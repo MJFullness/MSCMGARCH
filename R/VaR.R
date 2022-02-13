@@ -409,17 +409,17 @@ ES_MSCMGARCH<-function(portfolio_weights,H,level,type,par,filterprobs,VaR){
       return(ES/level)
     } else{
       if(portfolio[1]>0){
-        f=function(k){integral(function(x,y){VineH2(pnorm(k/portfolio[1]-x*portfolio[2]/portfolio[1]-y*portfolio[3]/portfolio[1]),pnorm(x),pnorm(y),par,type)*dnorm(x)*dnorm(y)}, bounds=list(x=c(-Inf,Inf),y=c(-Inf,Inf)))$value}
+        f=function(k){integral(function(x,y){VineH2(pnorm(k/portfolio[1]-x*portfolio[2]/portfolio[1]-y*portfolio[3]/portfolio[1]),pnorm(x),pnorm(y),par,type)*dnorm(x)*dnorm(y)}, bounds=list(x=c(-Inf,Inf),y=c(-Inf,Inf)),absTol = 1e-3)$value}
         norm_const=f(-Inf)
         #ES=-integral(function(k){1-((p*filterprobs+(1-q)*(1-filterprobs))*pnorm(k,mean=0, sd=sqrt(portfolio[1]^2+portfolio[2]^2+portfolio[3]^2))+((1-p)*filterprobs+(q)*(1-filterprobs))*(integral(function(x,y){VineH2(pnorm(k/portfolio[1]-x*portfolio[2]/portfolio[1]-y*portfolio[3]/portfolio[1]),pnorm(x),pnorm(y),par,type)*dnorm(x)*dnorm(y)}, bounds=list(x=c(-Inf,Inf),y=c(-Inf,Inf)))$value-norm_const))},bounds=list(k=c(-Inf,VaR)))$value
         g=function(k){f(k)-norm_const}
-        ES=(p*filterprobs+(1-q)*(1-filterprobs))*integrate(function(z){z*dnorm(z,sd=SD)},lower = -Inf,upper = VaR,rel.tol = 1e-15)$value-((1-p)*filterprobs+(q)*(1-filterprobs))*integral(g,bounds=list(k=c(-Inf,VaR)),absTol = 1e-3)$value
+        ES=(p*filterprobs+(1-q)*(1-filterprobs))*integrate(function(z){z*dnorm(z,sd=SD)},lower = -Inf,upper = VaR,rel.tol = 1e-15)$value+((1-p)*filterprobs+(q)*(1-filterprobs))*integral(g,bounds=list(k=c(-Inf,VaR)),absTol = 1e-3)$value
       }else{
-        f=function(k){1-integral(function(x,y){VineH2(pnorm(k/portfolio[1]-x*portfolio[2]/portfolio[1]-y*portfolio[3]/portfolio[1]),pnorm(x),pnorm(y),par,type)*dnorm(x)*dnorm(y)}, bounds=list(x=c(-Inf,Inf),y=c(-Inf,Inf)))$value}
+        f=function(k){1-integral(function(x,y){VineH2(pnorm(k/portfolio[1]-x*portfolio[2]/portfolio[1]-y*portfolio[3]/portfolio[1]),pnorm(x),pnorm(y),par,type)*dnorm(x)*dnorm(y)}, bounds=list(x=c(-Inf,Inf),y=c(-Inf,Inf)),absTol = 1e-3)$value}
         norm_const=f(-Inf)
         g=function(k){(f(k)-norm_const)}
         
-        ES=(p*filterprobs+(1-q)*(1-filterprobs))*integrate(function(z){z*dnorm(z,sd=SD)},lower = -Inf,upper = VaR,rel.tol = 1e-15)$value-((1-p)*filterprobs+(q)*(1-filterprobs))*integral(g,bounds=list(k=c(-Inf,VaR)),absTol = 1e-3)$value
+        ES=(p*filterprobs+(1-q)*(1-filterprobs))*integrate(function(z){z*dnorm(z,sd=SD)},lower = -Inf,upper = VaR,rel.tol = 1e-15)$value+((1-p)*filterprobs+(q)*(1-filterprobs))*integral(g,bounds=list(k=c(-Inf,VaR)),absTol = 1e-3)$value
         
       }
       
@@ -1156,9 +1156,14 @@ rolling_window<-function(series,type,copula_type,asymmetric,window_length,portfo
   }
   else if(type=="MS_CMGARCH"){
     
-    forecast=future.apply::future_lapply(X=amount, FUN=Forecast_MSCMGARCH,copula_type=copula_type, asymmetric=asymmetric,window_length=window_length,portfolio_weights=portfolio_weights,series=series,signs=signs)
+    forecast=future.apply::future_lapply(X=amount, FUN=Forecast_MSCMGARCH_3,copula_type=copula_type, asymmetric=asymmetric,window_length=window_length,portfolio_weights=portfolio_weights,series=series,signs=signs)
    
-    }
+  }
+  else if(type=="MS_CMGARCH3"){
+    
+    forecast=future.apply::future_lapply(X=amount, FUN=Forecast_MSCMGARCH,copula_type=copula_type, asymmetric=asymmetric,window_length=window_length,portfolio_weights=portfolio_weights,series=series,signs=signs)
+    
+  }
   forecast_final=unlist(forecast[[1]])
   for(i in 2:length(forecast)){
     forecast_final=rbind(forecast_final,unlist(forecast[[i]]))
