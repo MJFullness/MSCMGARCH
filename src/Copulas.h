@@ -233,8 +233,8 @@ return res;
 }
 
 
-// [[Rcpp::export]]
-inline arma::mat cor_Gumbel(double theta){
+
+arma::mat cor_Gumbel(double theta){
   arma::mat cor_mat = arma::zeros(2,2);
   cor_mat(0,0)=1;
   cor_mat(1,1)=1;

@@ -298,17 +298,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// cor_Gumbel
-inline arma::mat cor_Gumbel(double theta);
-RcppExport SEXP _MSCMGARCH_cor_Gumbel(SEXP thetaSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type theta(thetaSEXP);
-    rcpp_result_gen = Rcpp::wrap(cor_Gumbel(theta));
-    return rcpp_result_gen;
-END_RCPP
-}
 // claytonCDF
 double claytonCDF(double u1, double u2, double theta);
 RcppExport SEXP _MSCMGARCH_claytonCDF(SEXP u1SEXP, SEXP u2SEXP, SEXP thetaSEXP) {
@@ -1299,7 +1288,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_MSCMGARCH_gumbelPDF", (DL_FUNC) &_MSCMGARCH_gumbelPDF, 3},
     {"_MSCMGARCH_gumbelH1", (DL_FUNC) &_MSCMGARCH_gumbelH1, 3},
     {"_MSCMGARCH_gumbelH2", (DL_FUNC) &_MSCMGARCH_gumbelH2, 3},
-    {"_MSCMGARCH_cor_Gumbel", (DL_FUNC) &_MSCMGARCH_cor_Gumbel, 1},
     {"_MSCMGARCH_claytonCDF", (DL_FUNC) &_MSCMGARCH_claytonCDF, 3},
     {"_MSCMGARCH_claytonPDF", (DL_FUNC) &_MSCMGARCH_claytonPDF, 3},
     {"_MSCMGARCH_claytonH1", (DL_FUNC) &_MSCMGARCH_claytonH1, 3},
