@@ -173,7 +173,7 @@ double loglike_Normal_Copula_3(const arma::vec& bekk, const arma::vec& theta, co
   arma::vec copula_par = theta.subvec(2,4);
   arma::mat cor_cop=cor_mat(copula_par,type);
   
-  if(arma::det(cor_cop)<=4e-8){
+  if(arma::det(cor_cop)<=1e-7){
     return -1e25;
   }
   
@@ -268,7 +268,7 @@ double loglike_Normal_Copula_3_asymm(const arma::vec& bekk, arma::vec signs, con
  
   arma::mat cor_cop=cor_mat(copula_par,type);
 
-  if(arma::det(cor_cop)<=4e-8){
+  if(arma::det(cor_cop)<=1e-7){
     return -1e25;
   }
   
@@ -375,7 +375,7 @@ double loglike_Normal_Copula_Copula_3(const arma::vec& bekk, const arma::vec& th
   arma::mat cor_cop_2=cor_mat(copula_par_2,type2);
   
   
-  if(arma::det(cor_cop_1)<=4e-8 || arma::det(cor_cop_2)<=4e-8){
+  if(arma::det(cor_cop_1)<=1e-7 || arma::det(cor_cop_2)<=1e-7){
     return -1e25;
   }
   
@@ -494,7 +494,7 @@ double loglike_Normal_Copula_Copula_3_asymm(const arma::vec& bekk, arma::vec sig
   arma::mat cor_cop_2=cor_mat(copula_par_2,type2);
   
   
-  if(arma::det(cor_cop_1)<=4e-8 || arma::det(cor_cop_2)<=4e-8){
+  if(arma::det(cor_cop_1)<=1e-7 || arma::det(cor_cop_2)<=1e-7){
     return -1e25;
   }
   
