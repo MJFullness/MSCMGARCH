@@ -7,6 +7,7 @@ Author: Who wrote it
 Maintainer: Who to complain to <yourfault@somewhere.net>
 Description: More about what it does (maybe more than one line)
 License: What license is it under?
-Depends: R (>= 3.5.0), BEKKs, parallel
-Imports: Rcpp (>= 1.0.6), parallel, pbapply, VineCopula, stats4, BEKKs, mvtnorm, optimParallel
+Depends: R (>= 3.5.0), BEKKs, parallel, future
+Imports: Rcpp (>= 1.0.6), parallel, pbapply, VineCopula, stats4, BEKKs, mvtnorm, optimParallel, rvinecopulib,future.apply,RcppParallel, cubature, calculus
 LinkingTo: Rcpp, RcppArmadillo, Rcpp11
+RoxygenNote: 7.1.2

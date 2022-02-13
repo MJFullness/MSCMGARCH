@@ -539,20 +539,21 @@ MLE_MSCMGARCH_3dim<-function(r, type, start_val=NULL, BEKK=NULL,asymmBEKK=FALSE,
     if(asymmBEKK==TRUE){
       #claculate BEKK
       if(is.null(BEKK)){
+      set.seed(1)
       spec=bekk_spec(mode=list(type="bekk",asymmetric=T),signs=signs,init_values="random")
       BEKK1=bekk_fit(spec,r)
       
-      BEKK=as.matrix(c(c(t(BEKK1$C0))[c(1,4,7,5,8,9)],c(BEKK1$A),c(BEKK1$B),c(BEKK1$G)))
-      }
+      BEKK=BEKK1$theta
+        }
       
       if(is.null(start_val)){
         set.seed(456)
         start_val=numeric(5)
         start_val[1]=0.92
         start_val[2]=0.2
-        start_val[3]=20
-        start_val[4]=21
-        start_val[5]=20
+        start_val[3]=24
+        start_val[4]=24
+        start_val[5]=24
         start_val=list(start_val)
         if(nc>1){
           for(i in 2:nc){
@@ -661,6 +662,7 @@ MLE_MSCMGARCH_3dim<-function(r, type, start_val=NULL, BEKK=NULL,asymmBEKK=FALSE,
       if(asymmBEKK==TRUE){
         #claculate BEKK
         if(is.null(BEKK)){
+          set.seed(1)
         spec=bekk_spec(model=list(type="bekk",asymmetric=T),init_values = "random",signs=signs)
         BEKK1=bekk_fit(spec,r)
         BEKK=BEKK1$theta
@@ -753,14 +755,14 @@ MLE_CMGARCH<-function(r, type, start_val,signs=NULL, hessian=T){
    if(nrow(type)==3 && is.null(signs)){
     
     f=function(par){return(-LL_loglike_Copula_3(par,r,type))}
-    #start_val=random_grid_search_LL_copula_3(start_val,r,type,1)$theta_optim
+    start_val=random_grid_search_LL_copula_3(start_val,r,type,1)$theta_optim
     res=optim(fn=f,par=start_val, hessian = hessian)
     
     return(res)
   }
   if(nrow(type)==3 && !is.null(signs)){
     f=function(par){return(-LL_loglike_Copula_3_asymm(par,signs,r,type))}
-    #start_val=random_grid_search_LL_copula_3_asymm(start_val,signs,r,type,1)$theta_optim
+    start_val=random_grid_search_LL_copula_3_asymm(start_val,signs,r,type,1)$theta_optim
     res=optim(fn=f,par=start_val, hessian = hessian)
     
     return(res)

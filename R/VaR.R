@@ -521,22 +521,24 @@ VaR_MSCMGARCH_3<-function(portfolio_weights,H,level,type1,type2,par,filterprobs 
     p1t = filterprobs[1]
     p2t = filterprobs[2]
     p3t = filterprobs[3]
-    correlation_matrix_1=cor_mat(par[6:9],type1)
-    correlation_matrix_2=cor_mat(par[9:12],type2)
-    p11 = theta[1];
-    p12 = theta[2];
+    correlation_matrix_1=cor_mat(par[7:9],type1)
+    correlation_matrix_2=cor_mat(par[10:12],type2)
+    p11 = par[1];
+    p12 = par[2];
     p13 =1 -p11 - p12;
-    p21 = theta[3];
-    p22 = theta[4];
+    p21 = par[3];
+    p22 = par[4];
     p23 =1 -p21 - p22;
-    p32 = theta[5];
-    p33 = theta[6];
+    p32 = par[5];
+    p33 = par[6];
     p31 =1 -p33 - p32;
     
     SD=sqrt(portfolio_weights%*%H%*%portfolio_weights)
     portfolio_1=portfolio_weights%*%eigen_value_decomposition(H) %*%solve(t(chol(correlation_matrix_1))) 
     portfolio_2=portfolio_weights%*%eigen_value_decomposition(H) %*%solve(t(chol(correlation_matrix_2))) 
     
+    copula_par1 =par[7:9]
+    copula_par2 =par[10:12]
       
     f = function(z){
             VaR=pnorm(z,sd=SD)
@@ -561,9 +563,9 @@ VaR_MSCMGARCH_3<-function(portfolio_weights,H,level,type1,type2,par,filterprobs 
         
         if(portfolio_1[3]==0){
         if(portfolio_1[1]>0){
-          return(cubintegrate(function(u){copulaH2(pnorm(k/portfolio_1[1]-u*portfolio_1[2]/portfolio_1[1]),pnorm(u),par[1],type[1])*dnorm(u)},lower = -Inf, upper= Inf )$integral)
+          return(cubintegrate(function(u){copulaH2(pnorm(k/portfolio_1[1]-u*portfolio_1[2]/portfolio_1[1]),pnorm(u),copula_par1[1],type1[1])*dnorm(u)},lower = -Inf, upper= Inf )$integral)
         }else{
-          return((1-cubintegrate(function(u){copulaH2(pnorm(k/portfolio_1[1]-u*portfolio_1[2]/portfolio_1[1]),pnorm(u),par[1],type[1])*dnorm(u)},lower = -Inf, upper= Inf )$integral))
+          return((1-cubintegrate(function(u){copulaH2(pnorm(k/portfolio_1[1]-u*portfolio_1[2]/portfolio_1[1]),pnorm(u),copula_par1[1],type1[1])*dnorm(u)},lower = -Inf, upper= Inf )$integral))
           
         }
       }
@@ -572,9 +574,9 @@ VaR_MSCMGARCH_3<-function(portfolio_weights,H,level,type1,type2,par,filterprobs 
     if(portfolio_1[2]==0){
      
         if(portfolio[1]>0){
-          return(cubintegrate(function(u){return(copulaH2(pnorm(k/portfolio_1[1]-u*portfolio_1[3]/portfolio_1[1]),pnorm(u),par[2],type[2])*dnorm(u))},lower = -Inf, upper=Inf )$integral)
+          return(cubintegrate(function(u){return(copulaH2(pnorm(k/portfolio_1[1]-u*portfolio_1[3]/portfolio_1[1]),pnorm(u),copula_par1[2],type1[2])*dnorm(u))},lower = -Inf, upper=Inf )$integral)
         }else{
-          return((1-cubintegrate(function(u){return(copulaH2(pnorm(k/portfolio_1[1]-u*portfolio_1[3]/portfolio_1[1]),pnorm(u),par[2],type[2])*dnorm(u))},lower = -Inf, upper=Inf )$integral))
+          return((1-cubintegrate(function(u){return(copulaH2(pnorm(k/portfolio_1[1]-u*portfolio_1[3]/portfolio_1[1]),pnorm(u),copula_par1[2],type1[2])*dnorm(u))},lower = -Inf, upper=Inf )$integral))
           
         }
       }
@@ -583,22 +585,22 @@ VaR_MSCMGARCH_3<-function(portfolio_weights,H,level,type1,type2,par,filterprobs 
     if(portfolio_1[1]==0){
       
         if(portfolio_1[2]>0){
-          return(cubintegrate(function(u){copulaH2(pnorm(k/portfolio_1[2]-u*portfolio_1[3]/portfolio_1[2]),pnorm(u),par[3],type[3])*dnorm(u)},lower = -Inf, upper= Inf )$integral)
+          return(cubintegrate(function(u){copulaH2(pnorm(k/portfolio_1[2]-u*portfolio_1[3]/portfolio_1[2]),pnorm(u),copula_par1[3],type1[3])*dnorm(u)},lower = -Inf, upper= Inf )$integral)
         }else{
-          return((1-cubintegrate(function(u){copulaH2(pnorm(k/portfolio_1[2]-u*portfolio_1[3]/portfolio_1[2]),pnorm(u),par[3],type[3])*dnorm(u)},lower = -Inf, upper= Inf )$integral))
+          return((1-cubintegrate(function(u){copulaH2(pnorm(k/portfolio_1[2]-u*portfolio_1[3]/portfolio_1[2]),pnorm(u),copula_par1[3],type1[3])*dnorm(u)},lower = -Inf, upper= Inf )$integral))
           
         }
       }else{
       
       if(portfolio_1[1]>0){
-        f=function(k){integral(function(x,y){VineH2(pnorm(k/portfolio_1[1]-x*portfolio_1[2]/portfolio_1[1]-y*portfolio_1[3]/portfolio_1[1]),pnorm(x),pnorm(y),par,type)*dnorm(x)*dnorm(y)}, bounds=list(x=c(-Inf,Inf),y=c(-Inf,Inf)))$value}
+        f=function(k){integral(function(x,y){VineH2(pnorm(k/portfolio_1[1]-x*portfolio_1[2]/portfolio_1[1]-y*portfolio_1[3]/portfolio_1[1]),pnorm(x),pnorm(y),copula_par1,type1)*dnorm(x)*dnorm(y)}, bounds=list(x=c(-Inf,Inf),y=c(-Inf,Inf)))$value}
         norm_const=f(-Inf)
-        g=return((integral(function(x,y){VineH2(pnorm(k/portfolio_1[1]-x*portfolio_1[2]/portfolio_1[1]-y*portfolio_1[3]/portfolio_1[1]),pnorm(x),pnorm(y),par,type)*dnorm(x)*dnorm(y)}, bounds=list(x=c(-Inf,Inf),y=c(-Inf,Inf)))$value-norm_const))
+        g=return((integral(function(x,y){VineH2(pnorm(k/portfolio_1[1]-x*portfolio_1[2]/portfolio_1[1]-y*portfolio_1[3]/portfolio_1[1]),pnorm(x),pnorm(y),copula_par1,type1)*dnorm(x)*dnorm(y)}, bounds=list(x=c(-Inf,Inf),y=c(-Inf,Inf)))$value-norm_const))
        
       }else{
-        f=function(k){1-integral(function(x,y){VineH2(pnorm(k/portfolio_1[1]-x*portfolio_1[2]/portfolio_1[1]-y*portfolio_1[3]/portfolio_1[1]),pnorm(x),pnorm(y),par,type)*dnorm(x)*dnorm(y)}, bounds=list(x=c(-Inf,Inf),y=c(-Inf,Inf)))$value}
+        f=function(k){1-integral(function(x,y){VineH2(pnorm(k/portfolio_1[1]-x*portfolio_1[2]/portfolio_1[1]-y*portfolio_1[3]/portfolio_1[1]),pnorm(x),pnorm(y),copula_par1,type1)*dnorm(x)*dnorm(y)}, bounds=list(x=c(-Inf,Inf),y=c(-Inf,Inf)))$value}
         norm_const=f(-Inf)
-        g=return((1-integral(function(x,y){VineH2(pnorm(k/portfolio_1[1]-x*portfolio_1[2]/portfolio_1[1]-y*portfolio_1[3]/portfolio_1[1]),pnorm(x),pnorm(y),par,type)*dnorm(x)*dnorm(y)}, bounds=list(x=c(-Inf,Inf),y=c(-Inf,Inf)))$value-norm_const))
+        g=return((1-integral(function(x,y){VineH2(pnorm(k/portfolio_1[1]-x*portfolio_1[2]/portfolio_1[1]-y*portfolio_1[3]/portfolio_1[1]),pnorm(x),pnorm(y),copula_par1,type1)*dnorm(x)*dnorm(y)}, bounds=list(x=c(-Inf,Inf),y=c(-Inf,Inf)))$value-norm_const))
         
       }
         return(g) 
@@ -619,9 +621,9 @@ VaR_MSCMGARCH_3<-function(portfolio_weights,H,level,type1,type2,par,filterprobs 
         
         if(portfolio_2[3]==0){
           if(portfolio_2[1]>0){
-            return(cubintegrate(function(u){copulaH2(pnorm(k/portfolio_2[1]-u*portfolio_2[2]/portfolio_2[1]),pnorm(u),par[1],type[1])*dnorm(u)},lower = -Inf, upper= Inf )$integral)
+            return(cubintegrate(function(u){copulaH2(pnorm(k/portfolio_2[1]-u*portfolio_2[2]/portfolio_2[1]),pnorm(u),copula_par2[1],type2[1])*dnorm(u)},lower = -Inf, upper= Inf )$integral)
           }else{
-            return((1-cubintegrate(function(u){copulaH2(pnorm(k/portfolio_2[1]-u*portfolio_2[2]/portfolio_2[1]),pnorm(u),par[1],type[1])*dnorm(u)},lower = -Inf, upper= Inf )$integral))
+            return((1-cubintegrate(function(u){copulaH2(pnorm(k/portfolio_2[1]-u*portfolio_2[2]/portfolio_2[1]),pnorm(u),copula_par2[1],type2[1])*dnorm(u)},lower = -Inf, upper= Inf )$integral))
             
           }
         }
@@ -630,9 +632,9 @@ VaR_MSCMGARCH_3<-function(portfolio_weights,H,level,type1,type2,par,filterprobs 
         if(portfolio_2[2]==0){
           
           if(portfolio[1]>0){
-            return(cubintegrate(function(u){return(copulaH2(pnorm(k/portfolio_2[1]-u*portfolio_2[3]/portfolio_2[1]),pnorm(u),par[2],type[2])*dnorm(u))},lower = -Inf, upper=Inf )$integral)
+            return(cubintegrate(function(u){return(copulaH2(pnorm(k/portfolio_2[1]-u*portfolio_2[3]/portfolio_2[1]),pnorm(u),copula_par2[2],type2[2])*dnorm(u))},lower = -Inf, upper=Inf )$integral)
           }else{
-            return((1-cubintegrate(function(u){return(copulaH2(pnorm(k/portfolio_2[1]-u*portfolio_2[3]/portfolio_2[1]),pnorm(u),par[2],type[2])*dnorm(u))},lower = -Inf, upper=Inf )$integral))
+            return((1-cubintegrate(function(u){return(copulaH2(pnorm(k/portfolio_2[1]-u*portfolio_2[3]/portfolio_2[1]),pnorm(u),copula_par2[2],type2[2])*dnorm(u))},lower = -Inf, upper=Inf )$integral))
             
           }
         }
@@ -641,22 +643,22 @@ VaR_MSCMGARCH_3<-function(portfolio_weights,H,level,type1,type2,par,filterprobs 
         if(portfolio_2[1]==0){
           
           if(portfolio_2[2]>0){
-            return(cubintegrate(function(u){copulaH2(pnorm(k/portfolio_2[2]-u*portfolio_2[3]/portfolio_2[2]),pnorm(u),par[3],type[3])*dnorm(u)},lower = -Inf, upper= Inf )$integral)
+            return(cubintegrate(function(u){copulaH2(pnorm(k/portfolio_2[2]-u*portfolio_2[3]/portfolio_2[2]),pnorm(u),copula_par2[3],type2[3])*dnorm(u)},lower = -Inf, upper= Inf )$integral)
           }else{
-            return((1-cubintegrate(function(u){copulaH2(pnorm(k/portfolio_2[2]-u*portfolio_2[3]/portfolio_2[2]),pnorm(u),par[3],type[3])*dnorm(u)},lower = -Inf, upper= Inf )$integral))
+            return((1-cubintegrate(function(u){copulaH2(pnorm(k/portfolio_2[2]-u*portfolio_2[3]/portfolio_2[2]),pnorm(u),copula_par2[3],type2[3])*dnorm(u)},lower = -Inf, upper= Inf )$integral))
             
           }
         }else{
           
           if(portfolio_2[1]>0){
-            f=function(k){integral(function(x,y){VineH2(pnorm(k/portfolio_2[1]-x*portfolio_2[2]/portfolio_2[1]-y*portfolio_2[3]/portfolio_2[1]),pnorm(x),pnorm(y),par,type)*dnorm(x)*dnorm(y)}, bounds=list(x=c(-Inf,Inf),y=c(-Inf,Inf)))$value}
+            f=function(k){integral(function(x,y){VineH2(pnorm(k/portfolio_2[1]-x*portfolio_2[2]/portfolio_2[1]-y*portfolio_2[3]/portfolio_2[1]),pnorm(x),pnorm(y),copula_par2,type2)*dnorm(x)*dnorm(y)}, bounds=list(x=c(-Inf,Inf),y=c(-Inf,Inf)))$value}
             norm_const=f(-Inf)
-            g=return((integral(function(x,y){VineH2(pnorm(k/portfolio_2[1]-x*portfolio_2[2]/portfolio_2[1]-y*portfolio_2[3]/portfolio_2[1]),pnorm(x),pnorm(y),par,type)*dnorm(x)*dnorm(y)}, bounds=list(x=c(-Inf,Inf),y=c(-Inf,Inf)))$value-norm_const))
+            g=return(f(k)-norm_const)
             
           }else{
-            f=function(k){1-integral(function(x,y){VineH2(pnorm(k/portfolio_2[1]-x*portfolio_2[2]/portfolio_2[1]-y*portfolio_2[3]/portfolio_2[1]),pnorm(x),pnorm(y),par,type)*dnorm(x)*dnorm(y)}, bounds=list(x=c(-Inf,Inf),y=c(-Inf,Inf)))$value}
+            f=function(k){1-integral(function(x,y){VineH2(pnorm(k/portfolio_2[1]-x*portfolio_2[2]/portfolio_2[1]-y*portfolio_2[3]/portfolio_2[1]),pnorm(x),pnorm(y),copula_par2,type2)*dnorm(x)*dnorm(y)}, bounds=list(x=c(-Inf,Inf),y=c(-Inf,Inf)))$value}
             norm_const=f(-Inf)
-            return((1-integral(function(x,y){VineH2(pnorm(k/portfolio_2[1]-x*portfolio_2[2]/portfolio_2[1]-y*portfolio_2[3]/portfolio_2[1]),pnorm(x),pnorm(y),par,type)*dnorm(x)*dnorm(y)}, bounds=list(x=c(-Inf,Inf),y=c(-Inf,Inf)))$value-norm_const))
+            return(f(k)-norm_const)
             
           }
           
@@ -669,7 +671,7 @@ VaR_MSCMGARCH_3<-function(portfolio_weights,H,level,type1,type2,par,filterprobs 
       final = function(k){
         return((p1t*p11+p2t*p21+p3t*p31)*f(k)+(p1t*p12+p2t*p22+p3t*p32)*f1(k)+(p1t*p13+p2t*p23+p3t*p33)*f2(k)-level)
       }
-      VaR= uniroot(final,interval=c(-1,0))$root
+      VaR= uniroot(final,interval=c(-0.5,0))$root
       
       
       return(VaR)
@@ -683,25 +685,28 @@ ES_MSCMGARCH_3<-function(portfolio_weights,H,level,type1, type2,par,filterprobs,
   p1t = filterprobs[1]
   p2t = filterprobs[2]
   p3t = filterprobs[3]
-  correlation_matrix_1=cor_mat(par[6:9],type1)
-  correlation_matrix_2=cor_mat(par[9:12],type2)
-  p11 = theta[1];
-  p12 = theta[2];
+  correlation_matrix_1=cor_mat(par[7:9],type1)
+  correlation_matrix_2=cor_mat(par[10:12],type2)
+  p11 = par[1];
+  p12 = par[2];
   p13 =1 -p11 - p12;
-  p21 = theta[3];
-  p22 = theta[4];
+  p21 = par[3];
+  p22 = par[4];
   p23 =1 -p21 - p22;
-  p32 = theta[5];
-  p33 = theta[6];
+  p32 = par[5];
+  p33 = par[6];
   p31 =1 -p33 - p32;
   
   SD=sqrt(portfolio_weights%*%H%*%portfolio_weights)
   portfolio_1=portfolio_weights%*%eigen_value_decomposition(H) %*%solve(t(chol(correlation_matrix_1))) 
   portfolio_2=portfolio_weights%*%eigen_value_decomposition(H) %*%solve(t(chol(correlation_matrix_2))) 
   
+  copula_par1 =par[7:9]
+  copula_par2 =par[10:12]
   
-  f = function(z){
-    VaR=pnorm(z,sd=SD)
+  f = function(k){
+    #VaR=integrate(function(z){z*dnorm(z,mean=0, sd=SD)},lower = -Inf, upper= k, rel.tol = 1e-15)$value
+    VaR=pnorm(k,mean=0, sd=SD)
     return(VaR)
   }
   
@@ -709,127 +714,128 @@ ES_MSCMGARCH_3<-function(portfolio_weights,H,level,type1, type2,par,filterprobs,
   
   
   
-  f1=function(k){
-    type = type1
-    if(sum(portfolio_1==0)>1){
-      if(sum(portfolio_1)>0){
-        VaR=pnorm(k,sd=sum(portfolio_1))
-      } else{
-        VaR=1-pnorm(k,sd=sum(portfolio_1))
-      }
-      
-      return(VaR)
+ 
+f1=function(k){
+  type = type1
+  if(sum(portfolio_1==0)>1){
+    if(sum(portfolio_1)>0){
+      VaR=pnorm(k,sd=sum(portfolio_1))
+    } else{
+      VaR=1-pnorm(k,sd=sum(portfolio_1))
     }
     
-    if(portfolio_1[3]==0){
-      if(portfolio_1[1]>0){
-        return(cubintegrate(function(u){copulaH2(pnorm(k/portfolio_1[1]-u*portfolio_1[2]/portfolio_1[1]),pnorm(u),par[1],type[1])*dnorm(u)},lower = -Inf, upper= Inf )$integral)
-      }else{
-        return((1-cubintegrate(function(u){copulaH2(pnorm(k/portfolio_1[1]-u*portfolio_1[2]/portfolio_1[1]),pnorm(u),par[1],type[1])*dnorm(u)},lower = -Inf, upper= Inf )$integral))
-        
-      }
-    }
-    
-    
-    if(portfolio_1[2]==0){
-      
-      if(portfolio[1]>0){
-        return(cubintegrate(function(u){return(copulaH2(pnorm(k/portfolio_1[1]-u*portfolio_1[3]/portfolio_1[1]),pnorm(u),par[2],type[2])*dnorm(u))},lower = -Inf, upper=Inf )$integral)
-      }else{
-        return((1-cubintegrate(function(u){return(copulaH2(pnorm(k/portfolio_1[1]-u*portfolio_1[3]/portfolio_1[1]),pnorm(u),par[2],type[2])*dnorm(u))},lower = -Inf, upper=Inf )$integral))
-        
-      }
-    }
-    
-    
-    if(portfolio_1[1]==0){
-      
-      if(portfolio_1[2]>0){
-        return(cubintegrate(function(u){copulaH2(pnorm(k/portfolio_1[2]-u*portfolio_1[3]/portfolio_1[2]),pnorm(u),par[3],type[3])*dnorm(u)},lower = -Inf, upper= Inf )$integral)
-      }else{
-        return((1-cubintegrate(function(u){copulaH2(pnorm(k/portfolio_1[2]-u*portfolio_1[3]/portfolio_1[2]),pnorm(u),par[3],type[3])*dnorm(u)},lower = -Inf, upper= Inf )$integral))
-        
-      }
-    }else{
-      
-      if(portfolio_1[1]>0){
-        f=function(k){integral(function(x,y){VineH2(pnorm(k/portfolio_1[1]-x*portfolio_1[2]/portfolio_1[1]-y*portfolio_1[3]/portfolio_1[1]),pnorm(x),pnorm(y),par,type)*dnorm(x)*dnorm(y)}, bounds=list(x=c(-Inf,Inf),y=c(-Inf,Inf)))$value}
-        norm_const=f(-Inf)
-        g=return((integral(function(x,y){VineH2(pnorm(k/portfolio_1[1]-x*portfolio_1[2]/portfolio_1[1]-y*portfolio_1[3]/portfolio_1[1]),pnorm(x),pnorm(y),par,type)*dnorm(x)*dnorm(y)}, bounds=list(x=c(-Inf,Inf),y=c(-Inf,Inf)))$value-norm_const))
-        
-      }else{
-        f=function(k){1-integral(function(x,y){VineH2(pnorm(k/portfolio_1[1]-x*portfolio_1[2]/portfolio_1[1]-y*portfolio_1[3]/portfolio_1[1]),pnorm(x),pnorm(y),par,type)*dnorm(x)*dnorm(y)}, bounds=list(x=c(-Inf,Inf),y=c(-Inf,Inf)))$value}
-        norm_const=f(-Inf)
-        g=return((1-integral(function(x,y){VineH2(pnorm(k/portfolio_1[1]-x*portfolio_1[2]/portfolio_1[1]-y*portfolio_1[3]/portfolio_1[1]),pnorm(x),pnorm(y),par,type)*dnorm(x)*dnorm(y)}, bounds=list(x=c(-Inf,Inf),y=c(-Inf,Inf)))$value-norm_const))
-        
-      }
-      return(g) 
-    } 
+    return(VaR)
   }
   
-  f2=function(k){
-    type=type2
-    if(sum(portfolio_2==0)>1){
-      if(sum(portfolio_2)>0){
-        VaR=pnorm(k,sd=sum(portfolio_2))
-      } else{
-        VaR=1-pnorm(k,sd=sum(portfolio_2))
-      }
-      
-      return(VaR)
-    }
-    
-    if(portfolio_2[3]==0){
-      if(portfolio_2[1]>0){
-        return(cubintegrate(function(u){copulaH2(pnorm(k/portfolio_2[1]-u*portfolio_2[2]/portfolio_2[1]),pnorm(u),par[1],type[1])*dnorm(u)},lower = -Inf, upper= Inf )$integral)
-      }else{
-        return((1-cubintegrate(function(u){copulaH2(pnorm(k/portfolio_2[1]-u*portfolio_2[2]/portfolio_2[1]),pnorm(u),par[1],type[1])*dnorm(u)},lower = -Inf, upper= Inf )$integral))
-        
-      }
-    }
-    
-    
-    if(portfolio_2[2]==0){
-      
-      if(portfolio[1]>0){
-        return(cubintegrate(function(u){return(copulaH2(pnorm(k/portfolio_2[1]-u*portfolio_2[3]/portfolio_2[1]),pnorm(u),par[2],type[2])*dnorm(u))},lower = -Inf, upper=Inf )$integral)
-      }else{
-        return((1-cubintegrate(function(u){return(copulaH2(pnorm(k/portfolio_2[1]-u*portfolio_2[3]/portfolio_2[1]),pnorm(u),par[2],type[2])*dnorm(u))},lower = -Inf, upper=Inf )$integral))
-        
-      }
-    }
-    
-    
-    if(portfolio_2[1]==0){
-      
-      if(portfolio_2[2]>0){
-        return(cubintegrate(function(u){copulaH2(pnorm(k/portfolio_2[2]-u*portfolio_2[3]/portfolio_2[2]),pnorm(u),par[3],type[3])*dnorm(u)},lower = -Inf, upper= Inf )$integral)
-      }else{
-        return((1-cubintegrate(function(u){copulaH2(pnorm(k/portfolio_2[2]-u*portfolio_2[3]/portfolio_2[2]),pnorm(u),par[3],type[3])*dnorm(u)},lower = -Inf, upper= Inf )$integral))
-        
-      }
+  if(portfolio_1[3]==0){
+    if(portfolio_1[1]>0){
+      return(cubintegrate(function(u){copulaH2(pnorm(k/portfolio_1[1]-u*portfolio_1[2]/portfolio_1[1]),pnorm(u),copula_par1[1],type1[1])*dnorm(u)},lower = -Inf, upper= Inf )$integral)
     }else{
+      return((1-cubintegrate(function(u){copulaH2(pnorm(k/portfolio_1[1]-u*portfolio_1[2]/portfolio_1[1]),pnorm(u),copula_par1[1],type1[1])*dnorm(u)},lower = -Inf, upper= Inf )$integral))
       
-      if(portfolio_2[1]>0){
-        f=function(k){integral(function(x,y){VineH2(pnorm(k/portfolio_2[1]-x*portfolio_2[2]/portfolio_2[1]-y*portfolio_2[3]/portfolio_2[1]),pnorm(x),pnorm(y),par,type)*dnorm(x)*dnorm(y)}, bounds=list(x=c(-Inf,Inf),y=c(-Inf,Inf)))$value}
-        norm_const=f(-Inf)
-        g=return((integral(function(x,y){VineH2(pnorm(k/portfolio_2[1]-x*portfolio_2[2]/portfolio_2[1]-y*portfolio_2[3]/portfolio_2[1]),pnorm(x),pnorm(y),par,type)*dnorm(x)*dnorm(y)}, bounds=list(x=c(-Inf,Inf),y=c(-Inf,Inf)))$value-norm_const))
-        
-      }else{
-        f=function(k){1-integral(function(x,y){VineH2(pnorm(k/portfolio_2[1]-x*portfolio_2[2]/portfolio_2[1]-y*portfolio_2[3]/portfolio_2[1]),pnorm(x),pnorm(y),par,type)*dnorm(x)*dnorm(y)}, bounds=list(x=c(-Inf,Inf),y=c(-Inf,Inf)))$value}
-        norm_const=f(-Inf)
-        return((1-integral(function(x,y){VineH2(pnorm(k/portfolio_2[1]-x*portfolio_2[2]/portfolio_2[1]-y*portfolio_2[3]/portfolio_2[1]),pnorm(x),pnorm(y),par,type)*dnorm(x)*dnorm(y)}, bounds=list(x=c(-Inf,Inf),y=c(-Inf,Inf)))$value-norm_const))
-        
-      }
+    }
+  }
+  
+  
+  if(portfolio_1[2]==0){
+    
+    if(portfolio[1]>0){
+      return(cubintegrate(function(u){return(copulaH2(pnorm(k/portfolio_1[1]-u*portfolio_1[3]/portfolio_1[1]),pnorm(u),copula_par1[2],type1[2])*dnorm(u))},lower = -Inf, upper=Inf )$integral)
+    }else{
+      return((1-cubintegrate(function(u){return(copulaH2(pnorm(k/portfolio_1[1]-u*portfolio_1[3]/portfolio_1[1]),pnorm(u),copula_par1[2],type1[2])*dnorm(u))},lower = -Inf, upper=Inf )$integral))
       
-    } 
+    }
+  }
+  
+  
+  if(portfolio_1[1]==0){
+    
+    if(portfolio_1[2]>0){
+      return(cubintegrate(function(u){copulaH2(pnorm(k/portfolio_1[2]-u*portfolio_1[3]/portfolio_1[2]),pnorm(u),copula_par1[3],type1[3])*dnorm(u)},lower = -Inf, upper= Inf )$integral)
+    }else{
+      return((1-cubintegrate(function(u){copulaH2(pnorm(k/portfolio_1[2]-u*portfolio_1[3]/portfolio_1[2]),pnorm(u),copula_par1[3],type1[3])*dnorm(u)},lower = -Inf, upper= Inf )$integral))
+      
+    }
+  }else{
+    
+    if(portfolio_1[1]>0){
+      f=function(k){integral(function(x,y){VineH2(pnorm(k/portfolio_1[1]-x*portfolio_1[2]/portfolio_1[1]-y*portfolio_1[3]/portfolio_1[1]),pnorm(x),pnorm(y),copula_par1,type1)*dnorm(x)*dnorm(y)}, bounds=list(x=c(-Inf,Inf),y=c(-Inf,Inf)))$value}
+      norm_const=f(-Inf)
+      g=return((integral(function(x,y){VineH2(pnorm(k/portfolio_1[1]-x*portfolio_1[2]/portfolio_1[1]-y*portfolio_1[3]/portfolio_1[1]),pnorm(x),pnorm(y),copula_par1,type1)*dnorm(x)*dnorm(y)}, bounds=list(x=c(-Inf,Inf),y=c(-Inf,Inf)))$value-norm_const))
+      
+    }else{
+      f=function(k){1-integral(function(x,y){VineH2(pnorm(k/portfolio_1[1]-x*portfolio_1[2]/portfolio_1[1]-y*portfolio_1[3]/portfolio_1[1]),pnorm(x),pnorm(y),copula_par1,type1)*dnorm(x)*dnorm(y)}, bounds=list(x=c(-Inf,Inf),y=c(-Inf,Inf)))$value}
+      norm_const=f(-Inf)
+      g=return((1-integral(function(x,y){VineH2(pnorm(k/portfolio_1[1]-x*portfolio_1[2]/portfolio_1[1]-y*portfolio_1[3]/portfolio_1[1]),pnorm(x),pnorm(y),copula_par1,type1)*dnorm(x)*dnorm(y)}, bounds=list(x=c(-Inf,Inf),y=c(-Inf,Inf)))$value-norm_const))
+      
+    }
+    return(g) 
   } 
+}
+
+f2=function(k){
+  type=type2
+  if(sum(portfolio_2==0)>1){
+    if(sum(portfolio_2)>0){
+      VaR=pnorm(k,sd=sum(portfolio_2))
+    } else{
+      VaR=1-pnorm(k,sd=sum(portfolio_2))
+    }
+    
+    return(VaR)
+  }
+  
+  if(portfolio_2[3]==0){
+    if(portfolio_2[1]>0){
+      return(cubintegrate(function(u){copulaH2(pnorm(k/portfolio_2[1]-u*portfolio_2[2]/portfolio_2[1]),pnorm(u),copula_par2[1],type2[1])*dnorm(u)},lower = -Inf, upper= Inf )$integral)
+    }else{
+      return((1-cubintegrate(function(u){copulaH2(pnorm(k/portfolio_2[1]-u*portfolio_2[2]/portfolio_2[1]),pnorm(u),copula_par2[1],type2[1])*dnorm(u)},lower = -Inf, upper= Inf )$integral))
+      
+    }
+  }
+  
+  
+  if(portfolio_2[2]==0){
+    
+    if(portfolio[1]>0){
+      return(cubintegrate(function(u){return(copulaH2(pnorm(k/portfolio_2[1]-u*portfolio_2[3]/portfolio_2[1]),pnorm(u),copula_par2[2],type2[2])*dnorm(u))},lower = -Inf, upper=Inf )$integral)
+    }else{
+      return((1-cubintegrate(function(u){return(copulaH2(pnorm(k/portfolio_2[1]-u*portfolio_2[3]/portfolio_2[1]),pnorm(u),copula_par2[2],type2[2])*dnorm(u))},lower = -Inf, upper=Inf )$integral))
+      
+    }
+  }
+  
+  
+  if(portfolio_2[1]==0){
+    
+    if(portfolio_2[2]>0){
+      return(cubintegrate(function(u){copulaH2(pnorm(k/portfolio_2[2]-u*portfolio_2[3]/portfolio_2[2]),pnorm(u),copula_par2[3],type2[3])*dnorm(u)},lower = -Inf, upper= Inf )$integral)
+    }else{
+      return((1-cubintegrate(function(u){copulaH2(pnorm(k/portfolio_2[2]-u*portfolio_2[3]/portfolio_2[2]),pnorm(u),copula_par2[3],type2[3])*dnorm(u)},lower = -Inf, upper= Inf )$integral))
+      
+    }
+  }else{
+    
+    if(portfolio_2[1]>0){
+      f=function(k){integral(function(x,y){VineH2(pnorm(k/portfolio_2[1]-x*portfolio_2[2]/portfolio_2[1]-y*portfolio_2[3]/portfolio_2[1]),pnorm(x),pnorm(y),copula_par2,type2)*dnorm(x)*dnorm(y)}, bounds=list(x=c(-Inf,Inf),y=c(-Inf,Inf)))$value}
+      norm_const=f(-Inf)
+      g=return(f(k)-norm_const)
+      
+    }else{
+      f=function(k){1-integral(function(x,y){VineH2(pnorm(k/portfolio_2[1]-x*portfolio_2[2]/portfolio_2[1]-y*portfolio_2[3]/portfolio_2[1]),pnorm(x),pnorm(y),copula_par2,type2)*dnorm(x)*dnorm(y)}, bounds=list(x=c(-Inf,Inf),y=c(-Inf,Inf)))$value}
+      norm_const=f(-Inf)
+      return(f(k)-norm_const)
+      
+    }
+    
+  } 
+}
   
   final = function(k){
     return((p1t*p11+p2t*p21+p3t*p31)*f(k)+(p1t*p12+p2t*p22+p3t*p32)*f1(k)+(p1t*p13+p2t*p23+p3t*p33)*f2(k))
   }
   
-  ES=-integral(final,bounds=list(k=c(-Inf,VaR)),absTol = 1e-5)$value
+  ES=-integral(final,bounds=list(k=c(-Inf,VaR)),absTol = 1e-4)$value
 return(ES/level)
 }
     
@@ -839,22 +845,24 @@ u_MSCMGARCH_3<-function(portfolio_weights,H,level,type1, type2,par,filterprobs,V
   p1t = filterprobs[1]
   p2t = filterprobs[2]
   p3t = filterprobs[3]
-  correlation_matrix_1=cor_mat(par[6:9],type1)
-  correlation_matrix_2=cor_mat(par[9:12],type2)
-  p11 = theta[1];
-  p12 = theta[2];
+  correlation_matrix_1=cor_mat(par[7:9],type1)
+  correlation_matrix_2=cor_mat(par[10:12],type2)
+  p11 = par[1];
+  p12 = par[2];
   p13 =1 -p11 - p12;
-  p21 = theta[3];
-  p22 = theta[4];
+  p21 = par[3];
+  p22 = par[4];
   p23 =1 -p21 - p22;
-  p32 = theta[5];
-  p33 = theta[6];
+  p32 = par[5];
+  p33 = par[6];
   p31 =1 -p33 - p32;
   
   SD=sqrt(portfolio_weights%*%H%*%portfolio_weights)
   portfolio_1=portfolio_weights%*%eigen_value_decomposition(H) %*%solve(t(chol(correlation_matrix_1))) 
   portfolio_2=portfolio_weights%*%eigen_value_decomposition(H) %*%solve(t(chol(correlation_matrix_2))) 
   
+  copula_par1 =par[7:9]
+  copula_par2 =par[10:12]
   
   f = function(z){
     VaR=pnorm(z,sd=SD)
@@ -879,9 +887,9 @@ u_MSCMGARCH_3<-function(portfolio_weights,H,level,type1, type2,par,filterprobs,V
     
     if(portfolio_1[3]==0){
       if(portfolio_1[1]>0){
-        return(cubintegrate(function(u){copulaH2(pnorm(k/portfolio_1[1]-u*portfolio_1[2]/portfolio_1[1]),pnorm(u),par[1],type[1])*dnorm(u)},lower = -Inf, upper= Inf )$integral)
+        return(cubintegrate(function(u){copulaH2(pnorm(k/portfolio_1[1]-u*portfolio_1[2]/portfolio_1[1]),pnorm(u),copula_par1[1],type1[1])*dnorm(u)},lower = -Inf, upper= Inf )$integral)
       }else{
-        return((1-cubintegrate(function(u){copulaH2(pnorm(k/portfolio_1[1]-u*portfolio_1[2]/portfolio_1[1]),pnorm(u),par[1],type[1])*dnorm(u)},lower = -Inf, upper= Inf )$integral))
+        return((1-cubintegrate(function(u){copulaH2(pnorm(k/portfolio_1[1]-u*portfolio_1[2]/portfolio_1[1]),pnorm(u),copula_par1[1],type1[1])*dnorm(u)},lower = -Inf, upper= Inf )$integral))
         
       }
     }
@@ -890,9 +898,9 @@ u_MSCMGARCH_3<-function(portfolio_weights,H,level,type1, type2,par,filterprobs,V
     if(portfolio_1[2]==0){
       
       if(portfolio[1]>0){
-        return(cubintegrate(function(u){return(copulaH2(pnorm(k/portfolio_1[1]-u*portfolio_1[3]/portfolio_1[1]),pnorm(u),par[2],type[2])*dnorm(u))},lower = -Inf, upper=Inf )$integral)
+        return(cubintegrate(function(u){return(copulaH2(pnorm(k/portfolio_1[1]-u*portfolio_1[3]/portfolio_1[1]),pnorm(u),copula_par1[2],type1[2])*dnorm(u))},lower = -Inf, upper=Inf )$integral)
       }else{
-        return((1-cubintegrate(function(u){return(copulaH2(pnorm(k/portfolio_1[1]-u*portfolio_1[3]/portfolio_1[1]),pnorm(u),par[2],type[2])*dnorm(u))},lower = -Inf, upper=Inf )$integral))
+        return((1-cubintegrate(function(u){return(copulaH2(pnorm(k/portfolio_1[1]-u*portfolio_1[3]/portfolio_1[1]),pnorm(u),copula_par1[2],type1[2])*dnorm(u))},lower = -Inf, upper=Inf )$integral))
         
       }
     }
@@ -901,22 +909,22 @@ u_MSCMGARCH_3<-function(portfolio_weights,H,level,type1, type2,par,filterprobs,V
     if(portfolio_1[1]==0){
       
       if(portfolio_1[2]>0){
-        return(cubintegrate(function(u){copulaH2(pnorm(k/portfolio_1[2]-u*portfolio_1[3]/portfolio_1[2]),pnorm(u),par[3],type[3])*dnorm(u)},lower = -Inf, upper= Inf )$integral)
+        return(cubintegrate(function(u){copulaH2(pnorm(k/portfolio_1[2]-u*portfolio_1[3]/portfolio_1[2]),pnorm(u),copula_par1[3],type1[3])*dnorm(u)},lower = -Inf, upper= Inf )$integral)
       }else{
-        return((1-cubintegrate(function(u){copulaH2(pnorm(k/portfolio_1[2]-u*portfolio_1[3]/portfolio_1[2]),pnorm(u),par[3],type[3])*dnorm(u)},lower = -Inf, upper= Inf )$integral))
+        return((1-cubintegrate(function(u){copulaH2(pnorm(k/portfolio_1[2]-u*portfolio_1[3]/portfolio_1[2]),pnorm(u),copula_par1[3],type1[3])*dnorm(u)},lower = -Inf, upper= Inf )$integral))
         
       }
     }else{
       
       if(portfolio_1[1]>0){
-        f=function(k){integral(function(x,y){VineH2(pnorm(k/portfolio_1[1]-x*portfolio_1[2]/portfolio_1[1]-y*portfolio_1[3]/portfolio_1[1]),pnorm(x),pnorm(y),par,type)*dnorm(x)*dnorm(y)}, bounds=list(x=c(-Inf,Inf),y=c(-Inf,Inf)))$value}
+        f=function(k){integral(function(x,y){VineH2(pnorm(k/portfolio_1[1]-x*portfolio_1[2]/portfolio_1[1]-y*portfolio_1[3]/portfolio_1[1]),pnorm(x),pnorm(y),copula_par1,type1)*dnorm(x)*dnorm(y)}, bounds=list(x=c(-Inf,Inf),y=c(-Inf,Inf)))$value}
         norm_const=f(-Inf)
-        g=return((integral(function(x,y){VineH2(pnorm(k/portfolio_1[1]-x*portfolio_1[2]/portfolio_1[1]-y*portfolio_1[3]/portfolio_1[1]),pnorm(x),pnorm(y),par,type)*dnorm(x)*dnorm(y)}, bounds=list(x=c(-Inf,Inf),y=c(-Inf,Inf)))$value-norm_const))
+        g=return((integral(function(x,y){VineH2(pnorm(k/portfolio_1[1]-x*portfolio_1[2]/portfolio_1[1]-y*portfolio_1[3]/portfolio_1[1]),pnorm(x),pnorm(y),copula_par1,type1)*dnorm(x)*dnorm(y)}, bounds=list(x=c(-Inf,Inf),y=c(-Inf,Inf)))$value-norm_const))
         
       }else{
-        f=function(k){1-integral(function(x,y){VineH2(pnorm(k/portfolio_1[1]-x*portfolio_1[2]/portfolio_1[1]-y*portfolio_1[3]/portfolio_1[1]),pnorm(x),pnorm(y),par,type)*dnorm(x)*dnorm(y)}, bounds=list(x=c(-Inf,Inf),y=c(-Inf,Inf)))$value}
+        f=function(k){1-integral(function(x,y){VineH2(pnorm(k/portfolio_1[1]-x*portfolio_1[2]/portfolio_1[1]-y*portfolio_1[3]/portfolio_1[1]),pnorm(x),pnorm(y),copula_par1,type1)*dnorm(x)*dnorm(y)}, bounds=list(x=c(-Inf,Inf),y=c(-Inf,Inf)))$value}
         norm_const=f(-Inf)
-        g=return((1-integral(function(x,y){VineH2(pnorm(k/portfolio_1[1]-x*portfolio_1[2]/portfolio_1[1]-y*portfolio_1[3]/portfolio_1[1]),pnorm(x),pnorm(y),par,type)*dnorm(x)*dnorm(y)}, bounds=list(x=c(-Inf,Inf),y=c(-Inf,Inf)))$value-norm_const))
+        g=return((1-integral(function(x,y){VineH2(pnorm(k/portfolio_1[1]-x*portfolio_1[2]/portfolio_1[1]-y*portfolio_1[3]/portfolio_1[1]),pnorm(x),pnorm(y),copula_par1,type1)*dnorm(x)*dnorm(y)}, bounds=list(x=c(-Inf,Inf),y=c(-Inf,Inf)))$value-norm_const))
         
       }
       return(g) 
@@ -937,9 +945,9 @@ u_MSCMGARCH_3<-function(portfolio_weights,H,level,type1, type2,par,filterprobs,V
     
     if(portfolio_2[3]==0){
       if(portfolio_2[1]>0){
-        return(cubintegrate(function(u){copulaH2(pnorm(k/portfolio_2[1]-u*portfolio_2[2]/portfolio_2[1]),pnorm(u),par[1],type[1])*dnorm(u)},lower = -Inf, upper= Inf )$integral)
+        return(cubintegrate(function(u){copulaH2(pnorm(k/portfolio_2[1]-u*portfolio_2[2]/portfolio_2[1]),pnorm(u),copula_par2[1],type2[1])*dnorm(u)},lower = -Inf, upper= Inf )$integral)
       }else{
-        return((1-cubintegrate(function(u){copulaH2(pnorm(k/portfolio_2[1]-u*portfolio_2[2]/portfolio_2[1]),pnorm(u),par[1],type[1])*dnorm(u)},lower = -Inf, upper= Inf )$integral))
+        return((1-cubintegrate(function(u){copulaH2(pnorm(k/portfolio_2[1]-u*portfolio_2[2]/portfolio_2[1]),pnorm(u),copula_par2[1],type2[1])*dnorm(u)},lower = -Inf, upper= Inf )$integral))
         
       }
     }
@@ -948,9 +956,9 @@ u_MSCMGARCH_3<-function(portfolio_weights,H,level,type1, type2,par,filterprobs,V
     if(portfolio_2[2]==0){
       
       if(portfolio[1]>0){
-        return(cubintegrate(function(u){return(copulaH2(pnorm(k/portfolio_2[1]-u*portfolio_2[3]/portfolio_2[1]),pnorm(u),par[2],type[2])*dnorm(u))},lower = -Inf, upper=Inf )$integral)
+        return(cubintegrate(function(u){return(copulaH2(pnorm(k/portfolio_2[1]-u*portfolio_2[3]/portfolio_2[1]),pnorm(u),copula_par2[2],type2[2])*dnorm(u))},lower = -Inf, upper=Inf )$integral)
       }else{
-        return((1-cubintegrate(function(u){return(copulaH2(pnorm(k/portfolio_2[1]-u*portfolio_2[3]/portfolio_2[1]),pnorm(u),par[2],type[2])*dnorm(u))},lower = -Inf, upper=Inf )$integral))
+        return((1-cubintegrate(function(u){return(copulaH2(pnorm(k/portfolio_2[1]-u*portfolio_2[3]/portfolio_2[1]),pnorm(u),copula_par2[2],type2[2])*dnorm(u))},lower = -Inf, upper=Inf )$integral))
         
       }
     }
@@ -959,22 +967,22 @@ u_MSCMGARCH_3<-function(portfolio_weights,H,level,type1, type2,par,filterprobs,V
     if(portfolio_2[1]==0){
       
       if(portfolio_2[2]>0){
-        return(cubintegrate(function(u){copulaH2(pnorm(k/portfolio_2[2]-u*portfolio_2[3]/portfolio_2[2]),pnorm(u),par[3],type[3])*dnorm(u)},lower = -Inf, upper= Inf )$integral)
+        return(cubintegrate(function(u){copulaH2(pnorm(k/portfolio_2[2]-u*portfolio_2[3]/portfolio_2[2]),pnorm(u),copula_par2[3],type2[3])*dnorm(u)},lower = -Inf, upper= Inf )$integral)
       }else{
-        return((1-cubintegrate(function(u){copulaH2(pnorm(k/portfolio_2[2]-u*portfolio_2[3]/portfolio_2[2]),pnorm(u),par[3],type[3])*dnorm(u)},lower = -Inf, upper= Inf )$integral))
+        return((1-cubintegrate(function(u){copulaH2(pnorm(k/portfolio_2[2]-u*portfolio_2[3]/portfolio_2[2]),pnorm(u),copula_par2[3],type2[3])*dnorm(u)},lower = -Inf, upper= Inf )$integral))
         
       }
     }else{
       
       if(portfolio_2[1]>0){
-        f=function(k){integral(function(x,y){VineH2(pnorm(k/portfolio_2[1]-x*portfolio_2[2]/portfolio_2[1]-y*portfolio_2[3]/portfolio_2[1]),pnorm(x),pnorm(y),par,type)*dnorm(x)*dnorm(y)}, bounds=list(x=c(-Inf,Inf),y=c(-Inf,Inf)))$value}
+        f=function(k){integral(function(x,y){VineH2(pnorm(k/portfolio_2[1]-x*portfolio_2[2]/portfolio_2[1]-y*portfolio_2[3]/portfolio_2[1]),pnorm(x),pnorm(y),copula_par2,type2)*dnorm(x)*dnorm(y)}, bounds=list(x=c(-Inf,Inf),y=c(-Inf,Inf)), absTol = 1e-3)$value}
         norm_const=f(-Inf)
-        g=return((integral(function(x,y){VineH2(pnorm(k/portfolio_2[1]-x*portfolio_2[2]/portfolio_2[1]-y*portfolio_2[3]/portfolio_2[1]),pnorm(x),pnorm(y),par,type)*dnorm(x)*dnorm(y)}, bounds=list(x=c(-Inf,Inf),y=c(-Inf,Inf)))$value-norm_const))
+        g=return((integral(function(x,y){VineH2(pnorm(k/portfolio_2[1]-x*portfolio_2[2]/portfolio_2[1]-y*portfolio_2[3]/portfolio_2[1]),pnorm(x),pnorm(y),copula_par2,type2)*dnorm(x)*dnorm(y)}, bounds=list(x=c(-Inf,Inf),y=c(-Inf,Inf)), absTol = 1e-3)$value-norm_const))
         
       }else{
-        f=function(k){1-integral(function(x,y){VineH2(pnorm(k/portfolio_2[1]-x*portfolio_2[2]/portfolio_2[1]-y*portfolio_2[3]/portfolio_2[1]),pnorm(x),pnorm(y),par,type)*dnorm(x)*dnorm(y)}, bounds=list(x=c(-Inf,Inf),y=c(-Inf,Inf)))$value}
+        f=function(k){1-integral(function(x,y){VineH2(pnorm(k/portfolio_2[1]-x*portfolio_2[2]/portfolio_2[1]-y*portfolio_2[3]/portfolio_2[1]),pnorm(x),pnorm(y),copula_par2,type2)*dnorm(x)*dnorm(y)}, bounds=list(x=c(-Inf,Inf),y=c(-Inf,Inf)), absTol = 1e-3)$value}
         norm_const=f(-Inf)
-        return((1-integral(function(x,y){VineH2(pnorm(k/portfolio_2[1]-x*portfolio_2[2]/portfolio_2[1]-y*portfolio_2[3]/portfolio_2[1]),pnorm(x),pnorm(y),par,type)*dnorm(x)*dnorm(y)}, bounds=list(x=c(-Inf,Inf),y=c(-Inf,Inf)))$value-norm_const))
+        return((1-integral(function(x,y){VineH2(pnorm(k/portfolio_2[1]-x*portfolio_2[2]/portfolio_2[1]-y*portfolio_2[3]/portfolio_2[1]),pnorm(x),pnorm(y),copula_par2,type2)*dnorm(x)*dnorm(y)}, bounds=list(x=c(-Inf,Inf),y=c(-Inf,Inf)), absTol = 1e-3)$value-norm_const))
         
       }
       
@@ -1116,7 +1124,7 @@ Forecast_MSCMGARCH_3<-function(start,signs,copula_type,asymmetric,window_length,
     theta=BEKK$theta
     res=MLE_MSCMGARCH_3dim(series[start:(start+window_length-1),], copula_type, BEKK=theta, asymmBEKK=asymmetric, signs=signs, nc=1)
     par=res[[2]]$par
-    filterprobs=res[[3]][window_length]
+    filterprobs=res[[3]][window_length,]
     H=comp_bekk_forecast(theta,series[start:(start+window_length-1),])
   }
   else{
@@ -1126,7 +1134,7 @@ Forecast_MSCMGARCH_3<-function(start,signs,copula_type,asymmetric,window_length,
     theta=BEKK$theta
     res=MLE_MSCMGARCH_3dim(series[start:(start+(window_length-1)),], copula_type, BEKK=theta, asymmBEKK=asymmetric, signs=signs, nc=1)
     par=res[[2]]$par
-    filterprobs=res[[3]][window_length]
+    filterprobs=res[[3]][window_length,]
     H=comp_asymm_bekk_forecast(theta,series[start:(start+window_length-1),],signs)  
   }
   type1=copula_type[1:3]
@@ -1154,16 +1162,13 @@ rolling_window<-function(series,type,copula_type,asymmetric,window_length,portfo
   
   if(type=="Gaussian"){
   forecast=future.apply::future_lapply(X=amount, FUN=Forecast_Gaussian, asymmetric=asymmetric, window_length=window_length,portfolio_weights=portfolio_weights,series=series, signs=signs)
-  }
-  else if(type=="CMGARCH"){
+  }  else if(type=="CMGARCH"){
     forecast=future.apply::future_lapply(X=amount, FUN=Forecast_CMGARCH,copula_type=copula_type, asymmetric=asymmetric,window_length=window_length,portfolio_weights=portfolio_weights,series=series,signs=signs)
-  }
-  else if(type=="MS_CMGARCH"){
+  }  else if(type=="MS_CMGARCH"){
     
     forecast=future.apply::future_lapply(X=amount, FUN=Forecast_MSCMGARCH,copula_type=copula_type, asymmetric=asymmetric,window_length=window_length,portfolio_weights=portfolio_weights,series=series,signs=signs)
    
-  }
-  else if(type=="MS_CMGARCH3"){
+  }  else if(type=="MS_CMGARCH3"){
     
     forecast=future.apply::future_lapply(X=amount, FUN=Forecast_MSCMGARCH_3,copula_type=copula_type, asymmetric=asymmetric,window_length=window_length,portfolio_weights=portfolio_weights,series=series,signs=signs)
     
