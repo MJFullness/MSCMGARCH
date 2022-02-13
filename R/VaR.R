@@ -344,11 +344,9 @@ VaR_MSCMGARCH<-function(portfolio_weights,H,level,type,par,filterprobs ){
       #f=function(k){(p*filterprobs+(1-q)*(1-filterprobs))*pnorm(k,mean=0, sd=portfolio[1]^2+portfolio[2]^2+portfolio[3]^2)+((1-p)*filterprobs+(q)*(1-filterprobs))*integral(function(z,x,y){VineCopula(c(pnorm(z/portfolio[1]-x*portfolio[2]/portfolio[1]-y*portfolio[3]/portfolio[1]),pnorm(x),pnorm(y)),par,type)*dnorm(x)*dnorm(y)*dnorm(z/portfolio[1]-x*portfolio[2]/portfolio[1]-y*portfolio[3]/portfolio[1])}, bounds=list(z=c(-Inf,k),x=c(-Inf,Inf),y=c(-Inf,Inf)))$value/norm_const-level}
      
       
-       VaR= try(uniroot(g,interval=c(-0.5,-0.0001))$root)
+       VaR= uniroot(g,interval=c(-0.5,-0.0001))$root
        
-      if(!is.numeric(VaR)){
-        cat(c("Error" , par , norm_const))
-      }
+      
       return(VaR)
     }
     
@@ -415,18 +413,18 @@ ES_MSCMGARCH<-function(portfolio_weights,H,level,type,par,filterprobs,VaR){
         norm_const=f(-Inf)
         #ES=-integral(function(k){1-((p*filterprobs+(1-q)*(1-filterprobs))*pnorm(k,mean=0, sd=sqrt(portfolio[1]^2+portfolio[2]^2+portfolio[3]^2))+((1-p)*filterprobs+(q)*(1-filterprobs))*(integral(function(x,y){VineH2(pnorm(k/portfolio[1]-x*portfolio[2]/portfolio[1]-y*portfolio[3]/portfolio[1]),pnorm(x),pnorm(y),par,type)*dnorm(x)*dnorm(y)}, bounds=list(x=c(-Inf,Inf),y=c(-Inf,Inf)))$value-norm_const))},bounds=list(k=c(-Inf,VaR)))$value
         g=function(k){f(k)-norm_const}
-        ES=(p*filterprobs+(1-q)*(1-filterprobs))*qnorm(level/2,sd=SD)-((1-p)*filterprobs+(q)*(1-filterprobs))*(1/level)*cubintegrate(g,lower=-Inf,upper=VaR, absTol=1e-2)$integral
+        ES=(p*filterprobs+(1-q)*(1-filterprobs))*integrate(function(z){z*dnorm(z,sd=SD)},lower = -Inf,upper = VaR,rel.tol = 1e-15)$value-((1-p)*filterprobs+(q)*(1-filterprobs))*integral(g,bounds=list(k=c(-Inf,VaR)),absTol = 1e-3)$value
       }else{
         f=function(k){1-integral(function(x,y){VineH2(pnorm(k/portfolio[1]-x*portfolio[2]/portfolio[1]-y*portfolio[3]/portfolio[1]),pnorm(x),pnorm(y),par,type)*dnorm(x)*dnorm(y)}, bounds=list(x=c(-Inf,Inf),y=c(-Inf,Inf)))$value}
         norm_const=f(-Inf)
         g=function(k){(f(k)-norm_const)}
         
-        ES=(p*filterprobs+(1-q)*(1-filterprobs))*qnorm(level/2,sd=SD)-((1-p)*filterprobs+(q)*(1-filterprobs))*(1/level)*cubintegrate(g,lower=-Inf,upper=VaR, absTol=1e-3)$integral
+        ES=(p*filterprobs+(1-q)*(1-filterprobs))*integrate(function(z){z*dnorm(z,sd=SD)},lower = -Inf,upper = VaR,rel.tol = 1e-15)$value-((1-p)*filterprobs+(q)*(1-filterprobs))*integral(g,bounds=list(k=c(-Inf,VaR)),absTol = 1e-3)$value
         
       }
       
      
-      return(ES)
+      return(ES/level)
     }
     
   }
@@ -671,11 +669,9 @@ VaR_MSCMGARCH_3<-function(portfolio_weights,H,level,type1,type2,par,filterprobs 
       final = function(k){
         return((p1t*p11+p2t*p21+p3t*p31)*f(k)+(p1t*p12+p2t*p22+p3t*p32)*f1(k)+(p1t*p13+p2t*p23+p3t*p33)*f2(k)-level)
       }
-      VaR= try(uniroot(final,interval=c(-1,0))$root)
+      VaR= uniroot(final,interval=c(-1,0))$root
       
-      if(!is.numeric(VaR)){
-        cat(c("Error",par, norm_const))
-      }
+      
       return(VaR)
   
 } 
@@ -832,7 +828,8 @@ ES_MSCMGARCH_3<-function(portfolio_weights,H,level,type1, type2,par,filterprobs,
   final = function(k){
     return((p1t*p11+p2t*p21+p3t*p31)*f(k)+(p1t*p12+p2t*p22+p3t*p32)*f1(k)+(p1t*p13+p2t*p23+p3t*p33)*f2(k))
   }
-  ES=-cubintegrate(final, lower=-Inf, upper = VaR)$integral
+  
+  ES=-integral(final,bounds=list(k=c(-Inf,VaR)),absTol = 1e-5)$value
 return(ES/level)
 }
     

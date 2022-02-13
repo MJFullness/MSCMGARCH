@@ -498,9 +498,9 @@ MLE_MSCMGARCH_3dim<-function(r, type, start_val=NULL, BEKK=NULL,asymmBEKK=FALSE,
       start_val=numeric(5)
       start_val[1]=0.92
       start_val[2]=0.2
-      start_val[3]=29
-      start_val[4]=29
-      start_val[5]=29
+      start_val[3]=24
+      start_val[4]=24
+      start_val[5]=24
       start_val=list(start_val)
       if(nc>1){
       for(i in 2:nc){
@@ -550,9 +550,9 @@ MLE_MSCMGARCH_3dim<-function(r, type, start_val=NULL, BEKK=NULL,asymmBEKK=FALSE,
         start_val=numeric(5)
         start_val[1]=0.92
         start_val[2]=0.2
-        start_val[3]=29
-        start_val[4]=28
-        start_val[5]=29
+        start_val[3]=20
+        start_val[4]=21
+        start_val[5]=20
         start_val=list(start_val)
         if(nc>1){
           for(i in 2:nc){
@@ -615,7 +615,7 @@ MLE_MSCMGARCH_3dim<-function(r, type, start_val=NULL, BEKK=NULL,asymmBEKK=FALSE,
           start_val[8]=15
           start_val[9]=15
           start_val[10]=20
-          start_val[11]=29
+          start_val[11]=22
           start_val[12]=20
           if(nc>1){
           start_val=list(start_val)
@@ -679,7 +679,7 @@ MLE_MSCMGARCH_3dim<-function(r, type, start_val=NULL, BEKK=NULL,asymmBEKK=FALSE,
           start_val[8]=15
           start_val[9]=15
           start_val[10]=20
-          start_val[11]=29
+          start_val[11]=22
           start_val[12]=20
           if(nc>1){
           start_val=list(start_val)
@@ -700,21 +700,21 @@ MLE_MSCMGARCH_3dim<-function(r, type, start_val=NULL, BEKK=NULL,asymmBEKK=FALSE,
             start_val[[i]]<-start_val_temp
           }
           
-          f=function(par){return(random_grid_search_normal_copula_copula_3_asymm(BEKK,par,type,r,1))}
+          f=function(par){return(random_grid_search_normal_copula_copula_3_asymm(BEKK,signs,par,type,r,1))}
           theta<-parLapplyLB(X=start_val,fun=f)
           max_index <- which.max(sapply(theta, '[[', 'best_val'))
           theta <- theta[[max_index]]
           start_val <- as.vector(theta[[1]])
           } else{
-            start_val=random_grid_search_normal_copula_copula_3_asymm(BEKK,start_val,type,r,1)[[1]]
+            start_val=random_grid_search_normal_copula_copula_3_asymm(BEKK,signs,start_val,type,r,1)[[1]]
         }
           
         
-        f<-function(par){return(loglike_Normal_Copula_Copula_3_asymm(BEKK,par, r,type))}
+        f<-function(par){return(loglike_Normal_Copula_Copula_3_asymm(BEKK,signs,par, r,type))}
         #result<-optim(par=as.vector(start_val),fn=f,control=list(fnscale=-1), method = "BFGS", hessian = T)
         print(f(start_val)) 
         result<-optim(par=start_val,fn=f , method = "BFGS",control = list(fnscale=-1))
-        Filter_Prob=FilterProbs_Normal_Copula_Copula_3_asymm(BEKK,result$par,r)
+        Filter_Prob=FilterProbs_Normal_Copula_Copula_3_asymm(BEKK,signs,result$par,r, type)
         
         return(list(BEKK,result,Filter_Prob))
       }

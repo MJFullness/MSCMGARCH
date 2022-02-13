@@ -369,8 +369,8 @@ FilterProbs_Normal_Copula_Copula_3 <- function(bekk, theta, r, type) {
     .Call(`_MSCMGARCH_FilterProbs_Normal_Copula_Copula_3`, bekk, theta, r, type)
 }
 
-FilterProbs_Normal_Copula_Copula_3_Asymm <- function(bekk, signs, theta, r, type) {
-    .Call(`_MSCMGARCH_FilterProbs_Normal_Copula_Copula_3_Asymm`, bekk, signs, theta, r, type)
+FilterProbs_Normal_Copula_Copula_3_asymm <- function(bekk, signs, theta, r, type) {
+    .Call(`_MSCMGARCH_FilterProbs_Normal_Copula_Copula_3_asymm`, bekk, signs, theta, r, type)
 }
 
 random_grid_search_LL_copula_3 <- function(theta, r, type, nc) {

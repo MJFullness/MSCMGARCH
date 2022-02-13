@@ -1289,7 +1289,7 @@ arma::mat FilterProbs_Normal_Copula_Copula_3(const arma::vec& bekk, const arma::
 }
 
 // [[Rcpp::export]]
-arma::mat FilterProbs_Normal_Copula_Copula_3_Asymm(const arma::vec& bekk, arma::vec signs, const arma::vec& theta, const arma::mat& r,arma::vec& type) {
+arma::mat FilterProbs_Normal_Copula_Copula_3_asymm(const arma::vec& bekk, arma::vec signs, const arma::vec& theta, const arma::mat& r,arma::vec& type) {
   // Log-Likelihood function
   
   // convert to matrices

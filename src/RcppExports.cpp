@@ -1225,9 +1225,9 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// FilterProbs_Normal_Copula_Copula_3_Asymm
-arma::mat FilterProbs_Normal_Copula_Copula_3_Asymm(const arma::vec& bekk, arma::vec signs, const arma::vec& theta, const arma::mat& r, arma::vec& type);
-RcppExport SEXP _MSCMGARCH_FilterProbs_Normal_Copula_Copula_3_Asymm(SEXP bekkSEXP, SEXP signsSEXP, SEXP thetaSEXP, SEXP rSEXP, SEXP typeSEXP) {
+// FilterProbs_Normal_Copula_Copula_3_asymm
+arma::mat FilterProbs_Normal_Copula_Copula_3_asymm(const arma::vec& bekk, arma::vec signs, const arma::vec& theta, const arma::mat& r, arma::vec& type);
+RcppExport SEXP _MSCMGARCH_FilterProbs_Normal_Copula_Copula_3_asymm(SEXP bekkSEXP, SEXP signsSEXP, SEXP thetaSEXP, SEXP rSEXP, SEXP typeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1236,7 +1236,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const arma::vec& >::type theta(thetaSEXP);
     Rcpp::traits::input_parameter< const arma::mat& >::type r(rSEXP);
     Rcpp::traits::input_parameter< arma::vec& >::type type(typeSEXP);
-    rcpp_result_gen = Rcpp::wrap(FilterProbs_Normal_Copula_Copula_3_Asymm(bekk, signs, theta, r, type));
+    rcpp_result_gen = Rcpp::wrap(FilterProbs_Normal_Copula_Copula_3_asymm(bekk, signs, theta, r, type));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1363,7 +1363,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_MSCMGARCH_FilterProbs_Normal_Copula_3", (DL_FUNC) &_MSCMGARCH_FilterProbs_Normal_Copula_3, 4},
     {"_MSCMGARCH_FilterProbs_Normal_Copula_3_asymm", (DL_FUNC) &_MSCMGARCH_FilterProbs_Normal_Copula_3_asymm, 5},
     {"_MSCMGARCH_FilterProbs_Normal_Copula_Copula_3", (DL_FUNC) &_MSCMGARCH_FilterProbs_Normal_Copula_Copula_3, 4},
-    {"_MSCMGARCH_FilterProbs_Normal_Copula_Copula_3_Asymm", (DL_FUNC) &_MSCMGARCH_FilterProbs_Normal_Copula_Copula_3_Asymm, 5},
+    {"_MSCMGARCH_FilterProbs_Normal_Copula_Copula_3_asymm", (DL_FUNC) &_MSCMGARCH_FilterProbs_Normal_Copula_Copula_3_asymm, 5},
     {"_MSCMGARCH_random_grid_search_LL_copula_3", (DL_FUNC) &_MSCMGARCH_random_grid_search_LL_copula_3, 4},
     {"_MSCMGARCH_random_grid_search_LL_copula_3_asymm", (DL_FUNC) &_MSCMGARCH_random_grid_search_LL_copula_3_asymm, 5},
     {NULL, NULL, 0}

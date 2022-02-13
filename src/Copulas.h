@@ -634,7 +634,7 @@ double copulaH2(double u1,double u2, double theta, int type){
 bool valid_copula(arma::vec theta, arma::vec type){
   for (int i=0; i< type.n_rows; i++){
   if(type[i]==3 || type[i]==13){
-    if(theta[i]<0 || theta[i] > 30.7){
+    if(theta[i]<0 || theta[i] >= 30.7){
       return false;
     }
   }
