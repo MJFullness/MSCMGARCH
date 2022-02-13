@@ -1,10 +1,6 @@
-
-// [[Rcpp::depends(RcppArmadillo)]]
-
 #include <RcppArmadillo.h>
 #include "Copulas.h"
-// [[Rcpp::plugins(cpp11)]]
-
+#include "Bekk.h"
 
 
 // // [[Rcpp::export]]
@@ -48,8 +44,17 @@
 //   // Executing Matrix( m, sparse = TRIE )
 //   return Rcpp::as<double>(res);
 // }
-
-
+// [[Rcpp::export]]
+arma::mat eigen_value_decomposition(arma::mat& A){
+  arma::vec eigval;
+  arma::mat eigvec;
+  arma::eig_sym( eigval, eigvec, A );
+  
+  
+  arma::mat diag_mat_eigval = arma::diagmat(sqrt(eigval));
+  return eigvec*diag_mat_eigval*eigvec.t();
+  
+}
 
 // [[Rcpp::export]]
 double loglike_Normal_Gumbel_GumbelSurvival(const arma::vec& bekk, const arma::vec& theta, const arma::mat& r) {

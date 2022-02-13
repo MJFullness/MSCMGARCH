@@ -1,18 +1,8 @@
-#include <RcppArmadillo.h>
 
-// [[Rcpp::depends(RcppArmadillo)]]
+#ifndef Copulas_H
+#define Copulas_H
 
-// [[Rcpp::plugins(cpp11)]]
 
-// This is a simple example of exporting a C++ function to R. You can
-// source this function into an R session using the Rcpp::sourceCpp 
-// function (or via the Source button on the editor toolbar). Learn
-// more about Rcpp at:
-//
-//   http://www.rcpp.org/
-//   http://adv-r.had.co.nz/Rcpp.html
-//   http://gallery.rcpp.org/
-//
 
 // [[Rcpp::export]]
 arma::vec pnorm_cpp(arma::vec r){
@@ -44,44 +34,44 @@ arma::vec dnorm_cpp(arma::vec r){
   return res;
 }
 
-// [[Rcpp::export]]
-bool valid_bekk(arma::mat& C,arma::mat& A,arma::mat& G){
-  int n =C.n_cols;
-  arma::mat prod = kron(A,A)+kron(G,G);
-  
-  arma::vec eigvals;
-  eigvals= abs(arma::eig_gen(prod));
-  double max=0;
-  for (int i=0; i< eigvals.n_elem; i++){
-    if(eigvals[i]>max){
-      max=eigvals[i];
-    }
-  }
-  if(max >= 1){
-    return false;
-  }
-  
-  for (int i=0; i<n;i++){
-    if(C(i,i)<=0){
-      return false;
-    }
-  }
-  if(A(0,0)<=0 || G(0,0)<=0) {
-    return false;
-  }
-  else{
-    return true;
-  }
-}
+// // [[Rcpp::export]]
+// bool valid_bekk(arma::mat& C,arma::mat& A,arma::mat& G){
+//   int n =C.n_cols;
+//   arma::mat prod = kron(A,A)+kron(G,G);
+//   
+//   arma::vec eigvals;
+//   eigvals= abs(arma::eig_gen(prod));
+//   double max=0;
+//   for (int i=0; i< eigvals.n_elem; i++){
+//     if(eigvals[i]>max){
+//       max=eigvals[i];
+//     }
+//   }
+//   if(max >= 1){
+//     return false;
+//   }
+//   
+//   for (int i=0; i<n;i++){
+//     if(C(i,i)<=0){
+//       return false;
+//     }
+//   }
+//   if(A(0,0)<=0 || G(0,0)<=0) {
+//     return false;
+//   }
+//   else{
+//     return true;
+//   }
+// }
 
 // [[Rcpp::export]]
-double gumbelCDF(double u1, double u2, double theta){
+ double gumbelCDF(double u1, double u2, double theta){
   double res = std::exp(-std::pow(std::pow(-std::log(u1),theta) + std::pow(-std::log(u2),theta),1.0/theta));
   return res;
 }
 
 // [[Rcpp::export]]
-double gumbelPDF(double u1,double u2, double theta){
+ double gumbelPDF(double u1,double u2, double theta){
   
   if(theta==1.0){
     return 1.0;
@@ -136,8 +126,8 @@ double gumbelPDF(double u1,double u2, double theta){
   return res;
   
 }
-// [[Rcpp::export]]
-double gumbelPDF_raw(double u1,double u2, double theta){
+
+inline double gumbelPDF_raw(double u1,double u2, double theta){
   if(u1<1e-10){
     u1=1e-10;
     
@@ -164,7 +154,7 @@ if(std::isnan(res) ){
 return res;
   }
 // [[Rcpp::export]]
-double gumbelH1(double u1,double u2, double theta){
+ double gumbelH1(double u1,double u2, double theta){
   
   
   if(u1<1e-10){
@@ -194,17 +184,17 @@ double gumbelH1(double u1,double u2, double theta){
   //    std::log(u1 * u2) +
   //    std::log((theta) * std::pow(t1, -thetha1));
   //res= std::exp(res);
-  if((std::isnan(res)|| res== 0.0 ||res==R_PosInf) && u1>0.5 && u2>0.5 && u1==u2){
-    double res =std::nextafter(res,0.0);
-    return res;
-  }
+  // if((std::isnan(res) ||res==R_PosInf) && u1>0.5 && u2>0.5 && u1==u2){
+  //   double res =std::nextafter(res,0.0);
+  //   return res;
+  // }
   
   return res;
   
   
 }
 // [[Rcpp::export]]
-double gumbelH2(double u1,double u2, double theta){
+ double gumbelH2(double u1,double u2, double theta){
   
   
   if(u1<1e-10){
@@ -233,10 +223,10 @@ double gumbelH2(double u1,double u2, double theta){
   //    std::log(u1 * u2) +
   //    std::log((theta) * std::pow(t1, -thetha1));
   //res= std::exp(res);
-  if((std::isnan(res)|| res== 0.0 ||res==R_PosInf) && u1>0.5 && u2>0.5 && u1==u2){
-    double res =std::nextafter(res,1.0);
-    return res;
-  }
+  // if((std::isnan(res)|| res==R_PosInf) && u1>0.5 && u2>0.5 && u1==u2){
+  //   double res =std::nextafter(res,1.0);
+  //   return res;
+  // }
   return res;
   
   
@@ -244,7 +234,7 @@ double gumbelH2(double u1,double u2, double theta){
 
 
 // [[Rcpp::export]]
-arma::mat cor_Gumbel(double theta){
+inline arma::mat cor_Gumbel(double theta){
   arma::mat cor_mat = arma::zeros(2,2);
   cor_mat(0,0)=1;
   cor_mat(1,1)=1;
@@ -255,12 +245,12 @@ arma::mat cor_Gumbel(double theta){
 
 
 // [[Rcpp::export]]
-double claytonCDF(double u1, double u2, double theta){
+ double claytonCDF(double u1, double u2, double theta){
   double res = std::pow(std::pow(u1,-theta)+std::pow(u2,-theta)-1,-1/theta);
   return res;
 }
 // [[Rcpp::export]]
-double claytonPDF(double u1,double u2, double theta){
+ double claytonPDF(double u1,double u2, double theta){
   if(u1<1e-10){
     u1=1e-10;
     
@@ -306,8 +296,8 @@ double claytonPDF(double u1,double u2, double theta){
   
 }
 
-// [[Rcpp::export]]
-double claytonPDF_raw(double u1,double u2, double theta){
+
+inline double claytonPDF_raw(double u1,double u2, double theta){
   
   if(u1<1e-10){
     u1=1e-10;
@@ -343,7 +333,7 @@ double claytonPDF_raw(double u1,double u2, double theta){
 }
 
 // [[Rcpp::export]]
-double claytonH1(double u1,double u2, double theta){
+ double claytonH1(double u1,double u2, double theta){
   if(u1<1e-10){
     u1=1e-10;
     
@@ -376,7 +366,7 @@ double claytonH1(double u1,double u2, double theta){
 
 
 // [[Rcpp::export]]
-double claytonH2(double u1,double u2, double theta){
+ double claytonH2(double u1,double u2, double theta){
   if(u1<1e-10){
     u1=1e-10;
     
@@ -397,24 +387,24 @@ double claytonH2(double u1,double u2, double theta){
   double res = std::pow(std::pow(u1,-theta)+std::pow(u2,-theta)-1,-1/theta-1)*pow(u2,-theta-1);
   
   if(std::isnan(res)|| res== 0.0 ||res==R_PosInf){
-    double res =std::nextafter(res,0.0);
+    res =std::nextafter(res,0.0);
     return res;
   }
   return res;
   
 }
 
-// [[Rcpp::export]]
-double claytonPDF_log(double u1,double u2, double theta){
+
+inline double claytonPDF_log(double u1,double u2, double theta){
   
   double res= std::log(1.0+theta)+std::log(std::pow(u1,-theta)+std::pow(u2,-theta)-1.0)*(-1.0/theta -2.0) -std::log(u1*u2)*(theta+1);
   
   if((std::isnan(res) || res==R_NegInf) && u1<0.5 && u2<0.5 && u1==u2){
-    double res = std::nextafter(R_PosInf,0.0);
+    res = std::nextafter(R_PosInf,0.0);
     return res;
   }
   else if(std::isnan(res)){
-    double res = std::nextafter(res,1.0);
+    res = std::nextafter(res,1.0);
     return res;
   }
   
@@ -431,8 +421,8 @@ double claytonPDF_log(double u1,double u2, double theta){
   
 }
 
-// [[Rcpp::export]]
-arma::mat cor_Clayton(double theta){
+
+ arma::mat cor_Clayton(double theta){
   arma::mat cor_mat = arma::zeros(2,2);
   cor_mat(0,0)=1;
   cor_mat(1,1)=1;
@@ -443,27 +433,17 @@ arma::mat cor_Clayton(double theta){
 
 
 
-// [[Rcpp::export]]
-void set_seed(double seed) {
+
+inline void set_seed(double seed) {
   Rcpp::Environment base_env("package:base");
   Rcpp::Function set_seed_r = base_env["set.seed"];
   set_seed_r(std::floor(std::fabs(seed)));
 }
 
-// [[Rcpp::export]]
-arma::mat eigen_value_decomposition(arma::mat& A){
-  arma::vec eigval;
-  arma::mat eigvec;
-  arma::eig_sym( eigval, eigvec, A );
-  
-  
-  arma::mat diag_mat_eigval = arma::diagmat(sqrt(eigval));
-  return eigvec*diag_mat_eigval*eigvec.t();
-  
-}
 
-// [[Rcpp::export]]
-arma::mat BiCopSim_cpp(int NoOSim, int family, double par){
+
+
+inline arma::mat BiCopSim_cpp(int NoOSim, int family, double par){
   
   Rcpp::Environment pkg =  Rcpp::Environment::namespace_env("VineCopula");
   
@@ -475,8 +455,8 @@ arma::mat BiCopSim_cpp(int NoOSim, int family, double par){
   return  Rcpp::as<arma::mat>(res);
 }
 
-// [[Rcpp::export]]
-arma::mat rbicop_cpp(int NoOSim, 	const char* family , int rot , double par){
+
+inline arma::mat rbicop_cpp(int NoOSim, 	const char* family , int rot , double par){
   
   Rcpp::Environment pkg =  Rcpp::Environment::namespace_env("rvinecopulib");
   
@@ -488,8 +468,8 @@ arma::mat rbicop_cpp(int NoOSim, 	const char* family , int rot , double par){
   return  Rcpp::as<arma::mat>(res);
 }
 
-// [[Rcpp::export]]
-double dmvnorm_cpp(arma::mat r, arma::vec& mean, arma::mat& sigma){
+
+inline double dmvnorm_cpp(arma::mat r, arma::vec& mean, arma::mat& sigma){
   
   // Obtaining namespace of Matrix package
   Rcpp::Environment pkg = Rcpp::Environment::namespace_env("mvtnorm");
@@ -503,7 +483,7 @@ double dmvnorm_cpp(arma::mat r, arma::vec& mean, arma::mat& sigma){
 //rotation matrices
 
 // choose 2 int from N (as index)
-arma::imat choose2_fast(int &N)
+inline arma::imat choose2_fast(int &N)
 {
   arma::imat Out(N * (N - 1) / 2, 2);
   int c = 0;
@@ -520,7 +500,7 @@ arma::imat choose2_fast(int &N)
 }
 
 // Givens rotation matrix
-arma::mat rot_mat(arma::vec &thetas, int K)
+inline arma::mat rot_mat(arma::vec &thetas, int K)
 {
   arma::mat Out = arma::eye(K, K);
   arma::imat Cmat = choose2_fast(K);
@@ -539,8 +519,8 @@ arma::mat rot_mat(arma::vec &thetas, int K)
 
 
 
-// [[Rcpp::export]]
-double BiCopPDF_cpp(double returns1, double returns2 , int family, double par){
+
+inline double BiCopPDF_cpp(double returns1, double returns2 , int family, double par){
   
   // Obtaining namespace of Matrix package
   Rcpp::Environment pkg = Rcpp::Environment::namespace_env("VineCopula");
@@ -552,8 +532,8 @@ double BiCopPDF_cpp(double returns1, double returns2 , int family, double par){
   // Executing Matrix( m, sparse = TRIE )
   return Rcpp::as<double>(res);
 }
-// [[Rcpp::export]]
-double dbicop_cpp(arma::mat returns, 	const char* family , int rot, double par){
+
+inline double dbicop_cpp(arma::mat returns, 	const char* family , int rot, double par){
   
   // Obtaining namespace of Matrix package
   Rcpp::Environment pkg = Rcpp::Environment::namespace_env("rvinecopulib");
@@ -567,7 +547,7 @@ double dbicop_cpp(arma::mat returns, 	const char* family , int rot, double par){
 }
 
 // [[Rcpp::export]]
-double copulaPDF(double u1,double u2, double theta, int type){
+ double copulaPDF(double u1,double u2, double theta, int type){
   if(type==3){
     return claytonPDF(u1,u2,theta);
   }
@@ -582,8 +562,8 @@ double copulaPDF(double u1,double u2, double theta, int type){
   }
 }
 
-// [[Rcpp::export]]
-double copulaPDF_raw(double u1,double u2, double theta, int type){
+
+inline double copulaPDF_raw(double u1,double u2, double theta, int type){
   if(type==3){
     return claytonPDF_raw(u1,u2,theta);
   }
@@ -599,7 +579,7 @@ double copulaPDF_raw(double u1,double u2, double theta, int type){
 }
 
 // [[Rcpp::export]]
-double copulaH1(double u1,double u2, double theta, int type){
+ double copulaH1(double u1,double u2, double theta, int type){
   if(type==3){
     return claytonH1(u1,u2,theta);
   }
@@ -615,7 +595,7 @@ double copulaH1(double u1,double u2, double theta, int type){
 }
 
 // [[Rcpp::export]]
-double copulaH2(double u1,double u2, double theta, int type){
+ double copulaH2(double u1,double u2, double theta, int type){
   if(type==3){
     return claytonH2(u1,u2,theta);
   }
@@ -630,27 +610,27 @@ double copulaH2(double u1,double u2, double theta, int type){
   }
 }
 
-// [[Rcpp::export]]
-bool valid_copula(arma::vec theta, arma::vec type){
+
+inline bool valid_copula(arma::vec theta, arma::vec type){
   for (int i=0; i< type.n_rows; i++){
-  if(type[i]==3 || type[i]==13){
+  if(type[i]==3 || type[i]==13 || arma::sum(theta) > 89){
     if(theta[i]<0 || theta[i] >= 30.7){
       return false;
     }
   }
   if(type[i]==4 || type[i]==14){
-    if(theta[i]<1 ||  theta[i] > 31.5){
+    if(theta[i]<1 ||  theta[i] > 31.5 || arma::sum(theta) > 89){
       return false;
     }
   }
-  
+
   }
   return true;
-  
-  
+
+
 }
-// [[Rcpp::export]]
-double VineCopula2(arma::vec u, arma::vec copula_par, arma::vec type){
+
+inline double VineCopula2(arma::vec u, arma::vec copula_par, arma::vec type){
   double res=  copulaPDF(copulaH2(u[0],u[2],copula_par[1],type[1]),copulaH2(u[1],u[2],copula_par[2],type[2]),copula_par[0],type[0])*copulaPDF(u[0],u[2],copula_par[1],type[1])*copulaPDF(u[1],u[2],copula_par[2],type[2]);
 if(res == R_PosInf ||  std::isnan(res) || res == 0.0){
   return nextafter(res, 1.0);
@@ -659,7 +639,7 @@ return res;
 }
 
 // [[Rcpp::export]]
-double VineH2(double u1,double u2,double u3, arma::vec copula_par, arma::vec type){
+ double VineH2(double u1,double u2,double u3, arma::vec copula_par, arma::vec type){
   double res=  copulaH2(copulaH2(u1,u3,copula_par[1],type[1]),copulaH2(u2,u3,copula_par[2],type[2]),copula_par[0],type[0])*copulaPDF(u2,u3,copula_par[2],type[2]);
   if(res == R_PosInf ){
     return nextafter(res, 1.0);
@@ -671,7 +651,7 @@ double VineH2(double u1,double u2,double u3, arma::vec copula_par, arma::vec typ
   return res;
 }
 // [[Rcpp::export]]
-double VineCopula(arma::vec u, arma::vec copula_par, arma::vec type){
+ double VineCopula(arma::vec u, arma::vec copula_par, arma::vec type){
   double res = copulaPDF(copulaH2(u[0],u[2],copula_par[1],type[1]),copulaH2(u[1],u[2],copula_par[2],type[2]),copula_par[0],type[0])*copulaPDF(u[0],u[2],copula_par[1],type[1])*copulaPDF(u[1],u[2],copula_par[2],type[2]);
   if(res == R_PosInf){
     return std::nextafter(R_PosInf,1.0);
@@ -682,6 +662,10 @@ double VineCopula(arma::vec u, arma::vec copula_par, arma::vec type){
   
   return res;
 }
+
+
+
+#endif
 
 
 

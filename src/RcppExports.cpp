@@ -11,6 +11,219 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
+// elimination_mat
+arma::mat elimination_mat(const int& n);
+RcppExport SEXP _MSCMGARCH_elimination_mat(SEXP nSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const int& >::type n(nSEXP);
+    rcpp_result_gen = Rcpp::wrap(elimination_mat(n));
+    return rcpp_result_gen;
+END_RCPP
+}
+// commutation_mat
+arma::mat commutation_mat(const int& n);
+RcppExport SEXP _MSCMGARCH_commutation_mat(SEXP nSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const int& >::type n(nSEXP);
+    rcpp_result_gen = Rcpp::wrap(commutation_mat(n));
+    return rcpp_result_gen;
+END_RCPP
+}
+// duplication_mat
+arma::mat duplication_mat(const int& n);
+RcppExport SEXP _MSCMGARCH_duplication_mat(SEXP nSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const int& >::type n(nSEXP);
+    rcpp_result_gen = Rcpp::wrap(duplication_mat(n));
+    return rcpp_result_gen;
+END_RCPP
+}
+// inv_gen
+arma::mat inv_gen(const arma::mat& m);
+RcppExport SEXP _MSCMGARCH_inv_gen(SEXP mSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type m(mSEXP);
+    rcpp_result_gen = Rcpp::wrap(inv_gen(m));
+    return rcpp_result_gen;
+END_RCPP
+}
+// expected_indicator_value
+double expected_indicator_value(arma::mat r, arma::mat signs);
+RcppExport SEXP _MSCMGARCH_expected_indicator_value(SEXP rSEXP, SEXP signsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat >::type r(rSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type signs(signsSEXP);
+    rcpp_result_gen = Rcpp::wrap(expected_indicator_value(r, signs));
+    return rcpp_result_gen;
+END_RCPP
+}
+// loglike_bekk
+double loglike_bekk(const arma::vec& theta, const arma::mat& r);
+RcppExport SEXP _MSCMGARCH_loglike_bekk(SEXP thetaSEXP, SEXP rSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::vec& >::type theta(thetaSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type r(rSEXP);
+    rcpp_result_gen = Rcpp::wrap(loglike_bekk(theta, r));
+    return rcpp_result_gen;
+END_RCPP
+}
+// loglike_asymm_bekk
+double loglike_asymm_bekk(const arma::vec& theta, const arma::mat& r, arma::mat& signs);
+RcppExport SEXP _MSCMGARCH_loglike_asymm_bekk(SEXP thetaSEXP, SEXP rSEXP, SEXP signsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::vec& >::type theta(thetaSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type r(rSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type signs(signsSEXP);
+    rcpp_result_gen = Rcpp::wrap(loglike_asymm_bekk(theta, r, signs));
+    return rcpp_result_gen;
+END_RCPP
+}
+// score_bekk
+arma::mat score_bekk(const arma::mat& theta, arma::mat& r);
+RcppExport SEXP _MSCMGARCH_score_bekk(SEXP thetaSEXP, SEXP rSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type theta(thetaSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type r(rSEXP);
+    rcpp_result_gen = Rcpp::wrap(score_bekk(theta, r));
+    return rcpp_result_gen;
+END_RCPP
+}
+// score_asymm_bekk
+arma::mat score_asymm_bekk(const arma::mat& theta, arma::mat& r, arma::mat& signs);
+RcppExport SEXP _MSCMGARCH_score_asymm_bekk(SEXP thetaSEXP, SEXP rSEXP, SEXP signsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type theta(thetaSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type r(rSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type signs(signsSEXP);
+    rcpp_result_gen = Rcpp::wrap(score_asymm_bekk(theta, r, signs));
+    return rcpp_result_gen;
+END_RCPP
+}
+// bhh_bekk
+Rcpp::List bhh_bekk(arma::mat& r, const arma::mat& theta, int& max_iter, double& crit);
+RcppExport SEXP _MSCMGARCH_bhh_bekk(SEXP rSEXP, SEXP thetaSEXP, SEXP max_iterSEXP, SEXP critSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat& >::type r(rSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type theta(thetaSEXP);
+    Rcpp::traits::input_parameter< int& >::type max_iter(max_iterSEXP);
+    Rcpp::traits::input_parameter< double& >::type crit(critSEXP);
+    rcpp_result_gen = Rcpp::wrap(bhh_bekk(r, theta, max_iter, crit));
+    return rcpp_result_gen;
+END_RCPP
+}
+// bhh_asymm_bekk
+Rcpp::List bhh_asymm_bekk(arma::mat& r, const arma::mat& theta, int& max_iter, double& crit, arma::mat& signs);
+RcppExport SEXP _MSCMGARCH_bhh_asymm_bekk(SEXP rSEXP, SEXP thetaSEXP, SEXP max_iterSEXP, SEXP critSEXP, SEXP signsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat& >::type r(rSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type theta(thetaSEXP);
+    Rcpp::traits::input_parameter< int& >::type max_iter(max_iterSEXP);
+    Rcpp::traits::input_parameter< double& >::type crit(critSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type signs(signsSEXP);
+    rcpp_result_gen = Rcpp::wrap(bhh_asymm_bekk(r, theta, max_iter, crit, signs));
+    return rcpp_result_gen;
+END_RCPP
+}
+// random_grid_search_BEKK
+Rcpp::List random_grid_search_BEKK(arma::mat r);
+RcppExport SEXP _MSCMGARCH_random_grid_search_BEKK(SEXP rSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat >::type r(rSEXP);
+    rcpp_result_gen = Rcpp::wrap(random_grid_search_BEKK(r));
+    return rcpp_result_gen;
+END_RCPP
+}
+// random_grid_search_asymmetric_BEKK
+Rcpp::List random_grid_search_asymmetric_BEKK(arma::mat r, arma::mat signs);
+RcppExport SEXP _MSCMGARCH_random_grid_search_asymmetric_BEKK(SEXP rSEXP, SEXP signsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat >::type r(rSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type signs(signsSEXP);
+    rcpp_result_gen = Rcpp::wrap(random_grid_search_asymmetric_BEKK(r, signs));
+    return rcpp_result_gen;
+END_RCPP
+}
+// sigma_bekk
+Rcpp::List sigma_bekk(arma::mat& r, arma::mat& C, arma::mat& A, arma::mat& G);
+RcppExport SEXP _MSCMGARCH_sigma_bekk(SEXP rSEXP, SEXP CSEXP, SEXP ASEXP, SEXP GSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat& >::type r(rSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type C(CSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type A(ASEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type G(GSEXP);
+    rcpp_result_gen = Rcpp::wrap(sigma_bekk(r, C, A, G));
+    return rcpp_result_gen;
+END_RCPP
+}
+// sigma_bekk_asymm
+Rcpp::List sigma_bekk_asymm(arma::mat& r, arma::mat& C, arma::mat& A, arma::mat& B, arma::mat& G, arma::mat signs);
+RcppExport SEXP _MSCMGARCH_sigma_bekk_asymm(SEXP rSEXP, SEXP CSEXP, SEXP ASEXP, SEXP BSEXP, SEXP GSEXP, SEXP signsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat& >::type r(rSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type C(CSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type A(ASEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type B(BSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type G(GSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type signs(signsSEXP);
+    rcpp_result_gen = Rcpp::wrap(sigma_bekk_asymm(r, C, A, B, G, signs));
+    return rcpp_result_gen;
+END_RCPP
+}
+// hesse_bekk
+arma::mat hesse_bekk(arma::mat theta, arma::mat r);
+RcppExport SEXP _MSCMGARCH_hesse_bekk(SEXP thetaSEXP, SEXP rSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat >::type theta(thetaSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type r(rSEXP);
+    rcpp_result_gen = Rcpp::wrap(hesse_bekk(theta, r));
+    return rcpp_result_gen;
+END_RCPP
+}
+// hesse_asymm_bekk
+arma::mat hesse_asymm_bekk(arma::mat theta, arma::mat r, arma::mat& signs);
+RcppExport SEXP _MSCMGARCH_hesse_asymm_bekk(SEXP thetaSEXP, SEXP rSEXP, SEXP signsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat >::type theta(thetaSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type r(rSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type signs(signsSEXP);
+    rcpp_result_gen = Rcpp::wrap(hesse_asymm_bekk(theta, r, signs));
+    return rcpp_result_gen;
+END_RCPP
+}
 // pnorm_cpp
 arma::vec pnorm_cpp(arma::vec r);
 RcppExport SEXP _MSCMGARCH_pnorm_cpp(SEXP rSEXP) {
@@ -30,19 +243,6 @@ BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< arma::vec >::type r(rSEXP);
     rcpp_result_gen = Rcpp::wrap(dnorm_cpp(r));
-    return rcpp_result_gen;
-END_RCPP
-}
-// valid_bekk
-bool valid_bekk(arma::mat& C, arma::mat& A, arma::mat& G);
-RcppExport SEXP _MSCMGARCH_valid_bekk(SEXP CSEXP, SEXP ASEXP, SEXP GSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::mat& >::type C(CSEXP);
-    Rcpp::traits::input_parameter< arma::mat& >::type A(ASEXP);
-    Rcpp::traits::input_parameter< arma::mat& >::type G(GSEXP);
-    rcpp_result_gen = Rcpp::wrap(valid_bekk(C, A, G));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -69,19 +269,6 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type u2(u2SEXP);
     Rcpp::traits::input_parameter< double >::type theta(thetaSEXP);
     rcpp_result_gen = Rcpp::wrap(gumbelPDF(u1, u2, theta));
-    return rcpp_result_gen;
-END_RCPP
-}
-// gumbelPDF_raw
-double gumbelPDF_raw(double u1, double u2, double theta);
-RcppExport SEXP _MSCMGARCH_gumbelPDF_raw(SEXP u1SEXP, SEXP u2SEXP, SEXP thetaSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type u1(u1SEXP);
-    Rcpp::traits::input_parameter< double >::type u2(u2SEXP);
-    Rcpp::traits::input_parameter< double >::type theta(thetaSEXP);
-    rcpp_result_gen = Rcpp::wrap(gumbelPDF_raw(u1, u2, theta));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -112,7 +299,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // cor_Gumbel
-arma::mat cor_Gumbel(double theta);
+inline arma::mat cor_Gumbel(double theta);
 RcppExport SEXP _MSCMGARCH_cor_Gumbel(SEXP thetaSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -148,19 +335,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// claytonPDF_raw
-double claytonPDF_raw(double u1, double u2, double theta);
-RcppExport SEXP _MSCMGARCH_claytonPDF_raw(SEXP u1SEXP, SEXP u2SEXP, SEXP thetaSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type u1(u1SEXP);
-    Rcpp::traits::input_parameter< double >::type u2(u2SEXP);
-    Rcpp::traits::input_parameter< double >::type theta(thetaSEXP);
-    rcpp_result_gen = Rcpp::wrap(claytonPDF_raw(u1, u2, theta));
-    return rcpp_result_gen;
-END_RCPP
-}
 // claytonH1
 double claytonH1(double u1, double u2, double theta);
 RcppExport SEXP _MSCMGARCH_claytonH1(SEXP u1SEXP, SEXP u2SEXP, SEXP thetaSEXP) {
@@ -187,119 +361,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// claytonPDF_log
-double claytonPDF_log(double u1, double u2, double theta);
-RcppExport SEXP _MSCMGARCH_claytonPDF_log(SEXP u1SEXP, SEXP u2SEXP, SEXP thetaSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type u1(u1SEXP);
-    Rcpp::traits::input_parameter< double >::type u2(u2SEXP);
-    Rcpp::traits::input_parameter< double >::type theta(thetaSEXP);
-    rcpp_result_gen = Rcpp::wrap(claytonPDF_log(u1, u2, theta));
-    return rcpp_result_gen;
-END_RCPP
-}
-// cor_Clayton
-arma::mat cor_Clayton(double theta);
-RcppExport SEXP _MSCMGARCH_cor_Clayton(SEXP thetaSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type theta(thetaSEXP);
-    rcpp_result_gen = Rcpp::wrap(cor_Clayton(theta));
-    return rcpp_result_gen;
-END_RCPP
-}
-// set_seed
-void set_seed(double seed);
-RcppExport SEXP _MSCMGARCH_set_seed(SEXP seedSEXP) {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type seed(seedSEXP);
-    set_seed(seed);
-    return R_NilValue;
-END_RCPP
-}
-// eigen_value_decomposition
-arma::mat eigen_value_decomposition(arma::mat& A);
-RcppExport SEXP _MSCMGARCH_eigen_value_decomposition(SEXP ASEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::mat& >::type A(ASEXP);
-    rcpp_result_gen = Rcpp::wrap(eigen_value_decomposition(A));
-    return rcpp_result_gen;
-END_RCPP
-}
-// BiCopSim_cpp
-arma::mat BiCopSim_cpp(int NoOSim, int family, double par);
-RcppExport SEXP _MSCMGARCH_BiCopSim_cpp(SEXP NoOSimSEXP, SEXP familySEXP, SEXP parSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< int >::type NoOSim(NoOSimSEXP);
-    Rcpp::traits::input_parameter< int >::type family(familySEXP);
-    Rcpp::traits::input_parameter< double >::type par(parSEXP);
-    rcpp_result_gen = Rcpp::wrap(BiCopSim_cpp(NoOSim, family, par));
-    return rcpp_result_gen;
-END_RCPP
-}
-// rbicop_cpp
-arma::mat rbicop_cpp(int NoOSim, const char* family, int rot, double par);
-RcppExport SEXP _MSCMGARCH_rbicop_cpp(SEXP NoOSimSEXP, SEXP familySEXP, SEXP rotSEXP, SEXP parSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< int >::type NoOSim(NoOSimSEXP);
-    Rcpp::traits::input_parameter< const char* >::type family(familySEXP);
-    Rcpp::traits::input_parameter< int >::type rot(rotSEXP);
-    Rcpp::traits::input_parameter< double >::type par(parSEXP);
-    rcpp_result_gen = Rcpp::wrap(rbicop_cpp(NoOSim, family, rot, par));
-    return rcpp_result_gen;
-END_RCPP
-}
-// dmvnorm_cpp
-double dmvnorm_cpp(arma::mat r, arma::vec& mean, arma::mat& sigma);
-RcppExport SEXP _MSCMGARCH_dmvnorm_cpp(SEXP rSEXP, SEXP meanSEXP, SEXP sigmaSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::mat >::type r(rSEXP);
-    Rcpp::traits::input_parameter< arma::vec& >::type mean(meanSEXP);
-    Rcpp::traits::input_parameter< arma::mat& >::type sigma(sigmaSEXP);
-    rcpp_result_gen = Rcpp::wrap(dmvnorm_cpp(r, mean, sigma));
-    return rcpp_result_gen;
-END_RCPP
-}
-// BiCopPDF_cpp
-double BiCopPDF_cpp(double returns1, double returns2, int family, double par);
-RcppExport SEXP _MSCMGARCH_BiCopPDF_cpp(SEXP returns1SEXP, SEXP returns2SEXP, SEXP familySEXP, SEXP parSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type returns1(returns1SEXP);
-    Rcpp::traits::input_parameter< double >::type returns2(returns2SEXP);
-    Rcpp::traits::input_parameter< int >::type family(familySEXP);
-    Rcpp::traits::input_parameter< double >::type par(parSEXP);
-    rcpp_result_gen = Rcpp::wrap(BiCopPDF_cpp(returns1, returns2, family, par));
-    return rcpp_result_gen;
-END_RCPP
-}
-// dbicop_cpp
-double dbicop_cpp(arma::mat returns, const char* family, int rot, double par);
-RcppExport SEXP _MSCMGARCH_dbicop_cpp(SEXP returnsSEXP, SEXP familySEXP, SEXP rotSEXP, SEXP parSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::mat >::type returns(returnsSEXP);
-    Rcpp::traits::input_parameter< const char* >::type family(familySEXP);
-    Rcpp::traits::input_parameter< int >::type rot(rotSEXP);
-    Rcpp::traits::input_parameter< double >::type par(parSEXP);
-    rcpp_result_gen = Rcpp::wrap(dbicop_cpp(returns, family, rot, par));
-    return rcpp_result_gen;
-END_RCPP
-}
 // copulaPDF
 double copulaPDF(double u1, double u2, double theta, int type);
 RcppExport SEXP _MSCMGARCH_copulaPDF(SEXP u1SEXP, SEXP u2SEXP, SEXP thetaSEXP, SEXP typeSEXP) {
@@ -311,20 +372,6 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type theta(thetaSEXP);
     Rcpp::traits::input_parameter< int >::type type(typeSEXP);
     rcpp_result_gen = Rcpp::wrap(copulaPDF(u1, u2, theta, type));
-    return rcpp_result_gen;
-END_RCPP
-}
-// copulaPDF_raw
-double copulaPDF_raw(double u1, double u2, double theta, int type);
-RcppExport SEXP _MSCMGARCH_copulaPDF_raw(SEXP u1SEXP, SEXP u2SEXP, SEXP thetaSEXP, SEXP typeSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type u1(u1SEXP);
-    Rcpp::traits::input_parameter< double >::type u2(u2SEXP);
-    Rcpp::traits::input_parameter< double >::type theta(thetaSEXP);
-    Rcpp::traits::input_parameter< int >::type type(typeSEXP);
-    rcpp_result_gen = Rcpp::wrap(copulaPDF_raw(u1, u2, theta, type));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -356,31 +403,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// valid_copula
-bool valid_copula(arma::vec theta, arma::vec type);
-RcppExport SEXP _MSCMGARCH_valid_copula(SEXP thetaSEXP, SEXP typeSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::vec >::type theta(thetaSEXP);
-    Rcpp::traits::input_parameter< arma::vec >::type type(typeSEXP);
-    rcpp_result_gen = Rcpp::wrap(valid_copula(theta, type));
-    return rcpp_result_gen;
-END_RCPP
-}
-// VineCopula2
-double VineCopula2(arma::vec u, arma::vec copula_par, arma::vec type);
-RcppExport SEXP _MSCMGARCH_VineCopula2(SEXP uSEXP, SEXP copula_parSEXP, SEXP typeSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::vec >::type u(uSEXP);
-    Rcpp::traits::input_parameter< arma::vec >::type copula_par(copula_parSEXP);
-    Rcpp::traits::input_parameter< arma::vec >::type type(typeSEXP);
-    rcpp_result_gen = Rcpp::wrap(VineCopula2(u, copula_par, type));
-    return rcpp_result_gen;
-END_RCPP
-}
 // VineH2
 double VineH2(double u1, double u2, double u3, arma::vec copula_par, arma::vec type);
 RcppExport SEXP _MSCMGARCH_VineH2(SEXP u1SEXP, SEXP u2SEXP, SEXP u3SEXP, SEXP copula_parSEXP, SEXP typeSEXP) {
@@ -406,6 +428,17 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< arma::vec >::type copula_par(copula_parSEXP);
     Rcpp::traits::input_parameter< arma::vec >::type type(typeSEXP);
     rcpp_result_gen = Rcpp::wrap(VineCopula(u, copula_par, type));
+    return rcpp_result_gen;
+END_RCPP
+}
+// eigen_value_decomposition
+arma::mat eigen_value_decomposition(arma::mat& A);
+RcppExport SEXP _MSCMGARCH_eigen_value_decomposition(SEXP ASEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat& >::type A(ASEXP);
+    rcpp_result_gen = Rcpp::wrap(eigen_value_decomposition(A));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -958,18 +991,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// indicatorFunction
-int indicatorFunction(arma::mat r, arma::mat signs);
-RcppExport SEXP _MSCMGARCH_indicatorFunction(SEXP rSEXP, SEXP signsSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::mat >::type r(rSEXP);
-    Rcpp::traits::input_parameter< arma::mat >::type signs(signsSEXP);
-    rcpp_result_gen = Rcpp::wrap(indicatorFunction(r, signs));
-    return rcpp_result_gen;
-END_RCPP
-}
 // comp_bekk_forecast
 arma::mat comp_bekk_forecast(const arma::vec& bekk, const arma::mat& r);
 RcppExport SEXP _MSCMGARCH_comp_bekk_forecast(SEXP bekkSEXP, SEXP rSEXP) {
@@ -992,22 +1013,6 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const arma::mat& >::type r(rSEXP);
     Rcpp::traits::input_parameter< arma::mat >::type signs(signsSEXP);
     rcpp_result_gen = Rcpp::wrap(comp_asymm_bekk_forecast(bekk, r, signs));
-    return rcpp_result_gen;
-END_RCPP
-}
-// valid_asymm_bekk
-bool valid_asymm_bekk(arma::mat& C, arma::mat& A, arma::mat& B, arma::mat& G, arma::mat r, arma::mat signs);
-RcppExport SEXP _MSCMGARCH_valid_asymm_bekk(SEXP CSEXP, SEXP ASEXP, SEXP BSEXP, SEXP GSEXP, SEXP rSEXP, SEXP signsSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::mat& >::type C(CSEXP);
-    Rcpp::traits::input_parameter< arma::mat& >::type A(ASEXP);
-    Rcpp::traits::input_parameter< arma::mat& >::type B(BSEXP);
-    Rcpp::traits::input_parameter< arma::mat& >::type G(GSEXP);
-    Rcpp::traits::input_parameter< arma::mat >::type r(rSEXP);
-    Rcpp::traits::input_parameter< arma::mat >::type signs(signsSEXP);
-    rcpp_result_gen = Rcpp::wrap(valid_asymm_bekk(C, A, B, G, r, signs));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1271,37 +1276,40 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_MSCMGARCH_elimination_mat", (DL_FUNC) &_MSCMGARCH_elimination_mat, 1},
+    {"_MSCMGARCH_commutation_mat", (DL_FUNC) &_MSCMGARCH_commutation_mat, 1},
+    {"_MSCMGARCH_duplication_mat", (DL_FUNC) &_MSCMGARCH_duplication_mat, 1},
+    {"_MSCMGARCH_inv_gen", (DL_FUNC) &_MSCMGARCH_inv_gen, 1},
+    {"_MSCMGARCH_expected_indicator_value", (DL_FUNC) &_MSCMGARCH_expected_indicator_value, 2},
+    {"_MSCMGARCH_loglike_bekk", (DL_FUNC) &_MSCMGARCH_loglike_bekk, 2},
+    {"_MSCMGARCH_loglike_asymm_bekk", (DL_FUNC) &_MSCMGARCH_loglike_asymm_bekk, 3},
+    {"_MSCMGARCH_score_bekk", (DL_FUNC) &_MSCMGARCH_score_bekk, 2},
+    {"_MSCMGARCH_score_asymm_bekk", (DL_FUNC) &_MSCMGARCH_score_asymm_bekk, 3},
+    {"_MSCMGARCH_bhh_bekk", (DL_FUNC) &_MSCMGARCH_bhh_bekk, 4},
+    {"_MSCMGARCH_bhh_asymm_bekk", (DL_FUNC) &_MSCMGARCH_bhh_asymm_bekk, 5},
+    {"_MSCMGARCH_random_grid_search_BEKK", (DL_FUNC) &_MSCMGARCH_random_grid_search_BEKK, 1},
+    {"_MSCMGARCH_random_grid_search_asymmetric_BEKK", (DL_FUNC) &_MSCMGARCH_random_grid_search_asymmetric_BEKK, 2},
+    {"_MSCMGARCH_sigma_bekk", (DL_FUNC) &_MSCMGARCH_sigma_bekk, 4},
+    {"_MSCMGARCH_sigma_bekk_asymm", (DL_FUNC) &_MSCMGARCH_sigma_bekk_asymm, 6},
+    {"_MSCMGARCH_hesse_bekk", (DL_FUNC) &_MSCMGARCH_hesse_bekk, 2},
+    {"_MSCMGARCH_hesse_asymm_bekk", (DL_FUNC) &_MSCMGARCH_hesse_asymm_bekk, 3},
     {"_MSCMGARCH_pnorm_cpp", (DL_FUNC) &_MSCMGARCH_pnorm_cpp, 1},
     {"_MSCMGARCH_dnorm_cpp", (DL_FUNC) &_MSCMGARCH_dnorm_cpp, 1},
-    {"_MSCMGARCH_valid_bekk", (DL_FUNC) &_MSCMGARCH_valid_bekk, 3},
     {"_MSCMGARCH_gumbelCDF", (DL_FUNC) &_MSCMGARCH_gumbelCDF, 3},
     {"_MSCMGARCH_gumbelPDF", (DL_FUNC) &_MSCMGARCH_gumbelPDF, 3},
-    {"_MSCMGARCH_gumbelPDF_raw", (DL_FUNC) &_MSCMGARCH_gumbelPDF_raw, 3},
     {"_MSCMGARCH_gumbelH1", (DL_FUNC) &_MSCMGARCH_gumbelH1, 3},
     {"_MSCMGARCH_gumbelH2", (DL_FUNC) &_MSCMGARCH_gumbelH2, 3},
     {"_MSCMGARCH_cor_Gumbel", (DL_FUNC) &_MSCMGARCH_cor_Gumbel, 1},
     {"_MSCMGARCH_claytonCDF", (DL_FUNC) &_MSCMGARCH_claytonCDF, 3},
     {"_MSCMGARCH_claytonPDF", (DL_FUNC) &_MSCMGARCH_claytonPDF, 3},
-    {"_MSCMGARCH_claytonPDF_raw", (DL_FUNC) &_MSCMGARCH_claytonPDF_raw, 3},
     {"_MSCMGARCH_claytonH1", (DL_FUNC) &_MSCMGARCH_claytonH1, 3},
     {"_MSCMGARCH_claytonH2", (DL_FUNC) &_MSCMGARCH_claytonH2, 3},
-    {"_MSCMGARCH_claytonPDF_log", (DL_FUNC) &_MSCMGARCH_claytonPDF_log, 3},
-    {"_MSCMGARCH_cor_Clayton", (DL_FUNC) &_MSCMGARCH_cor_Clayton, 1},
-    {"_MSCMGARCH_set_seed", (DL_FUNC) &_MSCMGARCH_set_seed, 1},
-    {"_MSCMGARCH_eigen_value_decomposition", (DL_FUNC) &_MSCMGARCH_eigen_value_decomposition, 1},
-    {"_MSCMGARCH_BiCopSim_cpp", (DL_FUNC) &_MSCMGARCH_BiCopSim_cpp, 3},
-    {"_MSCMGARCH_rbicop_cpp", (DL_FUNC) &_MSCMGARCH_rbicop_cpp, 4},
-    {"_MSCMGARCH_dmvnorm_cpp", (DL_FUNC) &_MSCMGARCH_dmvnorm_cpp, 3},
-    {"_MSCMGARCH_BiCopPDF_cpp", (DL_FUNC) &_MSCMGARCH_BiCopPDF_cpp, 4},
-    {"_MSCMGARCH_dbicop_cpp", (DL_FUNC) &_MSCMGARCH_dbicop_cpp, 4},
     {"_MSCMGARCH_copulaPDF", (DL_FUNC) &_MSCMGARCH_copulaPDF, 4},
-    {"_MSCMGARCH_copulaPDF_raw", (DL_FUNC) &_MSCMGARCH_copulaPDF_raw, 4},
     {"_MSCMGARCH_copulaH1", (DL_FUNC) &_MSCMGARCH_copulaH1, 4},
     {"_MSCMGARCH_copulaH2", (DL_FUNC) &_MSCMGARCH_copulaH2, 4},
-    {"_MSCMGARCH_valid_copula", (DL_FUNC) &_MSCMGARCH_valid_copula, 2},
-    {"_MSCMGARCH_VineCopula2", (DL_FUNC) &_MSCMGARCH_VineCopula2, 3},
     {"_MSCMGARCH_VineH2", (DL_FUNC) &_MSCMGARCH_VineH2, 5},
     {"_MSCMGARCH_VineCopula", (DL_FUNC) &_MSCMGARCH_VineCopula, 3},
+    {"_MSCMGARCH_eigen_value_decomposition", (DL_FUNC) &_MSCMGARCH_eigen_value_decomposition, 1},
     {"_MSCMGARCH_loglike_Normal_Gumbel_GumbelSurvival", (DL_FUNC) &_MSCMGARCH_loglike_Normal_Gumbel_GumbelSurvival, 3},
     {"_MSCMGARCH_loglike_Normal_Gumbel_Clayton", (DL_FUNC) &_MSCMGARCH_loglike_Normal_Gumbel_Clayton, 3},
     {"_MSCMGARCH_loglike_Normal_GumbelS_ClaytonS", (DL_FUNC) &_MSCMGARCH_loglike_Normal_GumbelS_ClaytonS, 3},
@@ -1344,10 +1352,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_MSCMGARCH_loglike_LL_Clayton", (DL_FUNC) &_MSCMGARCH_loglike_LL_Clayton, 2},
     {"_MSCMGARCH_loglike_LL_ClaytonS", (DL_FUNC) &_MSCMGARCH_loglike_LL_ClaytonS, 2},
     {"_MSCMGARCH_loglike_LL_Frank", (DL_FUNC) &_MSCMGARCH_loglike_LL_Frank, 2},
-    {"_MSCMGARCH_indicatorFunction", (DL_FUNC) &_MSCMGARCH_indicatorFunction, 2},
     {"_MSCMGARCH_comp_bekk_forecast", (DL_FUNC) &_MSCMGARCH_comp_bekk_forecast, 2},
     {"_MSCMGARCH_comp_asymm_bekk_forecast", (DL_FUNC) &_MSCMGARCH_comp_asymm_bekk_forecast, 3},
-    {"_MSCMGARCH_valid_asymm_bekk", (DL_FUNC) &_MSCMGARCH_valid_asymm_bekk, 6},
     {"_MSCMGARCH_copula_cor", (DL_FUNC) &_MSCMGARCH_copula_cor, 2},
     {"_MSCMGARCH_cor_mat", (DL_FUNC) &_MSCMGARCH_cor_mat, 2},
     {"_MSCMGARCH_loglike_Normal_Copula_3", (DL_FUNC) &_MSCMGARCH_loglike_Normal_Copula_3, 4},

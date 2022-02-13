@@ -1,31 +1,14 @@
 #include <RcppArmadillo.h>
 
-
+#include "Bekk.h"
 
 
 
 // [[Rcpp::depends(RcppArmadillo)]]
 // [[Rcpp::plugins(cpp11)]]
 
-// [[Rcpp::export]]
-int indicatorFunction(arma::mat r, arma::mat signs){
-  r = r.t();
-  
-  int indicator = 1;
-  int n = r.n_rows;
-  for (int i = 0; i<n; i++){
-    if(arma::as_scalar(signs.row(i)) * arma::as_scalar(r.row(i)) < 0){
-      indicator = 0;
-    }
-  }
-  return indicator;
-}
-// [[Rcpp::export]]
-void set_seed(double seed) {
-  Rcpp::Environment base_env("package:base");
-  Rcpp::Function set_seed_r = base_env["set.seed"];
-  set_seed_r(std::floor(std::fabs(seed)));
-}
+
+
 // [[Rcpp::export]]
 arma::mat elimination_mat(const int& n) {
   // Generates an elimination matrix for size 'n'
@@ -98,35 +81,7 @@ arma::mat inv_gen(const arma::mat& m) {
   }
 }
 
-// [[Rcpp::export]]
-bool valid_bekk(arma::mat& C,arma::mat& A,arma::mat& G){
-  int n =C.n_cols;
-  arma::mat prod = kron(A,A)+kron(G,G);
 
-  arma::vec eigvals;
-  eigvals= abs(arma::eig_gen(prod));
-  double max=0;
-  for (int i=0; i< eigvals.n_elem; i++){
-    if(eigvals[i]>max){
-      max=eigvals[i];
-    }
-  }
-  if(max >= 1){
-    return false;
-  }
-
-  for (int i=0; i<n;i++){
-    if(C(i,i)<=0){
-      return false;
-    }
-  }
-  if(A(0,0)<=0 || G(0,0)<=0) {
-    return false;
-  }
-  else{
-    return true;
-  }
-}
 
 // [[Rcpp::export]]
 double expected_indicator_value(arma::mat r, arma::mat signs){
@@ -139,75 +94,8 @@ double expected_indicator_value(arma::mat r, arma::mat signs){
   return exp_indicator_value;
 }
 
-// [[Rcpp::export]]
-bool valid_asymm_bekk(arma::mat& C,arma::mat& A, arma::mat& B ,arma::mat& G, arma::mat r, arma::mat signs){
-  int n =C.n_cols;
-  //int N =r.n_rows;
-  double exp_indicator_value = expected_indicator_value(r,signs);
-
-  arma::mat prod = kron(A,A)+exp_indicator_value*kron(B,B)+kron(G,G);
-
-  arma::vec eigvals;
-  eigvals= abs(arma::eig_gen(prod));
-  double max=0;
-  for (int i=0; i< eigvals.n_elem; i++){
-    if(eigvals[i]>max){
-      max=eigvals[i];
-    }
-  }
-
-  if(max >= 1){
-    return false;
-  }
-
-  for (int i=0; i<n;i++){
-    if(C(i,i)<=0){
-      return false;
-    }
-  }
-  if(A(0,0)<=0 || B(0,0)<=0 || G(0,0)<=0) {
-    return false;
-  }
-
-  else{
-    return true;
-  }
-}
 
 
-// [[Rcpp::export]]
-bool valid_asymm_bekk_sim(arma::mat& C,arma::mat& A, arma::mat& B ,arma::mat& G, double exp_indicator_value, arma::mat signs){
-
-
-
-  arma::mat prod = kron(A,A)+exp_indicator_value*kron(B,B)+kron(G,G);
-
-  arma::vec eigvals;
-  eigvals= abs(arma::eig_gen(prod));
-  double max=0;
-  for (int i=0; i< eigvals.n_elem; i++){
-    if(eigvals[i]>max){
-      max=eigvals[i];
-    }
-  }
-
-  if(max >= 1){
-    return false;
-  }
-
-  for (int i=0; i < C.n_cols;i++){
-    if(C(i,i)<=0){
-      return false;
-    }
-  }
-  if(A(0,0)<=0 || B(0,0)<=0 || G(0,0)<=0) {
-    return false;
-  }
-
-  else{
-    return true;
-  }
-}
 
 // [[Rcpp::export]]
 double loglike_bekk(const arma::vec& theta, const arma::mat& r) {
@@ -1429,17 +1317,7 @@ arma::mat hesse_asymm_bekk(arma::mat theta, arma::mat r, arma::mat& signs){
 }
 
 
-// [[Rcpp::export]]
-arma::mat eigen_value_decomposition(arma::mat& A){
-  arma::vec eigval;
-  arma::mat eigvec;
-  arma::eig_sym( eigval, eigvec, A );
 
-
-  arma::mat diag_mat_eigval = arma::diagmat(sqrt(eigval));
-  return eigvec*diag_mat_eigval*eigvec.t();
-
-}
 
 /*
 // [[Rcpp::export]]
