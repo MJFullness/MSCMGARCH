@@ -1005,6 +1005,7 @@ Forecast_Gaussian<-function(start,asymmetric,window_length,portfolio_weights,ser
   
   }
   else{
+    set.seed(1)
     spec=bekk_spec(model=list(type="bekk",asymmetric=T),signs=signs, init_values = "random")
     BEKK=bekk_fit(spec,series[start:(start+window_length-1),])
     theta=BEKK$theta
@@ -1044,6 +1045,7 @@ Forecast_CMGARCH<-function(start,signs,copula_type,asymmetric,window_length,port
     H=comp_bekk_forecast(theta,series[start:(start+window_length-1),])
   }
   else{
+    set.seed(1)
     spec=bekk_spec(model=list(type="bekk",asymmetric=T), signs=signs, init_values="random")
     BEKK=bekk_fit(spec,series[start:(start+(window_length-1))]) 
     theta=BEKK$theta
@@ -1083,6 +1085,7 @@ Forecast_MSCMGARCH<-function(start,signs,copula_type,asymmetric,window_length,po
     filterprobs=res[[3]][window_length]
     H=comp_bekk_forecast(theta,series[start:(start+window_length-1),])
   } else{
+    set.seed(1)
     spec=bekk_spec(model=list(type="bekk",asymmetric=T), signs=signs, init_values="random")
     BEKK=bekk_fit(spec,series[start:(start+(window_length-1))]) 
     theta=BEKK$theta
@@ -1117,6 +1120,7 @@ Forecast_MSCMGARCH_3<-function(start,signs,copula_type,asymmetric,window_length,
     H=comp_bekk_forecast(theta,series[start:(start+window_length-1),])
   }
   else{
+    set.seed(1)
     spec=bekk_spec(model=list(type="bekk",asymmetric=T), signs=signs, init_values="random")
     BEKK=bekk_fit(spec,series[start:(start+(window_length-1))]) 
     theta=BEKK$theta
