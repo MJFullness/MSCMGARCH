@@ -90,7 +90,7 @@ double loglike_Normal_Gumbel_GumbelSurvival(const arma::vec& bekk, const arma::v
   double par_gumbel =theta[6];
   double par_gumbelSurvival =theta[7];
   //check for identification
-  if(valid_bekk(C,A,G)==false  || p13 < 0 || p13 > 1  || p31 < 0 || p31 > 1  || p23 < 0 || p23 > 1  || p11+p12>1 || p21+p22>1 || p32+p33>1 ||p11<0 || p12<0 || p11>1 || p12>1 || p21<0 || p22<0 || p21>1 || p22>1  || p33<0 || p32<0 || p33>1 || p32>1||par_gumbelSurvival<=1 || par_gumbelSurvival >=100 || par_gumbel<= 1|| par_gumbel>=100){
+  if(valid_bekk(C,A,G)==false  || p13 < 0 || p13 > 1  || p31 < 0 || p31 > 1  || p23 < 0 || p23 > 1  || p11+p12>1 || p21+p22>1 || p32+p33>1 ||p11<0 || p12<0 || p11>1 || p12>1 || p21<0 || p22<0 || p21>1 || p22>1  || p33<0 || p32<0 || p33>1 || p32>1||par_gumbelSurvival<=1 || par_gumbelSurvival >=15 || par_gumbel<= 1|| par_gumbel>=15){
     return -1e25;
   }
   
@@ -105,7 +105,7 @@ double loglike_Normal_Gumbel_GumbelSurvival(const arma::vec& bekk, const arma::v
   
   //compute covariance matrix
   // set_seed(3592);
-  // arma::mat cor_gumbel=arma::cor(rbicop_cpp(100000,"gumbel",0,par_gumbel));
+  // arma::mat cor_gumbel=arma::cor(rbicop_cpp(29000,"gumbel",0,par_gumbel));
   //  
   arma::mat cor_gumbel=cor_Gumbel(par_gumbel);
   arma::mat cor_gumbel_chol=arma::chol(cor_gumbel).t();
@@ -113,7 +113,7 @@ double loglike_Normal_Gumbel_GumbelSurvival(const arma::vec& bekk, const arma::v
   double gumbel_det = arma::det(cor_gumbel_chol);
   
   //set_seed(3592);
-  //arma::mat cor_gumbelSurvival=arma::cor(rbicop_cpp(100000,"gumbel",180,par_gumbelSurvival));
+  //arma::mat cor_gumbelSurvival=arma::cor(rbicop_cpp(29000,"gumbel",180,par_gumbelSurvival));
   arma::mat cor_gumbelSurvival=cor_Gumbel(par_gumbelSurvival);
   arma::mat cor_gumbelSurvival_chol=arma::chol(cor_gumbelSurvival).t();
   
@@ -146,8 +146,8 @@ double loglike_Normal_Gumbel_GumbelSurvival(const arma::vec& bekk, const arma::v
     arma::vec p_norm_1=pnorm_cpp(cor_gumbel_chol*H_eigen_inv*r.row(i).t());
     arma::vec p_norm_2=pnorm_cpp(cor_gumbelSurvival_chol*H_eigen_inv*r.row(i).t());
     double llv_temp1 = arma::as_scalar((p1t*p11+p2t*p21+p3t*p31)*arma::prod(dnorm_cpp(H_eigen_inv*r.row(i).t()))*H_det);
-    double llv_temp2 = arma::as_scalar((p1t*p12+p2t*p22+p3t*p32)*d_norm_1*gumbelPDF(p_norm_1(0),p_norm_1(1),par_gumbel)*H_det* gumbel_det);
-    double llv_temp3 = arma::as_scalar((p1t*p13+p2t*p23+p3t*p33)*d_norm_2*gumbelPDF(1-p_norm_2(0),1-p_norm_2(1),par_gumbelSurvival)*H_det*gumbelSurvival_det);
+    double llv_temp2 = arma::as_scalar((p1t*p12+p2t*p22+p3t*p32)*d_norm_1*gumbelPDF_raw(p_norm_1(0),p_norm_1(1),par_gumbel)*H_det* gumbel_det);
+    double llv_temp3 = arma::as_scalar((p1t*p13+p2t*p23+p3t*p33)*d_norm_2*gumbelPDF_raw(1-p_norm_2(0),1-p_norm_2(1),par_gumbelSurvival)*H_det*gumbelSurvival_det);
     //double llv_temp2 = (p1t*p12+p2t*p22+p3t*p32)*d_norm_1*dbicop_cpp(p_norm_1,"gumbel",0,par_gumbel)*H_det* gumbel_det;
     //double llv_temp3 = (p1t*p13+p2t*p23+p3t*p33)*d_norm_2*dbicop_cpp(p_norm_2,"gumbel",180,par_gumbelSurvival)*H_det*gumbelSurvival_det;
     
@@ -197,7 +197,7 @@ double loglike_Normal_Gumbel_Clayton(const arma::vec& bekk, const arma::vec& the
   double par_gumbel =theta[6];
   double par_clayton =theta[7];
   //check for identification
-  if(valid_bekk(C,A,G)==false  || p13 < 0 || p13 > 1  || p31 < 0 || p31 > 1  || p23 < 0 || p23 > 1  || p11+p12>1 || p21+p22>1 || p32+p33>1 ||p11<0 || p12<0 || p11>1 || p12>1 || p21<0 || p22<0 || p21>1 || p22>1  || p33<0 || p32<0 || p33>1 || p32>1||par_clayton<=0 || par_clayton >=100 || par_gumbel<= 1|| par_gumbel>=100){
+  if(valid_bekk(C,A,G)==false  || p13 < 0 || p13 > 1  || p31 < 0 || p31 > 1  || p23 < 0 || p23 > 1  || p11+p12>1 || p21+p22>1 || p32+p33>1 ||p11<0 || p12<0 || p11>1 || p12>1 || p21<0 || p22<0 || p21>1 || p22>1  || p33<0 || p32<0 || p33>1 || p32>1||par_clayton<=0 || par_clayton >=15 || par_gumbel<= 1|| par_gumbel>=15){
     return -1e25;
   }
   
@@ -212,7 +212,7 @@ double loglike_Normal_Gumbel_Clayton(const arma::vec& bekk, const arma::vec& the
   
   //compute covariance matrix
   // set_seed(3592);
-  // arma::mat cor_gumbel=arma::cor(rbicop_cpp(100000,"gumbel",0,par_gumbel));
+  // arma::mat cor_gumbel=arma::cor(rbicop_cpp(29000,"gumbel",0,par_gumbel));
   
   arma::mat cor_gumbel=cor_Gumbel(par_gumbel);
   arma::mat cor_gumbel_chol=arma::chol(cor_gumbel).t();
@@ -220,7 +220,7 @@ double loglike_Normal_Gumbel_Clayton(const arma::vec& bekk, const arma::vec& the
   double gumbel_det = arma::det(cor_gumbel_chol);
   
   // set_seed(3592);
-  // arma::mat cor_clayton=arma::cor(rbicop_cpp(100000,"clayton",0,par_clayton));
+  // arma::mat cor_clayton=arma::cor(rbicop_cpp(29000,"clayton",0,par_clayton));
   arma::mat cor_clayton=cor_Clayton(par_clayton);
   arma::mat cor_clayton_chol=arma::chol(cor_clayton).t();
   
@@ -255,8 +255,8 @@ double loglike_Normal_Gumbel_Clayton(const arma::vec& bekk, const arma::vec& the
     double llv_temp1 = arma::as_scalar((p1t*p11+p2t*p21+p3t*p31)*arma::prod(dnorm_cpp(H_eigen_inv*r.row(i).t()))*H_det);
     //double llv_temp2 = arma::as_scalar((p1t*p12+p2t*p22+p3t*p32)*d_norm_1*dbicop_cpp(p_norm_1,"gumbel",0,par_gumbel)*H_det* gumbel_det);
     //double llv_temp3 = arma::as_scalar((p1t*p13+p2t*p23+p3t*p33)*d_norm_2*dbicop_cpp(p_norm_2,"clayton",0,par_clayton)*H_det*clayton_det);
-    double llv_temp2 = (p1t*p12+p2t*p22+p3t*p32)*d_norm_1*gumbelPDF(p_norm_1(0),p_norm_1(1),par_gumbel)*H_det* gumbel_det;
-    double llv_temp3 = (p1t*p13+p2t*p23+p3t*p33)*d_norm_2*claytonPDF(p_norm_2(0),p_norm_2(1),par_clayton)*H_det*clayton_det;
+    double llv_temp2 = (p1t*p12+p2t*p22+p3t*p32)*d_norm_1*gumbelPDF_raw(p_norm_1(0),p_norm_1(1),par_gumbel)*H_det* gumbel_det;
+    double llv_temp3 = (p1t*p13+p2t*p23+p3t*p33)*d_norm_2*claytonPDF_raw(p_norm_2(0),p_norm_2(1),par_clayton)*H_det*clayton_det;
     
     double llv_temp = llv_temp1+llv_temp2+llv_temp3;
     p1t = llv_temp1/llv_temp;
@@ -304,7 +304,7 @@ double loglike_Normal_GumbelS_ClaytonS(const arma::vec& bekk, const arma::vec& t
   double par_gumbel =theta[6];
   double par_clayton =theta[7];
   //check for identification
-  if(valid_bekk(C,A,G)==false  || p13 < 0 || p13 > 1  || p31 < 0 || p31 > 1  || p23 < 0 || p23 > 1  || p11+p12>1 || p21+p22>1 || p32+p33>1 ||p11<0 || p12<0 || p11>1 || p12>1 || p21<0 || p22<0 || p21>1 || p22>1  || p33<0 || p32<0 || p33>1 || p32>1||par_clayton<=0 || par_clayton >=100 || par_gumbel<= 1|| par_gumbel>=100){
+  if(valid_bekk(C,A,G)==false  || p13 < 0 || p13 > 1  || p31 < 0 || p31 > 1  || p23 < 0 || p23 > 1  || p11+p12>1 || p21+p22>1 || p32+p33>1 ||p11<0 || p12<0 || p11>1 || p12>1 || p21<0 || p22<0 || p21>1 || p22>1  || p33<0 || p32<0 || p33>1 || p32>1||par_clayton<=0 || par_clayton >=15 || par_gumbel<= 1|| par_gumbel>=22.3){
     return -1e25;
   }
   
@@ -319,7 +319,7 @@ double loglike_Normal_GumbelS_ClaytonS(const arma::vec& bekk, const arma::vec& t
   
   //compute covariance matrix
   //set_seed(3592);
-  //arma::mat cor_gumbel=arma::cor(rbicop_cpp(100000,"gumbel",180,par_gumbel));
+  //arma::mat cor_gumbel=arma::cor(rbicop_cpp(29000,"gumbel",180,par_gumbel));
      
   arma::mat cor_gumbel=cor_Gumbel(par_gumbel);
   arma::mat cor_gumbel_chol=arma::chol(cor_gumbel).t();
@@ -327,7 +327,7 @@ double loglike_Normal_GumbelS_ClaytonS(const arma::vec& bekk, const arma::vec& t
   double gumbel_det = arma::det(cor_gumbel_chol);
   
   // set_seed(3592);
-  // arma::mat cor_clayton=arma::cor(rbicop_cpp(100000,"clayton",180,par_clayton));
+  // arma::mat cor_clayton=arma::cor(rbicop_cpp(29000,"clayton",180,par_clayton));
   arma::mat cor_clayton=cor_Clayton(par_clayton);
   arma::mat cor_clayton_chol=arma::chol(cor_clayton).t();
   
@@ -362,8 +362,8 @@ double loglike_Normal_GumbelS_ClaytonS(const arma::vec& bekk, const arma::vec& t
     double llv_temp1 = arma::as_scalar((p1t*p11+p2t*p21+p3t*p31)*arma::prod(dnorm_cpp(H_eigen_inv*r.row(i).t()))*H_det);
     //double llv_temp2 = arma::as_scalar((p1t*p12+p2t*p22+p3t*p32)*d_norm_1*dbicop_cpp(p_norm_1,"gumbel",180,par_gumbel)*H_det* gumbel_det);
     //double llv_temp3 = arma::as_scalar((p1t*p13+p2t*p23+p3t*p33)*d_norm_2*dbicop_cpp(p_norm_2,"clayton",180,par_clayton)*H_det*clayton_det);
-    double llv_temp2 = (p1t*p12+p2t*p22+p3t*p32)*d_norm_1*gumbelPDF(1-p_norm_1(0),1-p_norm_1(1),par_gumbel)*H_det* gumbel_det;
-    double llv_temp3 = (p1t*p13+p2t*p23+p3t*p33)*d_norm_2*claytonPDF(1-p_norm_2(0),1-p_norm_2(1),par_clayton)*H_det*clayton_det;
+    double llv_temp2 = (p1t*p12+p2t*p22+p3t*p32)*d_norm_1*gumbelPDF_raw(1-p_norm_1(0),1-p_norm_1(1),par_gumbel)*H_det* gumbel_det;
+    double llv_temp3 = (p1t*p13+p2t*p23+p3t*p33)*d_norm_2*claytonPDF_raw(1-p_norm_2(0),1-p_norm_2(1),par_clayton)*H_det*clayton_det;
     
     double llv_temp = llv_temp1+llv_temp2+llv_temp3;
     p1t = llv_temp1/llv_temp;
@@ -412,7 +412,7 @@ double loglike_Normal_Clayton_ClaytonSurvival(const arma::vec& bekk, const arma:
   double par_clayton =theta[6];
   double par_claytonSurvival =theta[7];
   //check for identification
-  if(valid_bekk(C,A,G)==false  || p13 >= 1||   p13 <= 0|| p23 >= 1|| p21+p22>=1 || p32+p33>=1 || p11+p12>=1 || p23 <= 0||  p31 >= 1||  p31 <= 0 || p11<=0 || p12<=0 || p11>=1 || p12>=1 || p21<=0 || p22<=0 || p21>=1 || p22>=1  || p33<=0 || p32<=0 || p33>=1 || p32>=1||par_claytonSurvival<=0 || par_claytonSurvival >=100 || par_clayton<= 0|| par_clayton>=100){
+  if(valid_bekk(C,A,G)==false  || p13 >= 1||   p13 <= 0|| p23 >= 1|| p21+p22>=1 || p32+p33>=1 || p11+p12>=1 || p23 <= 0||  p31 >= 1||  p31 <= 0 || p11<=0 || p12<=0 || p11>=1 || p12>=1 || p21<=0 || p22<=0 || p21>=1 || p22>=1  || p33<=0 || p32<=0 || p33>=1 || p32>=1||par_claytonSurvival<=0 || par_claytonSurvival >=15 || par_clayton<= 0|| par_clayton>=15){
     return -1e25;
   }
   
@@ -426,7 +426,7 @@ double loglike_Normal_Clayton_ClaytonSurvival(const arma::vec& bekk, const arma:
   
   //compute covariance matrix
   // set_seed(3592);
-  // arma::mat cor_clay = arma::cor(rbicop_cpp(100000,"clayton",0,par_clayton));
+  // arma::mat cor_clay = arma::cor(rbicop_cpp(29000,"clayton",0,par_clayton));
   arma::mat cor_clay=cor_Clayton(par_clayton);
   arma::mat cor_clay_chol=arma::chol(cor_clay).t();
   
@@ -434,7 +434,7 @@ double loglike_Normal_Clayton_ClaytonSurvival(const arma::vec& bekk, const arma:
   
   arma::mat cor_claytonSurvival=cor_Clayton(par_claytonSurvival);
   // set_seed(3592);
-  // arma::mat cor_claytonSurvival = arma::cor(rbicop_cpp(100000,"clayton",180,par_claytonSurvival));
+  // arma::mat cor_claytonSurvival = arma::cor(rbicop_cpp(29000,"clayton",180,par_claytonSurvival));
   arma::mat cor_claytonSurvival_chol=arma::chol(cor_claytonSurvival).t();
   
   double claytonSurvival_det = arma::det(cor_claytonSurvival_chol);
@@ -464,8 +464,8 @@ double loglike_Normal_Clayton_ClaytonSurvival(const arma::vec& bekk, const arma:
     arma::vec p_norm_1=pnorm_cpp(cor_clay_chol*H_eigen_inv*r.row(i).t());
     arma::vec p_norm_2=pnorm_cpp(cor_claytonSurvival_chol*H_eigen_inv*r.row(i).t());
     double llv_temp1 = arma::as_scalar((p1t*p11+p2t*p21+p3t*p31)*arma::prod(dnorm_cpp(H_eigen_inv*r.row(i).t()))*H_det );
-    double llv_temp2 = arma::as_scalar((p1t*p12+p2t*p22+p3t*p32)*d_norm_1*claytonPDF(p_norm_1(0),p_norm_1(1),par_clayton)*H_det* clay_det);
-    double llv_temp3 = arma::as_scalar((p1t*p13+p2t*p23+p3t*p33)*d_norm_2*claytonPDF(1-p_norm_2(0),1-p_norm_2(1),par_claytonSurvival)*H_det*claytonSurvival_det);
+    double llv_temp2 = arma::as_scalar((p1t*p12+p2t*p22+p3t*p32)*d_norm_1*claytonPDF_raw(p_norm_1(0),p_norm_1(1),par_clayton)*H_det* clay_det);
+    double llv_temp3 = arma::as_scalar((p1t*p13+p2t*p23+p3t*p33)*d_norm_2*claytonPDF_raw(1-p_norm_2(0),1-p_norm_2(1),par_claytonSurvival)*H_det*claytonSurvival_det);
     // double llv_temp2 = arma::as_scalar((p1t*p12+p2t*p22+p3t*p32)*d_norm_1*dbicop_cpp(p_norm_1,"clayton",0,par_clayton)*H_det* clay_det);
     // double llv_temp3 = arma::as_scalar((p1t*p13+p2t*p23+p3t*p33)*d_norm_2*dbicop_cpp(p_norm_2,"clayton",180,par_claytonSurvival)*H_det*claytonSurvival_det);
      
@@ -509,7 +509,7 @@ double loglike_Clayton_Gumbel(const arma::vec& bekk, const arma::vec& theta, con
   double par_clayton =theta[2];
   double par_gumbel =theta[3];
   //check for identification
-  if(valid_bekk(C,A,G)==false || p<=0 || q<=0 || p>=1 || q>=1 || par_clayton<=0 || par_clayton >=17 || par_gumbel<= 1|| par_gumbel>=17){
+  if(valid_bekk(C,A,G)==false || p<=0 || q<=0 || p>=1 || q>=1 || par_clayton<=0 || par_clayton >=15 || par_gumbel<= 1|| par_gumbel>=15){
     return -1e25;
   }
   
@@ -523,10 +523,10 @@ double loglike_Clayton_Gumbel(const arma::vec& bekk, const arma::vec& theta, con
   
   //compute covariance matrix
   set_seed(3592);
-  arma::mat cor_clayton=arma::cor(BiCopSim_cpp(100000,3,par_clayton));
+  arma::mat cor_clayton=arma::cor(BiCopSim_cpp(29000,3,par_clayton));
   arma::mat cor_clayton_chol=arma::chol(cor_clayton).t();
   set_seed(3592);
-  arma::mat cor_gumbel=arma::cor(BiCopSim_cpp(100000,4,par_gumbel));
+  arma::mat cor_gumbel=arma::cor(BiCopSim_cpp(29000,4,par_gumbel));
   arma::mat cor_gumbel_chol=arma::chol(cor_gumbel).t();
   
  
@@ -596,7 +596,7 @@ double loglike_Clayton_Gumbel90(const arma::vec& bekk, const arma::vec& theta, c
   double par_clayton =theta[2];
   double par_gumbel =theta[3];
   //check for identification
-  if(valid_bekk(C,A,G)==false || p<=0 || q<=0 || p>=1 || q>=1 || par_clayton<=0 || par_clayton >=17 || par_gumbel<= -17|| par_gumbel>=-1){
+  if(valid_bekk(C,A,G)==false || p<=0 || q<=0 || p>=1 || q>=1 || par_clayton<=0 || par_clayton >=15 || par_gumbel<= -15|| par_gumbel>=-1){
     return -1e25;
   }
   
@@ -610,9 +610,9 @@ double loglike_Clayton_Gumbel90(const arma::vec& bekk, const arma::vec& theta, c
   
   //compute covariance matrix
   set_seed(3592);
-  arma::mat cor_clayton=arma::cor(BiCopSim_cpp(100000,3,par_clayton));
+  arma::mat cor_clayton=arma::cor(BiCopSim_cpp(29000,3,par_clayton));
   arma::mat cor_clayton_chol=arma::chol(cor_clayton).t();
-  arma::mat cor_gumbel=arma::cor(BiCopSim_cpp(100000,24,par_gumbel));
+  arma::mat cor_gumbel=arma::cor(BiCopSim_cpp(29000,24,par_gumbel));
   arma::mat cor_gumbel_chol=arma::chol(cor_gumbel).t();
   
   double clay_det=arma::det(cor_clayton_chol);
@@ -683,7 +683,7 @@ double loglike_Normal_Gumbel(const arma::vec& bekk, const arma::vec& theta, cons
   double q = theta[1];
   double par_gumbel =theta[2];
   //check for identification
-  if(valid_bekk(C,A,G)==false || p<=0 || q<=0 || p>=1 || q>=1|| par_gumbel<= 1|| par_gumbel>=100){
+  if(valid_bekk(C,A,G)==false || p<=0 || q<=0 || p>=1 || q>=1|| par_gumbel<= 1|| par_gumbel>=15){
     return -1e25;
   }
 
@@ -699,7 +699,7 @@ double loglike_Normal_Gumbel(const arma::vec& bekk, const arma::vec& theta, cons
 
   
   // set_seed(3592);
-  // arma::mat cor_gumbel=arma::cor(rbicop_cpp(100000,"gumbel",0,par_gumbel));
+  // arma::mat cor_gumbel=arma::cor(rbicop_cpp(29000,"gumbel",0,par_gumbel));
   arma::mat cor_gumbel=cor_Gumbel(par_gumbel);
   arma::mat cor_gumbel_chol=arma::chol(cor_gumbel).t();
   double gumb_det=arma::det(cor_gumbel_chol);
@@ -731,7 +731,7 @@ double loglike_Normal_Gumbel(const arma::vec& bekk, const arma::vec& theta, cons
     double d_norm_2=arma::prod(dnorm_cpp(cor_gumbel_chol*H_eigen_inv*r.row(i).t()));
 
     arma::vec p_norm_2=pnorm_cpp(cor_gumbel_chol*H_eigen_inv*r.row(i).t());
-    double llv_temp =(p1t*p+(1-p1t)*(1-q))*d_norm_1+(p1t*(1-p)+(1-p1t)*(q))*h_det*gumb_det*d_norm_2*gumbelPDF(p_norm_2(0),p_norm_2(1),par_gumbel);
+    double llv_temp =(p1t*p+(1-p1t)*(1-q))*d_norm_1+(p1t*(1-p)+(1-p1t)*(q))*h_det*gumb_det*d_norm_2*gumbelPDF_raw(p_norm_2(0),p_norm_2(1),par_gumbel);
     
     //double llv_temp =(p1t*p+(1-p1t)*(1-q))*d_norm_1+(p1t*(1-p)+(1-p1t)*(q))*h_det*gumb_det*d_norm_2*dbicop_cpp(p_norm_2,"gumbel",0,par_gumbel);
     // double llv_temp =(p1t*p+(1-p1t)*(1-q))*d_norm_1+std::exp(std::log(p1t*(1-p)+(1-p1t)*(q))+std::log(h_det)+std::log(gumb_det)+std::log(d_norm_2)+gumbelPDF_log(p_norm_2(0),p_norm_2(1),par_gumbel));
@@ -773,7 +773,7 @@ double loglike_Normal_Gumbel(const arma::vec& bekk, const arma::vec& theta, cons
 //   double q = theta[1];
 //   double par_gumbel =theta[2];
 //   //check for identification
-//   if(valid_bekk(C,A,G)==false || p<=0 || q<=0 || p>=1 || q>=1|| par_gumbel<= 1|| par_gumbel>=17){
+//   if(valid_bekk(C,A,G)==false || p<=0 || q<=0 || p>=1 || q>=1|| par_gumbel<= 1|| par_gumbel>=15){
 //     return -1e25;
 //   }
 //   
@@ -867,7 +867,7 @@ double loglike_Normal_GumbelS(const arma::vec& bekk, const arma::vec& theta, con
   double q = theta[1];
   double par_gumbel =theta[2];
   //check for identification
-  if(valid_bekk(C,A,G)==false || p<=0 || q<=0 || p>=1 || q>=1|| par_gumbel<= 1|| par_gumbel>=100){
+  if(valid_bekk(C,A,G)==false || p<=0 || q<=0 || p>=1 || q>=1|| par_gumbel<= 1|| par_gumbel>=15){
     return -1e25;
   }
   
@@ -883,7 +883,7 @@ double loglike_Normal_GumbelS(const arma::vec& bekk, const arma::vec& theta, con
   
  
   // set_seed(3592);
-  // arma::mat cor_gumbel=arma::cor(rbicop_cpp(100000,"gumbel",180,par_gumbel));
+  // arma::mat cor_gumbel=arma::cor(rbicop_cpp(29000,"gumbel",180,par_gumbel));
   arma::mat cor_gumbel=cor_Gumbel(par_gumbel);
   arma::mat cor_gumbel_chol=arma::chol(cor_gumbel).t();
   double gumb_det=arma::det(cor_gumbel_chol);
@@ -917,7 +917,7 @@ double loglike_Normal_GumbelS(const arma::vec& bekk, const arma::vec& theta, con
     arma::vec p_norm_2=pnorm_cpp(cor_gumbel_chol*H_eigen_inv*r.row(i).t());
     
     //double llv_temp =(p1t*p+(1-p1t)*(1-q))*d_norm_1+(p1t*(1-p)+(1-p1t)*(q))*h_det*gumb_det*d_norm_2*dbicop_cpp(p_norm_2,"gumbel",180,par_gumbel);
-    double llv_temp =arma::as_scalar((p1t*p+(1-p1t)*(1-q))*d_norm_1+(p1t*(1-p)+(1-p1t)*(q))*h_det*gumb_det*d_norm_2*gumbelPDF(1-p_norm_2(0),1-p_norm_2(1),par_gumbel));
+    double llv_temp =arma::as_scalar((p1t*p+(1-p1t)*(1-q))*d_norm_1+(p1t*(1-p)+(1-p1t)*(q))*h_det*gumb_det*d_norm_2*gumbelPDF_raw(1-p_norm_2(0),1-p_norm_2(1),par_gumbel));
     
     p1t=arma::as_scalar((p1t*p+(1-p1t)*(1-q))*d_norm_1)/llv_temp;
     
@@ -955,7 +955,7 @@ double loglike_Normal_Gumbel1(const arma::vec& bekk, const arma::vec& theta, con
   double q = theta[1];
   double par_gumbel =theta[2];
   //check for identification
-  if(valid_bekk(C,A,G)==false || p<=0 || q<=0 || p>=1 || q>=1|| par_gumbel<= 1|| par_gumbel>=16){
+  if(valid_bekk(C,A,G)==false || p<=0 || q<=0 || p>=1 || q>=1|| par_gumbel<= 1|| par_gumbel>=15){
     return -1e25;
   }
 
@@ -972,7 +972,7 @@ double loglike_Normal_Gumbel1(const arma::vec& bekk, const arma::vec& theta, con
 
   //arma::mat cor_gumbel=cor_Gumbel(par_gumbel);
   set_seed(3592);
-  arma::mat cor_gumbel=arma::cor(BiCopSim_cpp(100000,4,par_gumbel));
+  arma::mat cor_gumbel=arma::cor(BiCopSim_cpp(29000,4,par_gumbel));
   arma::mat cor_gumbel_chol=arma::chol(cor_gumbel).t();
   double gumb_det=arma::det(cor_gumbel_chol);
 
@@ -1004,7 +1004,7 @@ double loglike_Normal_Gumbel1(const arma::vec& bekk, const arma::vec& theta, con
 
     arma::vec p_norm_2=pnorm_cpp(cor_gumbel_chol*H_eigen_inv*r.row(i).t());
 
-    //double llv_temp =arma::as_scalar((p1t*p+(1-p1t)*(1-q))*d_norm_1+(p1t*(1-p)+(1-p1t)*(q))*h_det*gumb_det*d_norm_2*gumbelPDF(p_norm_2(0),p_norm_2(1),par_gumbel));
+    //double llv_temp =arma::as_scalar((p1t*p+(1-p1t)*(1-q))*d_norm_1+(p1t*(1-p)+(1-p1t)*(q))*h_det*gumb_det*d_norm_2*gumbelPDF_raw(p_norm_2(0),p_norm_2(1),par_gumbel));
     double llv_temp =arma::as_scalar((p1t*p+(1-p1t)*(1-q))*d_norm_1+(p1t*(1-p)+(1-p1t)*(q))*h_det*gumb_det*d_norm_2*BiCopPDF_cpp(p_norm_2(0),p_norm_2(1),4,par_gumbel));
 
     p1t=arma::as_scalar((p1t*p+(1-p1t)*(1-q))*d_norm_1)/llv_temp;
@@ -1058,8 +1058,8 @@ double loglike_Normal_Gumbel1(const arma::vec& bekk, const arma::vec& theta, con
 //   //compute covariance matrix
 //   
 //   set_seed(3592);
-//   arma::mat cor_gumbel=arma::cor(rbicop_cpp(100000,"gumbel",0,par_gumbel));
-//   //arma::mat cor_gumbel=arma::cor(rbicop_cpp(100000,"gumbel",0,par_gumbel));
+//   arma::mat cor_gumbel=arma::cor(rbicop_cpp(29000,"gumbel",0,par_gumbel));
+//   //arma::mat cor_gumbel=arma::cor(rbicop_cpp(29000,"gumbel",0,par_gumbel));
 //   arma::mat cor_gumbel_chol=arma::chol(cor_gumbel).t();
 //   double gumb_det=arma::det(cor_gumbel_chol);
 //   
@@ -1130,7 +1130,7 @@ double loglike_Normal_GumbelS1(const arma::vec& bekk, const arma::vec& theta, co
   double q = theta[1];
   double par_gumbel =theta[2];
   //check for identification
-  if(valid_bekk(C,A,G)==false || p<=0 || q<=0 || p>=1 || q>=1|| par_gumbel<= 1|| par_gumbel>=100){
+  if(valid_bekk(C,A,G)==false || p<=0 || q<=0 || p>=1 || q>=1|| par_gumbel<= 1|| par_gumbel>=15){
     return -1e25;
   }
 
@@ -1145,7 +1145,7 @@ double loglike_Normal_GumbelS1(const arma::vec& bekk, const arma::vec& theta, co
   //compute covariance matrix
 
   set_seed(3592);
-  arma::mat cor_gumbel=arma::cor(BiCopSim_cpp(100000,4,par_gumbel));
+  arma::mat cor_gumbel=arma::cor(BiCopSim_cpp(29000,4,par_gumbel));
   arma::mat cor_gumbel_chol=arma::chol(cor_gumbel).t();
 
 
@@ -1228,7 +1228,7 @@ double loglike_Normal_Frank(const arma::vec& bekk, const arma::vec& theta, const
   //compute covariance matrix
   
   set_seed(3592);
-  arma::mat cor_frank=arma::cor(rbicop_cpp(100000,"frank",0,par_frank));
+  arma::mat cor_frank=arma::cor(rbicop_cpp(29000,"frank",0,par_frank));
   arma::mat cor_frank_chol=arma::chol(cor_frank).t();
   
   
@@ -1297,7 +1297,7 @@ double loglike_Normal_Clayton1(const arma::vec& bekk, const arma::vec& theta, co
   double q = theta[1];
   double par_clayton =theta[2];
   //check for identification
-  if(valid_bekk(C,A,G)==false || p<=0 || q<=0 || p>=1 || q>=1|| par_clayton<= 0|| par_clayton>=100){
+  if(valid_bekk(C,A,G)==false || p<=0 || q<=0 || p>=1 || q>=1|| par_clayton<= 0|| par_clayton>=15){
     return -1e25;
   }
 
@@ -1311,8 +1311,8 @@ double loglike_Normal_Clayton1(const arma::vec& bekk, const arma::vec& theta, co
 
   //compute covariance matrix
 
-  set_seed(3592);
-  // arma::mat cor_clay=arma::cor(BiCopSim_cpp(100000,13,par_clayton));
+ 
+  // arma::mat cor_clay=arma::cor(BiCopSim_cpp(29000,13,par_clayton));
   arma::mat cor_clay=cor_Clayton(par_clayton);
   arma::mat cor_clay_chol=arma::chol(cor_clay).t();
 
@@ -1356,86 +1356,87 @@ double loglike_Normal_Clayton1(const arma::vec& bekk, const arma::vec& theta, co
 // [[Rcpp::export]]
 double loglike_Normal_ClaytonS(const arma::vec& bekk, const arma::vec& theta, const arma::mat& r) {
   // Log-Likelihood function
-  
+
   // convert to matrices
   int n = r.n_cols;
   // Length of each series
   int NoOBs = r.n_rows;
   int numb_of_vars = 2 * std::pow(n, 2) + n * (n + 1)/2;
   arma::mat C = arma::zeros(n, n);
-  
+
   int index = 0;
-  
+
   for(int i = 0; i < n; i++){
     for (int j = i; j < n; j++) {
       C(j, i) = bekk(index);
       index += 1;
     }
   }
-  
+
   arma::mat A = arma::reshape(bekk.subvec(index, (index + std::pow(n, 2)) - 1 ).t(), n, n);
   arma::mat G = arma::reshape(bekk.subvec((index +  std::pow(n, 2)), numb_of_vars-1).t(), n, n);
   double p = theta[0];
   double q = theta[1];
   double par_clayton =theta[2];
   //check for identification
-  if(valid_bekk(C,A,G)==false || p<=0 || q<=0 || p>=1 || q>=1|| par_clayton<= 0|| par_clayton>=100){
+  if(valid_bekk(C,A,G)==false || p<=0 || q<=0 || p>=1 || q>=1|| par_clayton<= 0|| par_clayton>=24){
     return -1e25;
   }
-  
+
   // compute inital H
   arma::mat H = (r.t() * r) / r.n_rows;
-  
+
   arma::mat CC  = C * C.t();
   arma::mat At  = A.t();
   arma::mat Gt  = G.t();
-  
-  
+
+
   //compute covariance matrix
-  
+
  //set_seed(3592);
- // arma::mat cor_clay=arma::cor(rbicop_cpp(100000,"clayton",180,par_clayton));
+ // arma::mat cor_clay=arma::cor(rbicop_cpp(29000,"clayton",180,par_clayton));
   arma::mat cor_clay=cor_Clayton(par_clayton);
   arma::mat cor_clay_chol=arma::chol(cor_clay).t();
-  
-  
+
+
   arma::mat H_eigen_inv=arma::inv( eigen_value_decomposition(H));
-  
-  
-  
+
+
+
   double p1t = 1;
-  
+
   double d_norm_1=arma::prod(dnorm_cpp(H_eigen_inv*r.row(0).t()))*arma::det(H_eigen_inv);;
   // double d_norm_2=arma::prod(dnorm_cpp(cor_gumbel_chol*H_eigen_inv*r.row(0).t()));
-  
+
   arma::vec p_norm_1=pnorm_cpp(H_eigen_inv*r.row(0).t());
   arma::vec p_norm_2=pnorm_cpp(cor_clay_chol*H_eigen_inv*r.row(0).t());
-  
+
   double llv = log(arma::as_scalar(d_norm_1));
-  
-  
+
+
   for (int i = 1; i < NoOBs; i++) {
     H = CC + At * r.row(i - 1).t() * r.row(i - 1) * A + Gt * H * G;
-    
+
     arma::mat H_eigen_inv=arma::inv( eigen_value_decomposition(H));
-    
-    
-    
+
+
+
     double d_norm_1=arma::prod(dnorm_cpp(H_eigen_inv*r.row(i).t()))*arma::det(H_eigen_inv);;
     double d_norm_2=arma::prod(dnorm_cpp(cor_clay_chol*H_eigen_inv*r.row(i).t()));
-    
+
     arma::vec p_norm_2=pnorm_cpp(cor_clay_chol*H_eigen_inv*r.row(i).t());
-    
-    double llv_temp =arma::as_scalar((p1t*p+(1-p1t)*(1-q))*d_norm_1+(p1t*(1-p)+(1-p1t)*(q))*arma::det(H_eigen_inv)*arma::det(cor_clay_chol)*d_norm_2*claytonPDF(1-p_norm_2(0),1-p_norm_2(1),par_clayton));
+
+    double llv_temp =arma::as_scalar((p1t*p+(1-p1t)*(1-q))*d_norm_1+(p1t*(1-p)+(1-p1t)*(q))*arma::det(H_eigen_inv)*arma::det(cor_clay_chol)*d_norm_2*claytonPDF_raw(1-p_norm_2(0),1-p_norm_2(1),par_clayton));
     p1t=arma::as_scalar((p1t*p+(1-p1t)*(1-q))*d_norm_1)/llv_temp;
-    
+
     llv+=log(llv_temp);
-    
-    
+
+
   }
-  
+
   return llv;
 }
+
 // [[Rcpp::export]]
 double loglike_Normal_Clayton(const arma::vec& bekk, const arma::vec& theta, const arma::mat& r) {
   // Log-Likelihood function
@@ -1462,7 +1463,7 @@ double loglike_Normal_Clayton(const arma::vec& bekk, const arma::vec& theta, con
   double q = theta[1];
   double par_clayton =theta[2];
   //check for identification
-  if(valid_bekk(C,A,G)==false || p<=0 || q<=0 || p>=1 || q>=1|| par_clayton<= 0|| par_clayton>=100){
+  if(valid_bekk(C,A,G)==false || p<=0 || q<=0 || p>=1 || q>=1|| par_clayton<= 0|| par_clayton>=25.3){
     return -1e25;
   }
   
@@ -1477,7 +1478,7 @@ double loglike_Normal_Clayton(const arma::vec& bekk, const arma::vec& theta, con
   //compute covariance matrix
   
   // set_seed(3592);
-  // arma::mat cor_clay=arma::cor(rbicop_cpp(100000,"clayton",0,par_clayton));
+  // arma::mat cor_clay=arma::cor(rbicop_cpp(29000,"clayton",0,par_clayton));
   arma::mat cor_clay=cor_Clayton(par_clayton);
   arma::mat cor_clay_chol=arma::chol(cor_clay).t();
   
@@ -1509,7 +1510,7 @@ double loglike_Normal_Clayton(const arma::vec& bekk, const arma::vec& theta, con
     
     arma::vec p_norm_2=pnorm_cpp(cor_clay_chol*H_eigen_inv*r.row(i).t());
     
-    double llv_temp =arma::as_scalar((p1t*p+(1-p1t)*(1-q))*d_norm_1+(p1t*(1-p)+(1-p1t)*(q))*arma::det(H_eigen_inv)*arma::det(cor_clay_chol)*d_norm_2*claytonPDF(p_norm_2(0),p_norm_2(1),par_clayton));
+    double llv_temp =arma::as_scalar((p1t*p+(1-p1t)*(1-q))*d_norm_1+(p1t*(1-p)+(1-p1t)*(q))*arma::det(H_eigen_inv)*arma::det(cor_clay_chol)*d_norm_2*claytonPDF_raw(p_norm_2(0),p_norm_2(1),par_clayton));
     //double llv_temp =arma::as_scalar((p1t*p+(1-p1t)*(1-q))*d_norm_1+(p1t*(1-p)+(1-p1t)*(q))*arma::det(H_eigen_inv)*arma::det(cor_clay_chol)*d_norm_2*dbicop_cpp(p_norm_2,"clayton",0,par_clayton));
     
     p1t=arma::as_scalar((p1t*p+(1-p1t)*(1-q))*d_norm_1)/llv_temp;
@@ -1521,6 +1522,7 @@ double loglike_Normal_Clayton(const arma::vec& bekk, const arma::vec& theta, con
  
   return llv;
 }
+
 
 // 
 // 
@@ -1580,7 +1582,7 @@ double loglike_Normal_Clayton(const arma::vec& bekk, const arma::vec& theta, con
 //   }
 //   
 //   //check for identification
-//   if(valid_bekk(C,A,G)==false || p<=0 || q<=0 || p>=1 || q>=1 || par_c12<=  lower_bounds_1[0]|| par_c12>=17 || par_c13<=  lower_bounds_1[1]|| par_c1>=17 || par_c23<=  lower_bounds_1[2]|| par_c12_>=17  || par_c12_2<=  lower_bounds_2[0]|| par_c12_2>=17 || par_c13_2<=  lower_bounds_2[1]|| par_c13_2>=17 || par_c23_2<=  lower_bounds_2[2]|| par_c23_2>=17){
+//   if(valid_bekk(C,A,G)==false || p<=0 || q<=0 || p>=1 || q>=1 || par_c12<=  lower_bounds_1[0]|| par_c12>=29 || par_c13<=  lower_bounds_1[1]|| par_c1>=29 || par_c23<=  lower_bounds_1[2]|| par_c12_>=29  || par_c12_2<=  lower_bounds_2[0]|| par_c12_2>=29 || par_c13_2<=  lower_bounds_2[1]|| par_c13_2>=29 || par_c23_2<=  lower_bounds_2[2]|| par_c23_2>=29){
 //     return -1e25;
 //   }
 //   
@@ -1596,12 +1598,12 @@ double loglike_Normal_Clayton(const arma::vec& bekk, const arma::vec& theta, con
 //   
 //   
 //   set_seed(3592);
-//   arma::mat cor_c12=arma::cor(BiCopSim_cpp(100000,c12));
-//   arma::mat cor_c13=arma::cor(BiCopSim_cpp(100000,c13));
-//   arma::mat cor_c23=arma::cor(BiCopSim_cpp(100000,c23));
-//   arma::mat cor_c12_2=arma::cor(BiCopSim_cpp(100000,c12_2));
-//   arma::mat cor_c13_2=arma::cor(BiCopSim_cpp(100000,c13_2));
-//   arma::mat cor_c23_2=arma::cor(BiCopSim_cpp(100000,c23_2));
+//   arma::mat cor_c12=arma::cor(BiCopSim_cpp(29000,c12));
+//   arma::mat cor_c13=arma::cor(BiCopSim_cpp(29000,c13));
+//   arma::mat cor_c23=arma::cor(BiCopSim_cpp(29000,c23));
+//   arma::mat cor_c12_2=arma::cor(BiCopSim_cpp(29000,c12_2));
+//   arma::mat cor_c13_2=arma::cor(BiCopSim_cpp(29000,c13_2));
+//   arma::mat cor_c23_2=arma::cor(BiCopSim_cpp(29000,c23_2));
 //   
 //   arma::mat cor_cop1=arma::eye(n,n);
 //   cor_cop1(0,1)=cor_c12(0,1);
@@ -1711,7 +1713,7 @@ double loglike_Normal_Clayton(const arma::vec& bekk, const arma::vec& theta, con
 //   SEXP c13 = BiCop_cpp(type[2],par_c13);
 //   
 //   //check for identification
-//   if(valid_bekk(C,A,G)==false || p<=0 || q<=0 || p>=1 || q>=1|| par_clayton<= 0|| par_clayton>=17){
+//   if(valid_bekk(C,A,G)==false || p<=0 || q<=0 || p>=1 || q>=1|| par_clayton<= 0|| par_clayton>=29){
 //     return -1e25;
 //   }
 //   
@@ -1728,9 +1730,9 @@ double loglike_Normal_Clayton(const arma::vec& bekk, const arma::vec& theta, con
 //     //compute covariance matrix
 //     
 //     set_seed(3592);
-//   arma::mat cor_c12=arma::cor(BiCopSim_cpp(100000,c12));
-//   arma::mat cor_c13=arma::cor(BiCopSim_cpp(100000,c13));
-//   arma::mat cor_c23=arma::cor(BiCopSim_cpp(100000,c23));
+//   arma::mat cor_c12=arma::cor(BiCopSim_cpp(29000,c12));
+//   arma::mat cor_c13=arma::cor(BiCopSim_cpp(29000,c13));
+//   arma::mat cor_c23=arma::cor(BiCopSim_cpp(29000,c23));
 //   
 //   arma::mat cor_cop=arma::eye(n,n);
 //   cor_cop(0,1)=cor_c12(0,1);
@@ -1811,7 +1813,7 @@ double loglike_Normal_ClaytonS1(const arma::vec& bekk, const arma::vec& theta, c
   double q = theta[1];
   double par_clayton =theta[2];
   //check for identification
-  if(valid_bekk(C,A,G)==false || p<=0 || q<=0 || p>=1 || q>=1|| par_clayton<= 0|| par_clayton>=100){
+  if(valid_bekk(C,A,G)==false || p<=0 || q<=0 || p>=1 || q>=1|| par_clayton<= 0|| par_clayton>=15){
     return -1e25;
   }
   
@@ -1826,7 +1828,7 @@ double loglike_Normal_ClaytonS1(const arma::vec& bekk, const arma::vec& theta, c
   //compute covariance matrix
   
   set_seed(3592);
-  arma::mat cor_clay=arma::cor(BiCopSim_cpp(100000,13,par_clayton));
+  arma::mat cor_clay=arma::cor(BiCopSim_cpp(29000,13,par_clayton));
   arma::mat cor_clay_chol=arma::chol(cor_clay).t();
   
   
@@ -1882,7 +1884,7 @@ Rcpp::List random_grid_search_clayton_gumbel(const arma::vec& bekk,const arma::v
   
   
   // Generating random values theta
-  while(l<(100/nc)){
+  while(l<(29/nc)){
     for(int i=0; i<(std::pow(n,2)-n+2);i++){
       theta_candidate[i]= arma::randn()*0.04+theta_mu[i];
   }
@@ -1916,26 +1918,30 @@ Rcpp::List random_grid_search_normal_gumbel(const arma::vec& bekk,const arma::ve
   double llv = loglike_Normal_Gumbel(bekk,theta_candidate,r);
   double best_val = llv;
   //set the seed
-  
+  double k = 1;
   
   // Generating random values theta
-  while(l<500){
+  while(l<300&& k<5){
     
-      theta_candidate[0]= arma::randn()*0.05+theta_mu[0];
-      theta_candidate[1]= arma::randn()*0.05+theta_mu[1];
-      theta_candidate[2]= arma::randn()*8+theta_mu[2];
+      theta_candidate[0]= arma::randn()*0.004/k+theta_mu[0];
+      theta_candidate[1]= arma::randn()*0.004/k+theta_mu[1];
+      theta_candidate[2]= arma::randn()*2/k+theta_mu[2];
     
     llv = loglike_Normal_Gumbel(bekk,theta_candidate,r);
    
-    
+    if(llv > -1e25){
       l++;
-    
+    }
+
     if(llv>best_val){
       best_val=llv;
       theta_optim=theta_candidate;
+     
+      if(l > 30){
+        theta_mu=theta_optim;
+        k+=0.5;
+      }
       
-      
-      theta_mu=theta_optim;
       
     }
   }
@@ -1963,7 +1969,7 @@ Rcpp::List random_grid_search_normal_gumbel1(const arma::vec& bekk,const arma::v
   
   
   // Generating random values theta
-  while(l<100 && j<5){
+  while(l<29 && j<5){
     
     theta_candidate[0]= arma::randn()*0.02+theta_mu[0];
     theta_candidate[1]= arma::randn()*0.02+theta_mu[1];
@@ -1972,7 +1978,7 @@ Rcpp::List random_grid_search_normal_gumbel1(const arma::vec& bekk,const arma::v
     double llv = loglike_Normal_Gumbel1(bekk,theta_candidate,r);
     
     
-    l++;
+    if(llv> -1e25){       l++;     }
     
     if(llv>best_val){
       best_val=llv;
@@ -2001,23 +2007,24 @@ Rcpp::List random_grid_search_normal_gumbelS(const arma::vec& bekk,const arma::v
   double best_val = llv;
   //set the seed
   
-  
+  double k =1;
   // Generating random values theta
-  while(l<500){
-    theta_candidate[0]= arma::randn()*0.05+theta_mu[0];
-    theta_candidate[1]= arma::randn()*0.05+theta_mu[1];
-    theta_candidate[2]= arma::randn()*8+theta_mu[2];
+  while(l<300 && k<5){
+    theta_candidate[0]= arma::randn()*0.004/k+theta_mu[0];
+    theta_candidate[1]= arma::randn()*0.004/k+theta_mu[1];
+    theta_candidate[2]= arma::randn()*2/k+theta_mu[2];
     llv = loglike_Normal_GumbelS(bekk,theta_candidate,r);
     
-      l++;
+      if(llv> -1e25){       l++;     }
     
     if(llv>best_val){
       best_val=llv;
       theta_optim=theta_candidate;
       
-      
+      if(l >30){
         theta_mu=theta_optim;
-      
+        k+=0.5;
+      }
     }
   }
   return Rcpp::List::create(Rcpp::Named("theta_optim") = theta_optim,
@@ -2040,23 +2047,24 @@ Rcpp::List random_grid_search_normal_clayton(const arma::vec& bekk,const arma::v
   double best_val = llv;
   //set the seed
   
-  
+  double k = 1;
   // Generating random values theta
-  while(l<500){
-    theta_candidate[0]= arma::randn()*0.05+theta_mu[0];
-    theta_candidate[1]= arma::randn()*0.05+theta_mu[1];
-    theta_candidate[2]= arma::randn()*8+theta_mu[2];
+  while(l<300 && k>5){
+    theta_candidate[0]= arma::randn()*0.004/k+theta_mu[0];
+    theta_candidate[1]= arma::randn()*0.004/k+theta_mu[1];
+    theta_candidate[2]= arma::randn()*2/k+theta_mu[2];
     llv = loglike_Normal_Clayton(bekk,theta_candidate,r);
     
-      l++;
+      if(llv> -1e25){       l++;     }
     
     if(llv>best_val){
       best_val=llv;
       theta_optim=theta_candidate;
-      
-      
-        theta_mu=theta_optim;
-      
+     
+      if(l>30){
+       theta_mu=theta_optim;
+       k+=0.5;
+    }
     }
   }
   return Rcpp::List::create(Rcpp::Named("theta_optim") = theta_optim,
@@ -2079,21 +2087,24 @@ Rcpp::List random_grid_search_normal_claytonS(const arma::vec& bekk,const arma::
   double best_val = llv;
   //set the seed
   
-  
+  double k = 1;
   // Generating random values theta
-  while(l<500){
-    theta_candidate[0]= arma::randn()*0.05+theta_mu[0];
-    theta_candidate[1]= arma::randn()*0.05+theta_mu[1];
-    theta_candidate[2]= arma::randn()*8+theta_mu[2];
+  while(l<300 && k<5){
+    theta_candidate[0]= arma::randn()*0.004/k+theta_mu[0];
+    theta_candidate[1]= arma::randn()*0.004/k+theta_mu[1];
+    theta_candidate[2]= arma::randn()*2/k+theta_mu[2];
     llv = loglike_Normal_ClaytonS(bekk,theta_candidate,r);
     
-      l++;
+      if(llv> -1e25){       l++;     }
     
     if(llv>best_val){
       best_val=llv;
       theta_optim=theta_candidate;
-      theta_mu=theta_optim;
       
+      if(l>30){
+        theta_mu=theta_optim;
+        k+=0.5;
+      }
     }
   }
   return Rcpp::List::create(Rcpp::Named("theta_optim") = theta_optim,
@@ -2118,13 +2129,13 @@ Rcpp::List random_grid_search_normal_frank(const arma::vec& bekk,const arma::vec
   
   
   // Generating random values theta
-  while(l<100){
+  while(l<29){
     theta_candidate[0]= arma::randn()*0.05+theta_mu[0];
     theta_candidate[1]= arma::randn()*0.05+theta_mu[1];
     theta_candidate[2]= arma::randn()*8+theta_mu[2];
     llv = loglike_Normal_Frank(bekk,theta_candidate,r);
     
-      l++;
+      if(llv> -1e25){       l++;     }
     
     if(llv>best_val){
       best_val=llv;
@@ -2154,7 +2165,7 @@ Rcpp::List random_grid_search_clayton_gumbel90(const arma::vec& bekk,const arma:
   
   
   // Generating random values theta
-  while(l<(100/nc)){
+  while(l<(29/nc)){
     for(int i=0; i<std::pow(n,2)-n +2;i++){
       theta_candidate[i]= arma::randn()*0.04+theta_mu[i];
     }
@@ -2395,14 +2406,14 @@ arma::mat FilterProbs_normal_clayton_claytonS(const arma::vec& bekk, const arma:
   
   //compute covariance matrix
   // set_seed(3592);
-  // arma::mat cor_gumbel=arma::cor(rbicop_cpp(100000,"clayton",0,par_gumbel));
+  // arma::mat cor_gumbel=arma::cor(rbicop_cpp(29000,"clayton",0,par_gumbel));
   arma::mat cor_gumbel=cor_Clayton(par_gumbel);
   arma::mat cor_gumbel_chol=arma::chol(cor_gumbel).t();
   
   double gumbel_det = arma::det(cor_gumbel_chol);
   
   // set_seed(3592);
-  // arma::mat cor_gumbelSurvival=arma::cor(rbicop_cpp(100000,"clayton",180,par_gumbelSurvival));
+  // arma::mat cor_gumbelSurvival=arma::cor(rbicop_cpp(29000,"clayton",180,par_gumbelSurvival));
   arma::mat cor_gumbelSurvival=cor_Clayton(par_gumbelSurvival);
   arma::mat cor_gumbelSurvival_chol=arma::chol(cor_gumbelSurvival).t();
   
@@ -2439,8 +2450,8 @@ arma::mat FilterProbs_normal_clayton_claytonS(const arma::vec& bekk, const arma:
     arma::vec p_norm_1=pnorm_cpp(cor_gumbel_chol*H_eigen_inv*r.row(i).t());
     arma::vec p_norm_2=pnorm_cpp(cor_gumbelSurvival_chol*H_eigen_inv*r.row(i).t());
     double llv_temp1 = arma::as_scalar((p1t*p11+p2t*p21+p3t*p31)*arma::prod(dnorm_cpp(H_eigen_inv*r.row(i).t()))*H_det );
-    double llv_temp2 = arma::as_scalar((p1t*p12+p2t*p22+p3t*p32)*d_norm_1*claytonPDF(p_norm_1(0),p_norm_1(1),par_gumbel)*H_det* gumbel_det);
-    double llv_temp3 = arma::as_scalar((p1t*p13+p2t*p23+p3t*p33)*d_norm_2*claytonPDF(1-p_norm_2(0),1-p_norm_2(1),par_gumbelSurvival)*H_det*gumbelSurvival_det);
+    double llv_temp2 = arma::as_scalar((p1t*p12+p2t*p22+p3t*p32)*d_norm_1*claytonPDF_raw(p_norm_1(0),p_norm_1(1),par_gumbel)*H_det* gumbel_det);
+    double llv_temp3 = arma::as_scalar((p1t*p13+p2t*p23+p3t*p33)*d_norm_2*claytonPDF_raw(1-p_norm_2(0),1-p_norm_2(1),par_gumbelSurvival)*H_det*gumbelSurvival_det);
     
     // double llv_temp2 = arma::as_scalar((p1t*p12+p2t*p22+p3t*p32)*d_norm_1*dbicop_cpp(p_norm_1,"clayton",0,par_gumbel)*H_det* gumbel_det);
     // double llv_temp3 = arma::as_scalar((p1t*p13+p2t*p23+p3t*p33)*d_norm_2*dbicop_cpp(p_norm_2,"clayton",180,par_gumbelSurvival)*H_det*gumbelSurvival_det);
@@ -2505,7 +2516,7 @@ arma::mat  FilterProbs_normal_gumbel_clayton(const arma::vec& bekk, const arma::
   
   //compute covariance matrix
   // set_seed(3592);
-  // arma::mat cor_gumbel=arma::cor(rbicop_cpp(100000,"gumbel",0,par_gumbel));
+  // arma::mat cor_gumbel=arma::cor(rbicop_cpp(29000,"gumbel",0,par_gumbel));
   
    arma::mat cor_gumbel=cor_Gumbel(par_gumbel);
   arma::mat cor_gumbel_chol=arma::chol(cor_gumbel).t();
@@ -2513,7 +2524,7 @@ arma::mat  FilterProbs_normal_gumbel_clayton(const arma::vec& bekk, const arma::
   double gumbel_det = arma::det(cor_gumbel_chol);
   
   // set_seed(3592);
-  // arma::mat cor_clayton=arma::cor(rbicop_cpp(100000,"clayton",0,par_clayton));
+  // arma::mat cor_clayton=arma::cor(rbicop_cpp(29000,"clayton",0,par_clayton));
   arma::mat cor_clayton=cor_Clayton(par_clayton);
   arma::mat cor_clayton_chol=arma::chol(cor_clayton).t();
   
@@ -2549,8 +2560,8 @@ arma::mat  FilterProbs_normal_gumbel_clayton(const arma::vec& bekk, const arma::
     double llv_temp1 = arma::as_scalar((p1t*p11+p2t*p21+p3t*p31)*arma::prod(dnorm_cpp(H_eigen_inv*r.row(i).t()))*H_det);
     //double llv_temp2 = arma::as_scalar((p1t*p12+p2t*p22+p3t*p32)*d_norm_1*dbicop_cpp(p_norm_1,"gumbel",0,par_gumbel)*H_det* gumbel_det);
     //double llv_temp3 = arma::as_scalar((p1t*p13+p2t*p23+p3t*p33)*d_norm_2*dbicop_cpp(p_norm_2,"clayton",0,par_clayton)*H_det*clayton_det);
-    double llv_temp2 = (p1t*p12+p2t*p22+p3t*p32)*d_norm_1*gumbelPDF(p_norm_1(0),p_norm_1(1),par_gumbel)*H_det* gumbel_det;
-    double llv_temp3 = (p1t*p13+p2t*p23+p3t*p33)*d_norm_2*claytonPDF(p_norm_2(0),p_norm_2(1),par_clayton)*H_det*clayton_det;
+    double llv_temp2 = (p1t*p12+p2t*p22+p3t*p32)*d_norm_1*gumbelPDF_raw(p_norm_1(0),p_norm_1(1),par_gumbel)*H_det* gumbel_det;
+    double llv_temp3 = (p1t*p13+p2t*p23+p3t*p33)*d_norm_2*claytonPDF_raw(p_norm_2(0),p_norm_2(1),par_clayton)*H_det*clayton_det;
     
     double llv_temp = llv_temp1+llv_temp2+llv_temp3;
     p1t = llv_temp1/llv_temp;
@@ -2614,7 +2625,7 @@ arma::mat FilterProbs_normal_gumbelS_claytonS(const arma::vec& bekk, const arma:
   
   //compute covariance matrix
   // set_seed(3592);
-  // arma::mat cor_gumbel=arma::cor(rbicop_cpp(100000,"gumbel",180,par_gumbel));
+  // arma::mat cor_gumbel=arma::cor(rbicop_cpp(29000,"gumbel",180,par_gumbel));
   //   
   arma::mat cor_gumbel=cor_Gumbel(par_gumbel);
   arma::mat cor_gumbel_chol=arma::chol(cor_gumbel).t();
@@ -2622,7 +2633,7 @@ arma::mat FilterProbs_normal_gumbelS_claytonS(const arma::vec& bekk, const arma:
   double gumbel_det = arma::det(cor_gumbel_chol);
   
   // set_seed(3592);
-  // arma::mat cor_clayton=arma::cor(rbicop_cpp(100000,"clayton",180,par_clayton));
+  // arma::mat cor_clayton=arma::cor(rbicop_cpp(29000,"clayton",180,par_clayton));
   arma::mat cor_clayton=cor_Clayton(par_clayton);
   arma::mat cor_clayton_chol=arma::chol(cor_clayton).t();
   
@@ -2658,8 +2669,8 @@ arma::mat FilterProbs_normal_gumbelS_claytonS(const arma::vec& bekk, const arma:
     double llv_temp1 = arma::as_scalar((p1t*p11+p2t*p21+p3t*p31)*arma::prod(dnorm_cpp(H_eigen_inv*r.row(i).t()))*H_det);
     //double llv_temp2 = arma::as_scalar((p1t*p12+p2t*p22+p3t*p32)*d_norm_1*dbicop_cpp(p_norm_1,"gumbel",180,par_gumbel)*H_det* gumbel_det);
     //double llv_temp3 = arma::as_scalar((p1t*p13+p2t*p23+p3t*p33)*d_norm_2*dbicop_cpp(p_norm_2,"clayton",180,par_clayton)*H_det*clayton_det);
-    double llv_temp2 = (p1t*p12+p2t*p22+p3t*p32)*d_norm_1*gumbelPDF(1-p_norm_1(0),1-p_norm_1(1),par_gumbel)*H_det* gumbel_det;
-    double llv_temp3 = (p1t*p13+p2t*p23+p3t*p33)*d_norm_2*claytonPDF(1-p_norm_2(0),1-p_norm_2(1),par_clayton)*H_det*clayton_det;
+    double llv_temp2 = (p1t*p12+p2t*p22+p3t*p32)*d_norm_1*gumbelPDF_raw(1-p_norm_1(0),1-p_norm_1(1),par_gumbel)*H_det* gumbel_det;
+    double llv_temp3 = (p1t*p13+p2t*p23+p3t*p33)*d_norm_2*claytonPDF_raw(1-p_norm_2(0),1-p_norm_2(1),par_clayton)*H_det*clayton_det;
     
     double llv_temp = llv_temp1+llv_temp2+llv_temp3;
     p1t = llv_temp1/llv_temp;
@@ -2724,14 +2735,14 @@ arma::mat FilterProbs_normal_gumbel_gumbelS(const arma::vec& bekk, const arma::v
   
   //compute covariance matrix
   // set_seed(3592);
-  // arma::mat cor_gumbel=arma::cor(rbicop_cpp(100000,"gumbel",0,par_gumbel));
+  // arma::mat cor_gumbel=arma::cor(rbicop_cpp(29000,"gumbel",0,par_gumbel));
   arma::mat cor_gumbel=cor_Gumbel(par_gumbel);
   arma::mat cor_gumbel_chol=arma::chol(cor_gumbel).t();
   
   double gumbel_det = arma::det(cor_gumbel_chol);
   
   // set_seed(3592);
-  // arma::mat cor_gumbelSurvival=arma::cor(rbicop_cpp(100000,"gumbel",180,par_gumbelSurvival));
+  // arma::mat cor_gumbelSurvival=arma::cor(rbicop_cpp(29000,"gumbel",180,par_gumbelSurvival));
   arma::mat cor_gumbelSurvival=cor_Gumbel(par_gumbelSurvival);
   arma::mat cor_gumbelSurvival_chol=arma::chol(cor_gumbelSurvival).t();
   
@@ -2771,8 +2782,8 @@ arma::mat FilterProbs_normal_gumbel_gumbelS(const arma::vec& bekk, const arma::v
     // double llv_temp2 = ((p1t*p12+p2t*p22+p3t*p32)*d_norm_1*dbicop_cpp(p_norm_1,"gumbel",0,par_gumbel)*H_det* gumbel_det);
     // double llv_temp3 = ((p1t*p13+p2t*p23+p3t*p33)*d_norm_2*dbicop_cpp(p_norm_2,"gumbel",180,par_gumbelSurvival)*H_det*gumbelSurvival_det);
     
-    double llv_temp2 = ((p1t*p12+p2t*p22+p3t*p32)*d_norm_1*gumbelPDF(p_norm_1(0),p_norm_1(1),par_gumbel)*H_det* gumbel_det);
-    double llv_temp3 = ((p1t*p13+p2t*p23+p3t*p33)*d_norm_2*gumbelPDF(1-p_norm_2(0),1-p_norm_2(1),par_gumbelSurvival)*H_det*gumbelSurvival_det);
+    double llv_temp2 = ((p1t*p12+p2t*p22+p3t*p32)*d_norm_1*gumbelPDF_raw(p_norm_1(0),p_norm_1(1),par_gumbel)*H_det* gumbel_det);
+    double llv_temp3 = ((p1t*p13+p2t*p23+p3t*p33)*d_norm_2*gumbelPDF_raw(1-p_norm_2(0),1-p_norm_2(1),par_gumbelSurvival)*H_det*gumbelSurvival_det);
     
     double llv_temp = llv_temp1+llv_temp2+llv_temp3;
     p1t = llv_temp1/llv_temp;
@@ -2828,9 +2839,9 @@ arma::mat FilterProbs_Clayton_Gumbel90(const arma::vec& bekk, const arma::vec& t
   
   //compute covariance matrix
   set_seed(3592);
-  arma::mat cor_clayton=arma::cor(BiCopSim_cpp(100000,3,par_clayton));
+  arma::mat cor_clayton=arma::cor(BiCopSim_cpp(29000,3,par_clayton));
   arma::mat cor_clayton_chol=arma::chol(cor_clayton).t();
-  arma::mat cor_gumbel=arma::cor(BiCopSim_cpp(100000,24,par_gumbel));
+  arma::mat cor_gumbel=arma::cor(BiCopSim_cpp(29000,24,par_gumbel));
   arma::mat cor_gumbel_chol=arma::chol(cor_gumbel).t();
   
   double clay_det=arma::det(cor_clayton_chol);
@@ -2916,7 +2927,7 @@ arma::mat FilterProbs_Normal_Gumbel(const arma::vec& bekk, const arma::vec& thet
 
   //compute covariance matrix
   // set_seed(3592);
-  // arma::mat cor_gumbel=arma::cor(rbicop_cpp(100000,"gumbel",0,par_copula));
+  // arma::mat cor_gumbel=arma::cor(rbicop_cpp(29000,"gumbel",0,par_copula));
   arma::mat cor_gumbel=cor_Gumbel(par_copula);
   arma::mat cor_gumbel_chol=arma::chol(cor_gumbel).t();
 
@@ -2951,7 +2962,7 @@ arma::mat FilterProbs_Normal_Gumbel(const arma::vec& bekk, const arma::vec& thet
 
      arma::vec p_norm_2=pnorm_cpp(cor_gumbel_chol*H_eigen_inv*r.row(i).t());
 
-    double llv_temp =((p1t*p+(1-p1t)*(1-q))*H_det*d_norm_1+(p1t*(1-p)+(1-p1t)*(q))*H_det*gumb_det*d_norm_2*gumbelPDF(p_norm_2(0),p_norm_2(1),par_copula));
+    double llv_temp =((p1t*p+(1-p1t)*(1-q))*H_det*d_norm_1+(p1t*(1-p)+(1-p1t)*(q))*H_det*gumb_det*d_norm_2*gumbelPDF_raw(p_norm_2(0),p_norm_2(1),par_copula));
     p1t=((p1t*p+(1-p1t)*(1-q))*H_det*d_norm_1)/llv_temp;
 
     filterProbs(i,0)=p1t;
@@ -3001,7 +3012,7 @@ arma::mat FilterProbs_Normal_Clayton(const arma::vec& bekk, const arma::vec& the
   
   //compute covariance matrix
   // set_seed(3592);
-  // arma::mat cor_gumbel=arma::cor(rbicop_cpp(100000,"clayton",0,par_copula));
+  // arma::mat cor_gumbel=arma::cor(rbicop_cpp(29000,"clayton",0,par_copula));
   arma::mat cor_gumbel=cor_Clayton(par_copula);
   arma::mat cor_gumbel_chol=arma::chol(cor_gumbel).t();
   
@@ -3036,7 +3047,7 @@ arma::mat FilterProbs_Normal_Clayton(const arma::vec& bekk, const arma::vec& the
     
     arma::vec p_norm_2=pnorm_cpp(cor_gumbel_chol*H_eigen_inv*r.row(i).t());
     
-    double llv_temp =arma::as_scalar((p1t*p+(1-p1t)*(1-q))*H_det*d_norm_1+(p1t*(1-p)+(1-p1t)*(q))*H_det*gumb_det*d_norm_2*claytonPDF(p_norm_2(0),p_norm_2(1),par_copula));
+    double llv_temp =arma::as_scalar((p1t*p+(1-p1t)*(1-q))*H_det*d_norm_1+(p1t*(1-p)+(1-p1t)*(q))*H_det*gumb_det*d_norm_2*claytonPDF_raw(p_norm_2(0),p_norm_2(1),par_copula));
     p1t=arma::as_scalar((p1t*p+(1-p1t)*(1-q))*H_det*d_norm_1)/llv_temp;
     
     filterProbs(i,0)=p1t;
@@ -3086,7 +3097,7 @@ arma::mat FilterProbs_Normal_GumbelS(const arma::vec& bekk, const arma::vec& the
   
   //compute covariance matrix
   //set_seed(3592);
-  //arma::mat cor_gumbel = arma::cor(rbicop_cpp(100000,"gumbel",180,par_copula));
+  //arma::mat cor_gumbel = arma::cor(rbicop_cpp(29000,"gumbel",180,par_copula));
   arma::mat cor_gumbel=cor_Gumbel(par_copula);
   arma::mat cor_gumbel_chol=arma::chol(cor_gumbel).t();
   
@@ -3121,7 +3132,7 @@ arma::mat FilterProbs_Normal_GumbelS(const arma::vec& bekk, const arma::vec& the
     
     arma::vec p_norm_2=pnorm_cpp(cor_gumbel_chol*H_eigen_inv*r.row(i).t());
     
-    double llv_temp =((p1t*p+(1-p1t)*(1-q))*H_det*d_norm_1+(p1t*(1-p)+(1-p1t)*(q))*H_det*gumb_det*d_norm_2*gumbelPDF(1-p_norm_2(0),1-p_norm_2(1),par_copula));
+    double llv_temp =((p1t*p+(1-p1t)*(1-q))*H_det*d_norm_1+(p1t*(1-p)+(1-p1t)*(q))*H_det*gumb_det*d_norm_2*gumbelPDF_raw(1-p_norm_2(0),1-p_norm_2(1),par_copula));
     //double llv_temp =((p1t*p+(1-p1t)*(1-q))*H_det*d_norm_1+(p1t*(1-p)+(1-p1t)*(q))*H_det*gumb_det*d_norm_2*dbicop_cpp(p_norm_2,"gumbel",180,par_copula));
     
     p1t=((p1t*p+(1-p1t)*(1-q))*H_det*d_norm_1)/llv_temp;
@@ -3173,7 +3184,7 @@ arma::mat FilterProbs_Normal_ClaytonS(const arma::vec& bekk, const arma::vec& th
   
   //compute covariance matrix
   // set_seed(3592);
-  // arma::mat cor_gumbel = arma::cor(rbicop_cpp(100000,"clayton",180,par_copula));
+  // arma::mat cor_gumbel = arma::cor(rbicop_cpp(29000,"clayton",180,par_copula));
   arma::mat cor_gumbel=cor_Clayton(par_copula);
   arma::mat cor_gumbel_chol=arma::chol(cor_gumbel).t();
   
@@ -3208,7 +3219,7 @@ arma::mat FilterProbs_Normal_ClaytonS(const arma::vec& bekk, const arma::vec& th
     
     arma::vec p_norm_2=pnorm_cpp(cor_gumbel_chol*H_eigen_inv*r.row(i).t());
     
-    double llv_temp =arma::as_scalar((p1t*p+(1-p1t)*(1-q))*H_det*d_norm_1+(p1t*(1-p)+(1-p1t)*(q))*H_det*gumb_det*d_norm_2*claytonPDF(1-p_norm_2(0),1-p_norm_2(1),par_copula));
+    double llv_temp =arma::as_scalar((p1t*p+(1-p1t)*(1-q))*H_det*d_norm_1+(p1t*(1-p)+(1-p1t)*(q))*H_det*gumb_det*d_norm_2*claytonPDF_raw(1-p_norm_2(0),1-p_norm_2(1),par_copula));
     p1t=arma::as_scalar((p1t*p+(1-p1t)*(1-q))*H_det*d_norm_1)/llv_temp;
     
     filterProbs(i,0)=p1t;
@@ -3257,7 +3268,7 @@ arma::mat FilterProbs_Normal_Frank(const arma::vec& bekk, const arma::vec& theta
   
   //compute covariance matrix
   set_seed(3592);
-  arma::mat cor_gumbel = arma::cor(rbicop_cpp(100000,"frank",0,par_copula));
+  arma::mat cor_gumbel = arma::cor(rbicop_cpp(10000,"frank",0,par_copula));
   arma::mat cor_gumbel_chol=arma::chol(cor_gumbel).t();
   
   
@@ -3339,7 +3350,7 @@ double loglike_LL_Gumbel(const arma::vec& theta, const arma::mat& r) {
   arma::mat G = arma::reshape(theta.subvec((index +  std::pow(n, 2)), numb_of_vars-1).t(), n, n);
   double par_gumbel = theta[11];
   //check for identification
-  if(valid_bekk(C,A,G)==false || par_gumbel<= 1|| par_gumbel>=17){
+  if(valid_bekk(C,A,G)==false || par_gumbel<= 1|| par_gumbel>=15){
     return -1e25;
   }
   
@@ -3352,8 +3363,8 @@ double loglike_LL_Gumbel(const arma::vec& theta, const arma::mat& r) {
   
   
   //compute covariance matrix
-  set_seed(3592);
-  arma::mat cor_gumbel=arma::cor(BiCopSim_cpp(100000,4,par_gumbel));
+  
+  arma::mat cor_gumbel=cor_Gumbel(par_gumbel);
   arma::mat cor_gumbel_chol=arma::chol(cor_gumbel).t();
   
   double det_gumbel = arma::det(cor_gumbel_chol);
@@ -3363,7 +3374,7 @@ double loglike_LL_Gumbel(const arma::vec& theta, const arma::mat& r) {
   
   arma::vec p_norm=pnorm_cpp(cor_gumbel_chol*H_eigen_inv*r.row(0).t());
   
-  double llv = log(arma::as_scalar(arma::det(H_eigen_inv)*det_gumbel*d_norm*BiCopPDF_cpp(p_norm(0),p_norm(1),4,par_gumbel)));
+  double llv = log(arma::as_scalar(arma::det(H_eigen_inv)*det_gumbel*d_norm*copulaPDF(p_norm(0),p_norm(1),par_gumbel,4)));
   
   
   for (int i = 1; i < NoOBs; i++) {
@@ -3377,7 +3388,7 @@ double loglike_LL_Gumbel(const arma::vec& theta, const arma::mat& r) {
     
     arma::vec p_norm=pnorm_cpp(cor_gumbel_chol*H_eigen_inv*r.row(i).t());
     
-    llv+=log(arma::as_scalar(arma::det(H_eigen_inv)*det_gumbel*d_norm*BiCopPDF_cpp(p_norm(0),p_norm(1),4,par_gumbel)));
+    llv+=log(arma::as_scalar(arma::det(H_eigen_inv)*det_gumbel*d_norm*copulaPDF(p_norm(0),p_norm(1),par_gumbel, 4)));
     
     
     
@@ -3411,7 +3422,7 @@ double loglike_LL_GumbelS(const arma::vec& theta, const arma::mat& r) {
   arma::mat G = arma::reshape(theta.subvec((index +  std::pow(n, 2)), numb_of_vars-1).t(), n, n);
   double par_gumbel = theta[11];
   //check for identification
-  if(valid_bekk(C,A,G)==false || par_gumbel<= 1|| par_gumbel>=17){
+  if(valid_bekk(C,A,G)==false || par_gumbel<= 1|| par_gumbel>=15){
     return -1e25;
   }
   
@@ -3424,8 +3435,8 @@ double loglike_LL_GumbelS(const arma::vec& theta, const arma::mat& r) {
   
   
   //compute covariance matrix
-  set_seed(3592);
-  arma::mat cor_gumbel=arma::cor(BiCopSim_cpp(100000,14,par_gumbel));
+ 
+  arma::mat cor_gumbel=cor_Gumbel(par_gumbel);
   arma::mat cor_gumbel_chol=arma::chol(cor_gumbel).t();
   
   double det_gumbel = arma::det(cor_gumbel_chol);
@@ -3435,7 +3446,7 @@ double loglike_LL_GumbelS(const arma::vec& theta, const arma::mat& r) {
   
   arma::vec p_norm=pnorm_cpp(cor_gumbel_chol*H_eigen_inv*r.row(0).t());
   
-  double llv = log(arma::as_scalar(arma::det(H_eigen_inv)*det_gumbel*d_norm*BiCopPDF_cpp(p_norm(0),p_norm(1),14,par_gumbel)));
+  double llv = log(arma::as_scalar(arma::det(H_eigen_inv)*det_gumbel*d_norm*copulaPDF(p_norm(0),p_norm(1),par_gumbel, 14)));
   
   
   for (int i = 1; i < NoOBs; i++) {
@@ -3449,7 +3460,7 @@ double loglike_LL_GumbelS(const arma::vec& theta, const arma::mat& r) {
     
     arma::vec p_norm=pnorm_cpp(cor_gumbel_chol*H_eigen_inv*r.row(i).t());
     
-    llv+=log(arma::as_scalar(arma::det(H_eigen_inv)*det_gumbel*d_norm*BiCopPDF_cpp(p_norm(0),p_norm(1),14,par_gumbel)));
+    llv+=log(arma::as_scalar(arma::det(H_eigen_inv)*det_gumbel*d_norm*copulaPDF(p_norm(0),p_norm(1),par_gumbel,14)));
     
     
     
@@ -3481,7 +3492,7 @@ double loglike_LL_Clayton(const arma::vec& theta, const arma::mat& r) {
   arma::mat G = arma::reshape(theta.subvec((index +  std::pow(n, 2)), numb_of_vars-1).t(), n, n);
   double par_clayton = theta[11];
   //check for identification
-  if(valid_bekk(C,A,G)==false || par_clayton<=0 || par_clayton>=17){
+  if(valid_bekk(C,A,G)==false || par_clayton<=0 || par_clayton>=29){
     return -1e25;
   }
   
@@ -3494,8 +3505,8 @@ double loglike_LL_Clayton(const arma::vec& theta, const arma::mat& r) {
   
   
   //compute covariance matrix
-  set_seed(3592);
-  arma::mat cor_gumbel=arma::cor(BiCopSim_cpp(100000,3,par_clayton));
+  
+  arma::mat cor_gumbel=cor_Clayton(par_clayton);
   arma::mat cor_gumbel_chol=arma::chol(cor_gumbel).t();
   
   double det_gumbel = arma::det(cor_gumbel_chol);
@@ -3505,7 +3516,7 @@ double loglike_LL_Clayton(const arma::vec& theta, const arma::mat& r) {
   
   arma::vec p_norm=pnorm_cpp(cor_gumbel_chol*H_eigen_inv*r.row(0).t());
   
-  double llv = log(arma::as_scalar(arma::det(H_eigen_inv)*det_gumbel*d_norm*BiCopPDF_cpp(p_norm(0),p_norm(1),3,par_clayton)));
+  double llv = log(arma::as_scalar(arma::det(H_eigen_inv)*det_gumbel*d_norm*copulaPDF(p_norm(0),p_norm(1),par_clayton,3)));
   
   
   for (int i = 1; i < NoOBs; i++) {
@@ -3519,7 +3530,7 @@ double loglike_LL_Clayton(const arma::vec& theta, const arma::mat& r) {
     
     arma::vec p_norm=pnorm_cpp(cor_gumbel_chol*H_eigen_inv*r.row(i).t());
     
-    llv+=log(arma::as_scalar(arma::det(H_eigen_inv)*det_gumbel*d_norm*BiCopPDF_cpp(p_norm(0),p_norm(1),3,par_clayton)));
+    llv+=log(arma::as_scalar(arma::det(H_eigen_inv)*det_gumbel*d_norm*copulaPDF(p_norm(0),p_norm(1),par_clayton,3)));
     
     
     
@@ -3552,7 +3563,7 @@ double loglike_LL_ClaytonS(const arma::vec& theta, const arma::mat& r) {
   arma::mat G = arma::reshape(theta.subvec((index +  std::pow(n, 2)), numb_of_vars-1).t(), n, n);
   double par_clayton = theta[11];
   //check for identification
-  if(valid_bekk(C,A,G)==false || par_clayton<=0 || par_clayton>=17){
+  if(valid_bekk(C,A,G)==false || par_clayton<=0 || par_clayton>=29){
     return -1e25;
   }
   
@@ -3565,8 +3576,8 @@ double loglike_LL_ClaytonS(const arma::vec& theta, const arma::mat& r) {
   
   
   //compute covariance matrix
-  set_seed(3592);
-  arma::mat cor_gumbel=arma::cor(BiCopSim_cpp(100000,13,par_clayton));
+  
+  arma::mat cor_gumbel=cor_Clayton(par_clayton);
   arma::mat cor_gumbel_chol=arma::chol(cor_gumbel).t();
   
   double det_gumbel = arma::det(cor_gumbel_chol);
@@ -3576,7 +3587,7 @@ double loglike_LL_ClaytonS(const arma::vec& theta, const arma::mat& r) {
   
   arma::vec p_norm=pnorm_cpp(cor_gumbel_chol*H_eigen_inv*r.row(0).t());
   
-  double llv = log(arma::as_scalar(arma::det(H_eigen_inv)*det_gumbel*d_norm*BiCopPDF_cpp(p_norm(0),p_norm(1),13,par_clayton)));
+  double llv = log(arma::as_scalar(arma::det(H_eigen_inv)*det_gumbel*d_norm*copulaPDF(p_norm(0),p_norm(1),par_clayton,13)));
   
   
   for (int i = 1; i < NoOBs; i++) {
@@ -3590,7 +3601,7 @@ double loglike_LL_ClaytonS(const arma::vec& theta, const arma::mat& r) {
     
     arma::vec p_norm=pnorm_cpp(cor_gumbel_chol*H_eigen_inv*r.row(i).t());
     
-    llv+=log(arma::as_scalar(arma::det(H_eigen_inv)*det_gumbel*d_norm*BiCopPDF_cpp(p_norm(0),p_norm(1),13,par_clayton)));
+    llv+=log(arma::as_scalar(arma::det(H_eigen_inv)*det_gumbel*d_norm*copulaPDF(p_norm(0),p_norm(1),par_clayton,13)));
     
     
     
@@ -3637,7 +3648,7 @@ double loglike_LL_Frank(const arma::vec& theta, const arma::mat& r) {
   
   //compute covariance matrix
   set_seed(3592);
-  arma::mat cor_gumbel=arma::cor(BiCopSim_cpp(100000,5,par_frank));
+  arma::mat cor_gumbel=arma::cor(BiCopSim_cpp(29000,5,par_frank));
   arma::mat cor_gumbel_chol=arma::chol(cor_gumbel).t();
   
   double det_gumbel = arma::det(cor_gumbel_chol);

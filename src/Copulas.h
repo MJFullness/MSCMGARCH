@@ -4,6 +4,7 @@
 
 
 
+
 // [[Rcpp::export]]
 arma::vec pnorm_cpp(arma::vec r){
   
@@ -100,8 +101,8 @@ arma::vec dnorm_cpp(arma::vec r){
  //    std::log(u1 * u2) +   std::log(1+(theta - 1.0) * std::pow(t1, -thetha1));
  //  double res = std::exp(temp);
   
-  double res=std::log(gumbelCDF(u1,u2,theta))-std::log(u1*u2)+(theta-1.0)*std::log(log(u1)*log(u2))+(-2.0+(2.0/theta))*std::log(std::pow(-log(u1),theta) +std::pow(-log(u2),theta)) +std::log(1+ (theta-1)*std::pow(std::pow(-log(u1),theta) +std::pow(-log(u2),theta),-1.0/theta));
-  
+   double res=std::log(gumbelCDF(u1,u2,theta))-std::log(u1*u2)+(theta-1.0)*std::log(log(u1)*log(u2))+(-2.0+(2.0/theta))*std::log(std::pow(-log(u1),theta) +std::pow(-log(u2),theta)) +std::log(1+ (theta-1)*std::pow(std::pow(-log(u1),theta) +std::pow(-log(u2),theta),-1.0/theta));
+  // 
    res= std::exp(res);
 
   
@@ -126,36 +127,91 @@ arma::vec dnorm_cpp(arma::vec r){
   return res;
   
 }
-
-inline double gumbelPDF_raw(double u1,double u2, double theta){
-  if(u1<1e-10){
-    u1=1e-10;
+// [[Rcpp::export]]
+double gumbelPDF_raw(double u1,double u2, double theta){
+  
+  if(theta==1.0){
+    return 1.0;
+  }
+  // if(u1<1e-10){
+  //   u1=1e-10;
+  // 
+  // }
+  // if(u2<1e-10){
+  //   u2=1e-10;
+  // 
+  // }
+  // if(u1>1.0-1e-10){
+  //   u1=1.0-1e-10;
+  // 
+  // }
+  // if(u2>1.0-1e-10){
+  //   u2=1.0-1e-10;
+  // 
+  // }
+  //double res=gumbelCDF(u1,u2,theta) *std::pow(u1*u2,-1.0)*std::pow(log(u1)*log(u2),theta-1.0)*(std::pow(std::pow(-log(u1),theta) +std::pow(-log(u2),theta),-2.0+(2.0/theta))) *(1+ (theta-1)*std::pow(std::pow(-log(u1),theta) +std::pow(-log(u2),theta),-1.0/theta));
+  double thetha1 = 1.0 / theta;
+  double t1 = std::pow(-std::log(u1), theta) + std::pow(-std::log(u2), theta);
+  double temp = -std::pow(t1, thetha1) + (2 * thetha1 - 2.0) * std::log(t1) +
+    (theta - 1.0) * std::log(std::log(u1) * std::log(u2)) -
+    std::log(u1 * u2) +   std::log(1+(theta - 1.0) * std::pow(t1, -thetha1));
+  double res = std::exp(temp);
+  
+  // double res=std::log(gumbelCDF(u1,u2,theta))-std::log(u1*u2)+(theta-1.0)*std::log(log(u1)*log(u2))+(-2.0+(2.0/theta))*std::log(std::pow(-log(u1),theta) +std::pow(-log(u2),theta)) +std::log(1+ (theta-1)*std::pow(std::pow(-log(u1),theta) +std::pow(-log(u2),theta),-1.0/theta));
+  // 
+  //  res= std::exp(res);
+  
+  
+  if((std::isnan(res)|| res== 0.0 || res==R_PosInf) && u1>0.5 && u2>0.5 && u1==u2){
+    double res =std::nextafter(R_PosInf,1.0);
+    return res;
+  }
+  else if(res==R_PosInf && u1==u2){
+    res = std::nextafter(R_PosInf,1.0);
+    return res;
+  }
+  
+  else if((std::isnan(res) || res==R_PosInf) && u1==u2 && u1<0.5 && u2<0.5){
+    return std::nextafter(R_PosInf,1.0);
+  } 
+  else if(std::isnan(res) || res==R_PosInf || res==0.0){
+    double res = std::nextafter(0.0,1.0);
+    
+    return res;
     
   }
-  if(u2<1e-10){
-    u2=1e-10;
-    
-  }
-  if(u1>1.0-1e-10){
-    u1=1.0-1e-10;
-    
-  }
-  if(u2>1.0-1e-10){
-    u2=1.0-1e-10;
-    
-  }
-  if(theta==1){
-    return 1;
-  }
-  double res= gumbelCDF(u1,u2,theta) *std::pow(u1*u2,-1.0)*std::pow(log(u1)*log(u2),theta-1.0)*(std::pow(std::pow(-log(u1),theta) +std::pow(-log(u2),theta),-2.0+(2.0/theta))) *(1+ (theta-1)*std::pow(std::pow(-log(u1),theta) +std::pow(-log(u2),theta),-1.0/theta));
-if(std::isnan(res) ){
-  res = std::nextafter(res,1.0);
+  return res;
+  
 }
-return res;
-  }
+
+// inline double gumbelPDF_raw(double u1,double u2, double theta){
+//   if(u1<1e-10){
+//     u1=1e-10;
+//     
+//   }
+//   if(u2<1e-10){
+//     u2=1e-10;
+//     
+//   }
+//   if(u1>1.0-1e-10){
+//     u1=1.0-1e-10;
+//     
+//   }
+//   if(u2>1.0-1e-10){
+//     u2=1.0-1e-10;
+//     
+//   }
+//   if(theta==1){
+//     return 1;
+//   }
+//   double res= gumbelCDF(u1,u2,theta) *std::pow(u1*u2,-1.0)*std::pow(log(u1)*log(u2),theta-1.0)*(std::pow(std::pow(-log(u1),theta) +std::pow(-log(u2),theta),-2.0+(2.0/theta))) *(1+ (theta-1)*std::pow(std::pow(-log(u1),theta) +std::pow(-log(u2),theta),-1.0/theta));
+// if(std::isnan(res) ){
+//   res = std::nextafter(res,1.0);
+// }
+// return res;
+//   }
 // [[Rcpp::export]]
  double gumbelH1(double u1,double u2, double theta){
-  
   
   if(u1<1e-10){
     u1=1e-10;
@@ -184,8 +240,8 @@ return res;
   //    std::log(u1 * u2) +
   //    std::log((theta) * std::pow(t1, -thetha1));
   //res= std::exp(res);
-  // if((std::isnan(res) ||res==R_PosInf) && u1>0.5 && u2>0.5 && u1==u2){
-  //   double res =std::nextafter(res,0.0);
+  // if((std::isnan(res)||  res==0.0 ||res==R_PosInf) && u1>0.5 && u2>0.5 && u1==u2){
+  //   double res =std::nextafter(res,0.5);
   //   return res;
   // }
   
@@ -223,8 +279,8 @@ return res;
   //    std::log(u1 * u2) +
   //    std::log((theta) * std::pow(t1, -thetha1));
   //res= std::exp(res);
-  // if((std::isnan(res)|| res==R_PosInf) && u1>0.5 && u2>0.5 && u1==u2){
-  //   double res =std::nextafter(res,1.0);
+  // if((std::isnan(res)||  res==0.0 ||res==R_PosInf) && u1>0.5 && u2>0.5 && u1==u2){
+  //   double res =std::nextafter(res,0.5);
   //   return res;
   // }
   return res;
@@ -297,40 +353,53 @@ arma::mat cor_Gumbel(double theta){
 }
 
 
-inline double claytonPDF_raw(double u1,double u2, double theta){
+// [[Rcpp::export]]
+double claytonPDF_raw(double u1,double u2, double theta){
   
-  if(u1<1e-10){
-    u1=1e-10;
+    if(theta==0){
+      return 1;
+    }
+    // if(u1<1e-12){
+    //   u1=1e-12;
+    // 
+    // }
+    // if(u2<1e-12){
+    //   u2=1e-12;
+    // 
+    // }
+    // if(u1>1.0-1e-12){
+    //   u1=1.0-1e-12;
+    // 
+    // }
+    // if(u2>1.0-1e-12){
+    //   u2=1.0-1e-12;
+    // 
+    // }
+    double temp = std::log(theta+1) - (1.0 + theta) * std::log(u1 * u2);
+    temp = temp - (2.0 + 1.0 / (theta)) *  std::log(std::pow(u1, -theta) + std::pow(u2, -theta) - 1.0);
+    
+    double res= std::exp(temp);
+    
+    if((std::isnan(res) || res==0.0 || res==R_PosInf ||  res==R_NegInf) && u1<0.5 && u2<0.5 && u1==u2){
+      double res = std::nextafter(R_PosInf,1.0);
+      return res;
+    }
+    else if(std::isnan(res)){
+      double res = std::nextafter(0.0,1.0);
+      return res;
+    }
+    
+    if(res==R_PosInf || res==R_NegInf ){
+      res=std::nextafter(0.0,1.0);
+      return res;
+    }
+    if(res==0.0){
+      res=std::nextafter(0.0,1.0);
+    }
+    
+    return res;
     
   }
-  if(u2<1e-10){
-    u2=1e-10;
-    
-  }
-  if(u1>1.0-1e-10){
-    u1=1.0-1e-10;
-    
-  }
-  if(u2>1.0-1e-10){
-    u2=1.0-1e-10;
-    
-  }
-  if(theta==0){
-    return 1;
-  }
-
-  double temp = std::log(theta+1) - (1.0 + theta) * std::log(u1 * u2);
-  temp = temp - (2.0 + 1.0 / (theta)) *  std::log(std::pow(u1, -theta) + std::pow(u2, -theta) - 1.0);
-  
-  double res= std::exp(temp);
-  
-  if(std::isnan(res)){
-    res = std::nextafter(res,1.0);
-  }
- 
-  return res;
-  
-}
 
 // [[Rcpp::export]]
  double claytonH1(double u1,double u2, double theta){
@@ -356,7 +425,7 @@ inline double claytonPDF_raw(double u1,double u2, double theta){
   
   
   if(std::isnan(res)|| res== 0.0 ||res==R_PosInf){
-    double res =std::nextafter(res,0.0);
+    double res =std::nextafter(res,0.5);
     return res;
   }
   
@@ -387,7 +456,7 @@ inline double claytonPDF_raw(double u1,double u2, double theta){
   double res = std::pow(std::pow(u1,-theta)+std::pow(u2,-theta)-1,-1/theta-1)*pow(u2,-theta-1);
   
   if(std::isnan(res)|| res== 0.0 ||res==R_PosInf){
-    res =std::nextafter(res,0.0);
+    res =std::nextafter(res,0.5);
     return res;
   }
   return res;
@@ -613,16 +682,17 @@ inline double copulaPDF_raw(double u1,double u2, double theta, int type){
 
 inline bool valid_copula(arma::vec theta, arma::vec type){
   for (int i=0; i< type.n_rows; i++){
-  if(type[i]==3 || type[i]==13 || arma::sum(theta) > 89){
-    if(theta[i]<0 || theta[i] >= 30.7){
+  if(type[i]==3 || type[i]==13 ){
+    if(theta[i]<0 || theta[i] > 29){
       return false;
     }
   }
   if(type[i]==4 || type[i]==14){
-    if(theta[i]<1 ||  theta[i] > 31.5 || arma::sum(theta) > 89){
+    if(theta[i]<1 ||  theta[i] > 14.3){
       return false;
     }
   }
+  
 
   }
   return true;

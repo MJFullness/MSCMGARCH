@@ -11,6 +11,29 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
+// eigen_value_decomposition_1
+arma::mat eigen_value_decomposition_1(arma::mat& A);
+RcppExport SEXP _MSCMGARCH_eigen_value_decomposition_1(SEXP ASEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat& >::type A(ASEXP);
+    rcpp_result_gen = Rcpp::wrap(eigen_value_decomposition_1(A));
+    return rcpp_result_gen;
+END_RCPP
+}
+// simulate_bekk
+arma::mat simulate_bekk(arma::vec theta, arma::mat r);
+RcppExport SEXP _MSCMGARCH_simulate_bekk(SEXP thetaSEXP, SEXP rSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::vec >::type theta(thetaSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type r(rSEXP);
+    rcpp_result_gen = Rcpp::wrap(simulate_bekk(theta, r));
+    return rcpp_result_gen;
+END_RCPP
+}
 // elimination_mat
 arma::mat elimination_mat(const int& n);
 RcppExport SEXP _MSCMGARCH_elimination_mat(SEXP nSEXP) {
@@ -272,6 +295,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// gumbelPDF_raw
+double gumbelPDF_raw(double u1, double u2, double theta);
+RcppExport SEXP _MSCMGARCH_gumbelPDF_raw(SEXP u1SEXP, SEXP u2SEXP, SEXP thetaSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type u1(u1SEXP);
+    Rcpp::traits::input_parameter< double >::type u2(u2SEXP);
+    Rcpp::traits::input_parameter< double >::type theta(thetaSEXP);
+    rcpp_result_gen = Rcpp::wrap(gumbelPDF_raw(u1, u2, theta));
+    return rcpp_result_gen;
+END_RCPP
+}
 // gumbelH1
 double gumbelH1(double u1, double u2, double theta);
 RcppExport SEXP _MSCMGARCH_gumbelH1(SEXP u1SEXP, SEXP u2SEXP, SEXP thetaSEXP) {
@@ -321,6 +357,19 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type u2(u2SEXP);
     Rcpp::traits::input_parameter< double >::type theta(thetaSEXP);
     rcpp_result_gen = Rcpp::wrap(claytonPDF(u1, u2, theta));
+    return rcpp_result_gen;
+END_RCPP
+}
+// claytonPDF_raw
+double claytonPDF_raw(double u1, double u2, double theta);
+RcppExport SEXP _MSCMGARCH_claytonPDF_raw(SEXP u1SEXP, SEXP u2SEXP, SEXP thetaSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type u1(u1SEXP);
+    Rcpp::traits::input_parameter< double >::type u2(u2SEXP);
+    Rcpp::traits::input_parameter< double >::type theta(thetaSEXP);
+    rcpp_result_gen = Rcpp::wrap(claytonPDF_raw(u1, u2, theta));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1265,6 +1314,8 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_MSCMGARCH_eigen_value_decomposition_1", (DL_FUNC) &_MSCMGARCH_eigen_value_decomposition_1, 1},
+    {"_MSCMGARCH_simulate_bekk", (DL_FUNC) &_MSCMGARCH_simulate_bekk, 2},
     {"_MSCMGARCH_elimination_mat", (DL_FUNC) &_MSCMGARCH_elimination_mat, 1},
     {"_MSCMGARCH_commutation_mat", (DL_FUNC) &_MSCMGARCH_commutation_mat, 1},
     {"_MSCMGARCH_duplication_mat", (DL_FUNC) &_MSCMGARCH_duplication_mat, 1},
@@ -1286,10 +1337,12 @@ static const R_CallMethodDef CallEntries[] = {
     {"_MSCMGARCH_dnorm_cpp", (DL_FUNC) &_MSCMGARCH_dnorm_cpp, 1},
     {"_MSCMGARCH_gumbelCDF", (DL_FUNC) &_MSCMGARCH_gumbelCDF, 3},
     {"_MSCMGARCH_gumbelPDF", (DL_FUNC) &_MSCMGARCH_gumbelPDF, 3},
+    {"_MSCMGARCH_gumbelPDF_raw", (DL_FUNC) &_MSCMGARCH_gumbelPDF_raw, 3},
     {"_MSCMGARCH_gumbelH1", (DL_FUNC) &_MSCMGARCH_gumbelH1, 3},
     {"_MSCMGARCH_gumbelH2", (DL_FUNC) &_MSCMGARCH_gumbelH2, 3},
     {"_MSCMGARCH_claytonCDF", (DL_FUNC) &_MSCMGARCH_claytonCDF, 3},
     {"_MSCMGARCH_claytonPDF", (DL_FUNC) &_MSCMGARCH_claytonPDF, 3},
+    {"_MSCMGARCH_claytonPDF_raw", (DL_FUNC) &_MSCMGARCH_claytonPDF_raw, 3},
     {"_MSCMGARCH_claytonH1", (DL_FUNC) &_MSCMGARCH_claytonH1, 3},
     {"_MSCMGARCH_claytonH2", (DL_FUNC) &_MSCMGARCH_claytonH2, 3},
     {"_MSCMGARCH_copulaPDF", (DL_FUNC) &_MSCMGARCH_copulaPDF, 4},

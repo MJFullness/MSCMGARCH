@@ -52,25 +52,29 @@ if(type=="Normal Clayton"){
     BEKK1=c(c(BEKK1$C0)[c(1,3,4)],c(BEKK1$A),c(BEKK1$G))
   }
   if(is.null(start_val)){
-    set.seed(456)
+    set.seed(1)
     start_val=numeric(3)
-    start_val[1]=runif(1,0,1)
-    start_val[2]=runif(1,0.1,1)
-    start_val[3]=runif(1,0,100)
+    start_val[1]=0.9
+    start_val[2]=0.2
+    start_val[3]=12
     start_val=list(start_val)
     for(i in 2:nc){
       start_val_temp=numeric(3)
       start_val_temp[1]=runif(1,0,1)
       start_val_temp[2]=runif(1,0.1,1)
-      start_val_temp[3]=runif(1,0,100)
+      start_val_temp[3]=runif(1,0,17)
       start_val[[i]]<-start_val_temp
     }
-    
+    if(nc>1){
     f=function(par){return(random_grid_search_normal_clayton(BEKK1,par,r,1))}
     theta<-parLapplyLB(X=start_val,fun=f)
     max_index <- which.max(sapply(theta, '[[', 'best_val'))
     theta <- theta[[max_index]]
     start_val <- as.vector(theta[[1]])
+    } else{
+      start_val= as.vector(random_grid_search_normal_clayton(BEKK1,start_val[[1]],r,1)[[1]])
+      
+    }
   }
   
   
@@ -94,22 +98,25 @@ if(type=="Normal Gumbel"){
   if(is.null(start_val)){
     start_val=numeric(3)
     start_val[1]=0.9
-    start_val[2]=0.6
-    start_val[3]=22
+    start_val[2]=0.2
+    start_val[3]=12
     start_val=list(start_val)
     for(i in 2:nc){
       start_val_temp=numeric(3)
       start_val_temp[1]=runif(1,0.5,1)
       start_val_temp[2]=runif(1,0.1,1)
-      start_val_temp[3]=runif(1,1,100)
+      start_val_temp[3]=runif(1,1,17)
       start_val[[i]]<-start_val_temp
     }
-    
+    if(nc>1){
     f=function(par){return(random_grid_search_normal_gumbel(BEKK1,par,r,1))}
     theta<-parLapplyLB(X=start_val,fun=f)
     max_index <- which.max(sapply(theta, '[[', 'best_val'))
     theta <- theta[[max_index]]
     start_val <- as.vector(theta[[1]])
+    }else{
+      start_val = random_grid_search_normal_gumbel(BEKK1,start_val[[1]],r,1)[[1]]
+    }
   }
   
   
@@ -145,12 +152,15 @@ if(type=="Normal Frank"){
         start_val_temp[3]=runif(1,-35,35)
         start_val[[i]]<-start_val_temp
       }
-      
+      if(nc>1){
       f=function(par){return(random_grid_search_normal_frank(BEKK1,par,r,1))}
       theta<-parLapplyLB(X=start_val,fun=f)
       max_index <- which.max(sapply(theta, '[[', 'best_val'))
       theta <- theta[[max_index]]
       start_val <- as.vector(theta[[1]])
+      }else{
+        start_val=random_grid_search_normal_frank(BEKK1,start_val[[1]],r,1)[[1]]
+      }
     }
     
     
@@ -173,25 +183,28 @@ if(type=="Normal Clayton Survival"){
     BEKK1=c(c(BEKK1$C0)[c(1,3,4)],c(BEKK1$A),c(BEKK1$G))
   }
   if(is.null(start_val)){
-    set.seed(45)
+    set.seed(1)
     start_val=numeric(3)
-    start_val[1]=runif(1,0.5,1)
-    start_val[2]=runif(1,0.1,1)
-    start_val[3]=runif(1,1,100)
+    start_val[1]=0.9
+    start_val[2]=0.2
+    start_val[3]=12
     start_val=list(start_val)
     for(i in 2:nc){
       start_val_temp=numeric(3)
       start_val_temp[1]=runif(1,0.5,1)
       start_val_temp[2]=runif(1,0.1,1)
-      start_val_temp[3]=runif(1,1,100)
+      start_val_temp[3]=runif(1,1,17)
       start_val[[i]]<-start_val_temp
     }
-    
+    if(nc>1){
     f=function(par){return(random_grid_search_normal_claytonS(BEKK1,par,r,1))}
     theta<-parLapplyLB(X=start_val,fun=f)
     max_index <- which.max(sapply(theta, '[[', 'best_val'))
     theta <- theta[[max_index]]
     start_val <- as.vector(theta[[1]])
+    }else{
+      start_val=random_grid_search_normal_claytonS(BEKK1,start_val[[1]],r,1)[[1]]
+    }
   }
   
   
@@ -216,23 +229,26 @@ if(type=="Normal Gumbel Survival"){
   if(is.null(start_val)){
     set.seed(4630)
     start_val=numeric(3)
-    start_val[1]=runif(1,0.5,1)
-    start_val[2]=runif(1,0.1,1)
-    start_val[3]=runif(1,1,100)
+    start_val[1]=0.9
+    start_val[2]=0.2
+    start_val[3]=12
     start_val=list(start_val)
     for(i in 2:nc){
       start_val_temp=numeric(3)
       start_val_temp[1]=runif(1,0.5,1)
       start_val_temp[2]=runif(1,0.1,1)
-      start_val_temp[3]=runif(1,1,100)
+      start_val_temp[3]=runif(1,1,12)
       start_val[[i]]<-start_val_temp
     }
-    
+    if(nc>1){
     f=function(par){return(random_grid_search_normal_gumbelS(BEKK1,par,r,1))}
     theta<-parLapplyLB(X=start_val,fun=f)
     max_index <- which.max(sapply(theta, '[[', 'best_val'))
     theta <- theta[[max_index]]
     start_val <- as.vector(theta[[1]])
+  }else{
+    start_val=random_grid_search_normal_gumbelS(BEKK1,start_val[[1]],r,1)[[1]]
+  }
   }
   
   
@@ -265,8 +281,8 @@ if(type=="Normal Gumbel GumbelSurvival"){
     start_val[4]=0.6
     start_val[5]=0.1
     start_val[6]=0.4
-    start_val[7]=44
-    start_val[8]=44
+    start_val[7]=12
+    start_val[8]=12
     if(nc>1){
       start_val=list(start_val)
     for(i in 2:nc){
@@ -277,8 +293,8 @@ if(type=="Normal Gumbel GumbelSurvival"){
     start_val_temp[4]=runif(1,0,1-start_val_temp[3])
     start_val_temp[5]=runif(1,0,1)
     start_val_temp[6]=runif(1,0,1-start_val_temp[5])
-    start_val_temp[7]=runif(1,10,100)
-    start_val_temp[8]=runif(1,10,100)
+    start_val_temp[7]=runif(1,10,12)
+    start_val_temp[8]=runif(1,10,12)
     
     start_val[[i]]<-start_val_temp
     }
@@ -288,7 +304,7 @@ if(type=="Normal Gumbel GumbelSurvival"){
       theta <- theta[[max_index]]
       start_val <- as.vector(theta[[1]])
     }    else{
-    start_val=random_grid_search_normal_gumbel_gumbelsurvival(BEKK1,start_val[[1]],r)$theta_optim
+    start_val=random_grid_search_normal_gumbel_gumbelsurvival(BEKK1,start_val,r)$theta_optim
     }
   }
  
@@ -321,8 +337,8 @@ if(type=="Normal GumbelSurvival ClaytonSurvival")  {
     start_val[4]=0.6
     start_val[5]=0.1
     start_val[6]=0.4
-    start_val[7]=22
-    start_val[8]=27
+    start_val[7]=12
+    start_val[8]=12
     if(nc>1){
       start_val=list(start_val)
       for(i in 2:nc){
@@ -333,8 +349,8 @@ if(type=="Normal GumbelSurvival ClaytonSurvival")  {
         start_val_temp[4]=runif(1,0,1-start_val_temp[3])
         start_val_temp[5]=runif(1,0,1)
         start_val_temp[6]=runif(1,0,1-start_val_temp[5])
-        start_val_temp[7]=runif(1,10,100)
-        start_val_temp[8]=runif(1,10,100)
+        start_val_temp[7]=runif(1,10,17)
+        start_val_temp[8]=runif(1,10,17)
         
         start_val[[i]]<-start_val_temp
       }
@@ -344,7 +360,7 @@ if(type=="Normal GumbelSurvival ClaytonSurvival")  {
       theta <- theta[[max_index]]
       start_val <- as.vector(theta[[1]])
     }    else{
-      start_val=random_grid_search_normal_gumbelS_claytonS(BEKK1,start_val[[1]],r)$theta_optim
+      start_val=random_grid_search_normal_gumbelS_claytonS(BEKK1,start_val,r)$theta_optim
     }
   }
   
@@ -378,8 +394,8 @@ if(type=="Normal GumbelSurvival ClaytonSurvival")  {
       start_val[4]=0.6
       start_val[5]=0.1
       start_val[6]=0.4
-      start_val[7]=50
-      start_val[8]=50
+      start_val[7]=12
+      start_val[8]=12
       if(nc>1){
         start_val=list(start_val)
         for(i in 2:nc){
@@ -390,8 +406,8 @@ if(type=="Normal GumbelSurvival ClaytonSurvival")  {
           start_val_temp[4]=runif(1,0,1-start_val_temp[3])
           start_val_temp[5]=runif(1,0,1)
           start_val_temp[6]=runif(1,0,1-start_val_temp[5])
-          start_val_temp[7]=runif(1,10,100)
-          start_val_temp[8]=runif(1,10,100)
+          start_val_temp[7]=runif(1,10,17)
+          start_val_temp[8]=runif(1,10,17)
           
           start_val[[i]]<-start_val_temp
         }
@@ -401,7 +417,7 @@ if(type=="Normal GumbelSurvival ClaytonSurvival")  {
         theta <- theta[[max_index]]
         start_val <- as.vector(theta[[1]])
       }    else{
-        start_val=random_grid_search_normal_gumbel_clayton(BEKK1,start_val[[1]],r)$theta_optim
+        start_val=random_grid_search_normal_gumbel_clayton(BEKK1,start_val,r)$theta_optim
       }
     }
     
@@ -428,16 +444,16 @@ if(type=="Normal GumbelSurvival ClaytonSurvival")  {
     if(is.null(start_val)){
       set.seed(42)
       start_val=numeric(8)
-      start_val[1]=runif(1,0.8,1)
-      start_val[2]=runif(1,0,1-start_val[1])
-      start_val[3]=runif(1,0.1,1)
-      start_val[4]=runif(1,0,1-start_val[3])
-      start_val[5]=runif(1,0.1,1)
-      start_val[6]=runif(1,0,1-start_val[5])
-      start_val[7]=runif(1,0,100)
-      start_val[8]=runif(1,0,100)
-      start_val=list(start_val)
+      start_val[1]=0.8
+      start_val[2]=0.1
+      start_val[3]=0.2
+      start_val[4]=0.6
+      start_val[5]=0.1
+      start_val[6]=0.4
+      start_val[7]=12
+      start_val[8]=12
       if(nc>1){
+        start_val=list(start_val)
         for(i in 2:nc){
           start_val_temp=numeric(8)
           start_val_temp[1]=runif(1,0.5,1)
@@ -446,18 +462,22 @@ if(type=="Normal GumbelSurvival ClaytonSurvival")  {
           start_val_temp[4]=runif(1,0,1-start_val_temp[3])
           start_val_temp[5]=runif(1,0.1,1)
           start_val_temp[6]=runif(1,0,1-start_val_temp[5])
-          start_val_temp[7]=runif(1,1,100)
-          start_val_temp[8]=runif(1,1,100)
+          start_val_temp[7]=runif(1,1,17)
+          start_val_temp[8]=runif(1,1,17)
           
           start_val[[i]]<-start_val_temp
         }
-      }
+      
       
       f=function(par){return(random_grid_search_normal_clayton_claytonsurvival(BEKK1,par,r))}
       theta<-parLapplyLB(X=start_val,fun=f)
       max_index <- which.max(sapply(theta, '[[', 'best_val'))
       theta <- theta[[max_index]]
       start_val <- as.vector(theta[[1]])
+    }else{
+      start_val=random_grid_search_normal_clayton_claytonsurvival(BEKK1,start_val,r)$theta_optim
+      
+    }
     }
     
     cat("Optimize")
@@ -498,9 +518,9 @@ MLE_MSCMGARCH_3dim<-function(r, type, start_val=NULL, BEKK=NULL,asymmBEKK=FALSE,
       start_val=numeric(5)
       start_val[1]=0.92
       start_val[2]=0.2
-      start_val[3]=24
-      start_val[4]=24
-      start_val[5]=24
+      start_val[3]=12
+      start_val[4]=12
+      start_val[5]=12
       start_val=list(start_val)
       if(nc>1){
       for(i in 2:nc){
@@ -551,9 +571,9 @@ MLE_MSCMGARCH_3dim<-function(r, type, start_val=NULL, BEKK=NULL,asymmBEKK=FALSE,
         start_val=numeric(5)
         start_val[1]=0.92
         start_val[2]=0.2
-        start_val[3]=24
-        start_val[4]=24
-        start_val[5]=24
+        start_val[3]=12
+        start_val[4]=12
+        start_val[5]=12
         start_val=list(start_val)
         if(nc>1){
           for(i in 2:nc){
@@ -612,12 +632,12 @@ MLE_MSCMGARCH_3dim<-function(r, type, start_val=NULL, BEKK=NULL,asymmBEKK=FALSE,
           start_val[4]=0.05
           start_val[5]=0.05
           start_val[6]=0.05
-          start_val[7]=10
-          start_val[8]=15
-          start_val[9]=15
-          start_val[10]=20
-          start_val[11]=22
-          start_val[12]=20
+          start_val[7]=4
+          start_val[8]=3
+          start_val[9]=3
+          start_val[10]=4
+          start_val[11]=3
+          start_val[12]=3
           if(nc>1){
           start_val=list(start_val)
           for(i in 2:nc){
@@ -677,12 +697,12 @@ MLE_MSCMGARCH_3dim<-function(r, type, start_val=NULL, BEKK=NULL,asymmBEKK=FALSE,
           start_val[4]=0.05
           start_val[5]=0.05
           start_val[6]=0.05
-          start_val[7]=10
-          start_val[8]=15
-          start_val[9]=15
-          start_val[10]=20
-          start_val[11]=22
-          start_val[12]=20
+          start_val[7]=4
+          start_val[8]=3
+          start_val[9]=3
+          start_val[10]=4
+          start_val[11]=3
+          start_val[12]=3
           if(nc>1){
           start_val=list(start_val)
           for(i in 2:nc){

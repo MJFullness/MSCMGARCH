@@ -9,10 +9,6 @@
 // [[Rcpp::plugins(cpp11)]]
 
 
-
-
-
-
 // [[Rcpp::export]]
 arma::mat comp_bekk_forecast(const arma::vec& bekk, const arma::mat& r) {
   // Log-Likelihood function
@@ -152,7 +148,7 @@ double loglike_Normal_Copula_3(const arma::vec& bekk, const arma::vec& theta, co
   arma::mat G = arma::reshape(bekk.subvec((index +  std::pow(n, 2)), numb_of_vars-1).t(), n, n);
   double p = theta[0];
   double q = theta[1];
- 
+  
   
   //check for identification
   if( valid_bekk(C,A,G)==false || p<=0 || q<=0 || p>=1 || q>=1 || valid_copula(theta.subvec(2,4),type)==false){
@@ -173,7 +169,7 @@ double loglike_Normal_Copula_3(const arma::vec& bekk, const arma::vec& theta, co
   arma::vec copula_par = theta.subvec(2,4);
   arma::mat cor_cop=cor_mat(copula_par,type);
   
-  if(arma::det(cor_cop)<=1e-7){
+  if(arma::det(cor_cop)<= 3e-5){
     return -1e25;
   }
   
@@ -212,7 +208,7 @@ double loglike_Normal_Copula_3(const arma::vec& bekk, const arma::vec& theta, co
     double llv_2 = arma::as_scalar((p1t*(1-p)+(1-p1t)*q)*VineCopula(p_norm_2,copula_par,type)*d_norm_2*H_det*cop_chol_det);
     
     double llv_temp = llv_1+llv_2;
-      p1t=llv_1/llv_temp;
+    p1t=llv_1/llv_temp;
     
     llv+=log(llv_temp);
     
@@ -268,7 +264,7 @@ double loglike_Normal_Copula_3_asymm(const arma::vec& bekk, arma::vec signs, con
  
   arma::mat cor_cop=cor_mat(copula_par,type);
 
-  if(arma::det(cor_cop)<=1e-7){
+  if(arma::det(cor_cop)<=3e-5){
     return -1e25;
   }
   
@@ -375,7 +371,7 @@ double loglike_Normal_Copula_Copula_3(const arma::vec& bekk, const arma::vec& th
   arma::mat cor_cop_2=cor_mat(copula_par_2,type2);
   
   
-  if(arma::det(cor_cop_1)<=1e-7 || arma::det(cor_cop_2)<=1e-7){
+  if(arma::det(cor_cop_1)<=3e-5 || arma::det(cor_cop_2)<=3e-5){
     return -1e25;
   }
   
@@ -494,7 +490,7 @@ double loglike_Normal_Copula_Copula_3_asymm(const arma::vec& bekk, arma::vec sig
   arma::mat cor_cop_2=cor_mat(copula_par_2,type2);
   
   
-  if(arma::det(cor_cop_1)<=1e-7 || arma::det(cor_cop_2)<=1e-7){
+  if(arma::det(cor_cop_1)<=3e-5 || arma::det(cor_cop_2)<=3e-5){
     return -1e25;
   }
   
@@ -748,7 +744,7 @@ Rcpp::List random_grid_search_normal_copula_3(const arma::vec& bekk,const arma::
   arma::vec theta_optim=theta;
   arma::vec theta_candidate=theta; 
   double best_val = loglike_Normal_Copula_3(bekk,theta,r,type);
-  arma::vec alternative_theta = {0.9,0.3,12,12,12};
+  arma::vec alternative_theta = {0.9,0.3,6,6,6};
   double best_val_alt = loglike_Normal_Copula_3(bekk,alternative_theta,r,type);
   
   
@@ -761,14 +757,14 @@ Rcpp::List random_grid_search_normal_copula_3(const arma::vec& bekk,const arma::
   }
   //set the seed
   
-  double k = 1.5;
+  double k = 1;
   // Generating random values theta
-  while(l<200){
+  while(l<200 && k<4){
     for(int i=0; i<2;i++){
       theta_candidate[i]= arma::randn()*0.004/k+theta_mu[i];
     }
     for(int i=2; i<5;i++){
-      theta_candidate[i]= arma::randn()*6/k+theta_mu[i];
+      theta_candidate[i]= arma::randn()*2/k+theta_mu[i];
     }
     double llv = loglike_Normal_Copula_3(bekk,theta_candidate,r,type);
     if(llv > -1e25){
@@ -779,9 +775,8 @@ Rcpp::List random_grid_search_normal_copula_3(const arma::vec& bekk,const arma::
       theta_optim=theta_candidate;
       theta_mu=theta_optim;
       if(l>20){
-          k+=0.5;
-        
-      }
+          k++;
+        }
       
       
     }
@@ -809,7 +804,7 @@ Rcpp::List random_grid_search_normal_copula_copula_3(const arma::vec& bekk,const
   double k = 1;
   
   // Generating random values theta
-  while(l<300){
+  while(l<200 && k<5){
     
     theta_candidate[0]=arma::randu(); 
     theta_candidate[1]=arma::randu()*(1-theta_candidate[0]); 
@@ -817,24 +812,24 @@ Rcpp::List random_grid_search_normal_copula_copula_3(const arma::vec& bekk,const
     theta_candidate[3]=arma::randu()*(1-theta_candidate[2]); 
     theta_candidate[4]=arma::randu();
     theta_candidate[5]=arma::randu()*(1-theta_candidate[4]); 
-    
       
     
     for(int i=6; i<12;i++){
-      theta_candidate[i]= arma::randn()*3/k+theta_mu[i];
+      theta_candidate[i]= arma::randn()*2/k+theta_mu[i];
     }
     double llv = loglike_Normal_Copula_Copula_3(bekk,theta_candidate,r,type);
    
     if(llv > -1e25){
       l++;
+      
     }
     if(llv>best_val){
       best_val=llv;
       theta_optim=theta_candidate;
       
-      if(l>10){
+      if(l>20){
         theta_mu=theta_candidate;
-        k+=0.2;
+        k+=0.7;
       }
       
       
@@ -856,7 +851,7 @@ Rcpp::List random_grid_search_normal_copula_3_asymm(const arma::vec& bekk,arma::
   theta_mu=theta;
   arma::vec theta_optim=theta;
   arma::vec theta_candidate=theta; 
-  arma::vec alternative_theta = {0.9,0.3,4,25,25};
+  arma::vec alternative_theta = {0.9,0.3,4,12,15};
   double best_val_alt = loglike_Normal_Copula_3_asymm(bekk,signs,alternative_theta,r,type);
   
   
@@ -870,12 +865,12 @@ Rcpp::List random_grid_search_normal_copula_3_asymm(const arma::vec& bekk,arma::
   double k = 1;
   
   // Generating random values theta
-  while(l<300 && k<5){
+  while(l<200 && k<4){
     for(int i=0; i<2;i++){
-      theta_candidate[i]= arma::randn()*0.004/k+theta_mu[i];
+      theta_candidate[i]= arma::randn()*0.005/k+theta_mu[i];
     }
-    for(int i=2; i<5;i++){
-      theta_candidate[i]= arma::randn()*3/k+theta_mu[i];
+    for(int i=2; i< 4.5;i++){
+      theta_candidate[i]= arma::randn()*2/k+theta_mu[i];
     }
     double llv = loglike_Normal_Copula_3_asymm(bekk,signs,theta_candidate,r,type);
     if(llv > -1e25){
@@ -887,9 +882,9 @@ Rcpp::List random_grid_search_normal_copula_3_asymm(const arma::vec& bekk,arma::
      
         theta_optim=theta_candidate;
        
-     if(l>10){
+     if(l>20){
        theta_mu=theta_candidate;
-        k+=0.2;
+        k+=0.75;
      }
        
       
@@ -926,7 +921,7 @@ Rcpp::List random_grid_search_normal_copula_copula_3_asymm(const arma::vec& bekk
     theta_candidate[4]=arma::randu();
     theta_candidate[5]=arma::randu()*(1-theta_candidate[4]); 
     for(int i=6; i<12;i++){
-      theta_candidate[i]= arma::randn()*3/k+theta_mu[i];
+      theta_candidate[i]= arma::randn()*2/k+theta_mu[i];
     }
     double llv = loglike_Normal_Copula_Copula_3_asymm(bekk,signs,theta_candidate,r,type);
     if(llv > -1e25){
@@ -935,9 +930,9 @@ Rcpp::List random_grid_search_normal_copula_copula_3_asymm(const arma::vec& bekk
     if(llv>best_val){
       best_val=llv;
       theta_optim=theta_candidate;
-      if(l>10){
+      if(l>20){
         theta_mu=theta_candidate;
-        k+=0.2;
+        k+=0.7;
       }
     }
   }
