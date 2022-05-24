@@ -1354,14 +1354,14 @@ rolling_window<-function(series,type,copula_type,asymmetric,window_length,portfo
   if(type=="Gaussian"){
   forecast=pblapply(X=amount, FUN=Forecast_Gaussian, asymmetric=asymmetric, window_length=window_length,portfolio_weights=portfolio_weights,series=series, signs=signs, cl=cl)
   }  else if(type=="CMGARCH"){
-    forecast=pblapply(X=amount, FUN=Forecast_CMGARCH,copula_type=copula_type, asymmetric=asymmetric,window_length=window_length,portfolio_weights=portfolio_weights,series=series,signs=signs, cl=cl)
+    forecast=pblapply(X=amount, FUN=Forecast_CMGARCH,copula_type=copula_type, asymmetric=asymmetric,window_length=window_length,portfolio_weights=portfolio_weights,series=series,signs=signs, cl=cl, use_lb = T)
   }  else if(type=="MS_CMGARCH"){
     
-    forecast=pblapply(X=amount, FUN=Forecast_MSCMGARCH,copula_type=copula_type, asymmetric=asymmetric,window_length=window_length,portfolio_weights=portfolio_weights,series=series,signs=signs, cl=cl)
+    forecast=pblapply(X=amount, FUN=Forecast_MSCMGARCH,copula_type=copula_type, asymmetric=asymmetric,window_length=window_length,portfolio_weights=portfolio_weights,series=series,signs=signs, cl=cl, use_lb = T)
    
   }  else if(type=="MS_CMGARCH3"){
     
-    forecast=pblapply(X=amount, FUN=Forecast_MSCMGARCH_3,copula_type=copula_type, asymmetric=asymmetric, window_length=window_length,portfolio_weights=portfolio_weights,series=series,signs=signs, cl=cl)
+    forecast=pblapply(X=amount, FUN=Forecast_MSCMGARCH_3,copula_type=copula_type, asymmetric=asymmetric, window_length=window_length,portfolio_weights=portfolio_weights,series=series,signs=signs, cl=cl, use_lb = T)
     
   }
   forecast_final=unlist(forecast[[1]])
