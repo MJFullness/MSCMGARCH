@@ -1346,21 +1346,22 @@ Forecast_MSCMGARCH_3<-function(start,signs,copula_type,asymmetric,window_length,
 
 
 rolling_window<-function(series,type,copula_type,asymmetric,window_length,portfolio_weights,signs,nc){
-  plan(future::multicore(workers = nc))
+  #plan(future::multicore(workers = nc))
+  cl<-makeCluster(nc)
   n=nrow(series)
   amount=seq(1,n-window_length)
   
   if(type=="Gaussian"){
-  forecast=future.apply::future_lapply(X=amount, FUN=Forecast_Gaussian, asymmetric=asymmetric, window_length=window_length,portfolio_weights=portfolio_weights,series=series, signs=signs)
+  forecast=pblapply(X=amount, FUN=Forecast_Gaussian, asymmetric=asymmetric, window_length=window_length,portfolio_weights=portfolio_weights,series=series, signs=signs, cl=cl)
   }  else if(type=="CMGARCH"){
-    forecast=future.apply::future_lapply(X=amount, FUN=Forecast_CMGARCH,copula_type=copula_type, asymmetric=asymmetric,window_length=window_length,portfolio_weights=portfolio_weights,series=series,signs=signs)
+    forecast=pblapply(X=amount, FUN=Forecast_CMGARCH,copula_type=copula_type, asymmetric=asymmetric,window_length=window_length,portfolio_weights=portfolio_weights,series=series,signs=signs, cl=cl)
   }  else if(type=="MS_CMGARCH"){
     
-    forecast=future.apply::future_lapply(X=amount, FUN=Forecast_MSCMGARCH,copula_type=copula_type, asymmetric=asymmetric,window_length=window_length,portfolio_weights=portfolio_weights,series=series,signs=signs)
+    forecast=pblapply(X=amount, FUN=Forecast_MSCMGARCH,copula_type=copula_type, asymmetric=asymmetric,window_length=window_length,portfolio_weights=portfolio_weights,series=series,signs=signs, cl=cl)
    
   }  else if(type=="MS_CMGARCH3"){
     
-    forecast=future.apply::future_lapply(X=amount, FUN=Forecast_MSCMGARCH_3,copula_type=copula_type, asymmetric=asymmetric, window_length=window_length,portfolio_weights=portfolio_weights,series=series,signs=signs)
+    forecast=pblapply(X=amount, FUN=Forecast_MSCMGARCH_3,copula_type=copula_type, asymmetric=asymmetric, window_length=window_length,portfolio_weights=portfolio_weights,series=series,signs=signs, cl=cl)
     
   }
   forecast_final=unlist(forecast[[1]])
